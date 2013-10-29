@@ -22,6 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="id.artefact.kiblat.SplashActivity"
+            android:label="@string/title_activity_splash" >
+        </activity>
     </application>
 
 </manifest>

@@ -214,9 +214,13 @@ int drawable abs__tab_selected_focused_holo 0x7f020051
 int drawable abs__tab_selected_holo 0x7f020052
 int drawable abs__tab_selected_pressed_holo 0x7f020053
 int drawable abs__tab_unselected_pressed_holo 0x7f020054
-int drawable ic_launcher 0x7f020055
-int drawable shadow 0x7f020056
-int drawable shadowright 0x7f020057
+int drawable bg_striped 0x7f020055
+int drawable bg_striped_img 0x7f020056
+int drawable bg_striped_split 0x7f020057
+int drawable bg_striped_split_img 0x7f020058
+int drawable ic_launcher 0x7f020059
+int drawable shadow 0x7f02005a
+int drawable shadowright 0x7f02005b
 int id abs__action_bar 0x7f040027
 int id abs__action_bar_container 0x7f040026
 int id abs__action_bar_subtitle 0x7f040016

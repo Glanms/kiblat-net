@@ -126,6 +126,9 @@ int dimen abs__dialog_min_width_minor 0x7f07000a
 int dimen action_button_min_width 0x7f07000b
 int dimen activity_horizontal_margin 0x7f07000c
 int dimen activity_vertical_margin 0x7f07000d
+int dimen list_padding 0x7f07000f
+int dimen shadow_width 0x7f070010
+int dimen slidingmenu_offset 0x7f07000e
 int drawable abs__ab_bottom_solid_dark_holo 0x7f020000
 int drawable abs__ab_bottom_solid_inverse_holo 0x7f020001
 int drawable abs__ab_bottom_solid_light_holo 0x7f020002
@@ -212,6 +215,8 @@ int drawable abs__tab_selected_holo 0x7f020052
 int drawable abs__tab_selected_pressed_holo 0x7f020053
 int drawable abs__tab_unselected_pressed_holo 0x7f020054
 int drawable ic_launcher 0x7f020055
+int drawable shadow 0x7f020056
+int drawable shadowright 0x7f020057
 int id abs__action_bar 0x7f040027
 int id abs__action_bar_container 0x7f040026
 int id abs__action_bar_subtitle 0x7f040016

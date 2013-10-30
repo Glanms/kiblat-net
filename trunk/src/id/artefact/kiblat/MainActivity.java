@@ -27,6 +27,9 @@ public class MainActivity extends SherlockActivity {
         menu.setFadeDegree(0.35f);
         menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
         menu.setMenu(R.layout.activity_splash);
+        
+        getSupportActionBar().setIcon(R.drawable.ic_launcher);
+        setTitle("TES TES TES");
 	}
 
 	@Override

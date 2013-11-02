@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">KiblatDotNet</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_base">BaseActivity</string>
+    <string name="github">GitHub</string>
+    <string name="github_label">SlidingMenu on GitHub</string>
+    <string name="changing_fragments">Changing Fragments</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="anim_slide">Slide Up</string>
+
+</resources>

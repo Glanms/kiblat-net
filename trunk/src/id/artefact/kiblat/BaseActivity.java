@@ -5,6 +5,7 @@ import id.artefact.kiblat.help.Util;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -61,10 +62,11 @@ public class BaseActivity extends SlidingFragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			toggle();
+			showMenu();
 			return true;
 		case R.id.github:
-			Util.goToGitHub(this);
+			Intent i = new Intent(this, MainActivity.class);
+			startActivity(i);
 			return true;
 		}
 		return onOptionsItemSelected(item);

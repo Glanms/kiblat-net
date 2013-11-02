@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/octocat" />
+        android:src="@drawable/ic_action_github" />
 
     <TextView
         android:layout_width="0dp"

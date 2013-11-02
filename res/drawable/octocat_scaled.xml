@@ -3,6 +3,6 @@
     android:scaleHeight="0.25f"
     android:scaleWidth="0.25f"
     android:scaleGravity="center"
-    android:src="@drawable/octocat" >
+    android:src="@drawable/ic_action_github" >
 
 </scale>

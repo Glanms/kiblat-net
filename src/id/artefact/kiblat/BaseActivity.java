@@ -5,7 +5,10 @@ import id.artefact.kiblat.help.Util;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +22,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
+@SuppressLint("NewApi")
 public class BaseActivity extends SlidingFragmentActivity {
 
 	private int mTitleRes;
@@ -34,7 +38,10 @@ public class BaseActivity extends SlidingFragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setTitle("Kiblat");
+		setTitle("");
+		getActionBar().setLogo(R.drawable.logo);
+		getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		// set the Behind View
 		setBehindContentView(R.layout.behind_frame);
@@ -55,7 +62,7 @@ public class BaseActivity extends SlidingFragmentActivity {
 		sm.setFadeDegree(0.35f);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 
-		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
 	}
 
 	

@@ -16,7 +16,7 @@ public class ColorFragment extends Fragment {
 	private int mColorRes = -1;
 	
 	public ColorFragment() { 
-		this(R.color.white);
+		this(R.color.biru_danker);
 	}
 	
 	public ColorFragment(int colorRes) {

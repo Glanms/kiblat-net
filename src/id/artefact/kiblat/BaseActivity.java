@@ -48,7 +48,6 @@ public class BaseActivity extends SlidingFragmentActivity {
 		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
 		getSupportActionBar().setCustomView(R.layout.actionbar_custom);
 		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
 		// set the Behind View
 		setBehindContentView(R.layout.behind_frame);
 		if (savedInstanceState == null) {
@@ -70,7 +69,7 @@ public class BaseActivity extends SlidingFragmentActivity {
 		sm.setFadeDegree(0.35f);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 
-		
+		ImageView logo = (ImageView) findViewById(R.id.kiblat_logo);
 		ImageView home = (ImageView) findViewById(R.id.home);
 		home.setOnClickListener(new OnClickListener() {
 			
@@ -79,21 +78,31 @@ public class BaseActivity extends SlidingFragmentActivity {
 				showMenu();
 			}
 		});
+		
+		logo.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(getApplicationContext(), MainActivity.class);
+				startActivity(i);
+			}
+		});
 	}
 
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.github:
-			Intent i = new Intent(this, MainActivity.class);
-			startActivity(i);
-			return true;
-
-		}
-		return onOptionsItemSelected(item);
-	}
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//		case R.id.github:
+//			Intent i = new Intent(this, MainActivity.class);
+//			startActivity(i);
+//			return true;
+//
+//		}
+//		return onOptionsItemSelected(item);
+//	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.main, menu);
+		getSupportMenuInflater().inflate(R.menu.kosong, menu);
 		return true;
 	}
 }

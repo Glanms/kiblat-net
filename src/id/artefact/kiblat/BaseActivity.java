@@ -111,25 +111,4 @@ public class BaseActivity extends SlidingFragmentActivity {
 		return super.onOptionsItemSelected(item);
 		}
 	}
-	
-
-	
-	
-
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		switch (item.getItemId()) {
-//		case R.id.github:
-//			Intent i = new Intent(this, CommentActivity.class);
-//			startActivity(i);
-//			return true;
-//
-//		}
-//		return onOptionsItemSelected(item);
-//	}
-//	
-//
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		getSupportMenuInflater().inflate(R.menu.main, menu);
-//		return true;
-//	}
 }

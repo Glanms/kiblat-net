@@ -75,11 +75,12 @@ public class AboveFragment extends ListFragment {
 		}
 	}
 	
+	
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub
 
-		Intent i = new Intent(v.getContext(), CommentActivity.class);
+		Intent i = new Intent(v.getContext(), ContentActivity.class);
 		startActivity(i);
 	}
 

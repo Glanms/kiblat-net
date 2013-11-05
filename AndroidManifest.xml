@@ -31,6 +31,10 @@
             android:name="id.artefact.kiblat.CommentActivity"
             android:label="@string/title_activity_comment" >
         </activity>
+        <activity
+            android:name="id.artefact.kiblat.ContentActivity"
+            android:label="@string/title_activity_content" >
+        </activity>
     </application>
 
 </manifest>

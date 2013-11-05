@@ -1,37 +1,22 @@
 package id.artefact.kiblat;
 
-
-import id.artefact.kiblat.help.LazyAdapterComment;
-
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
 
-
-
-import android.view.View;
-
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-
+import android.os.Bundle;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
 
-public class CommentActivity extends SherlockActivity {
+public class ContentActivity extends SherlockActivity {
 
-	LazyAdapterComment adapter;
-	public final static String KEY_TITLE = "title";
-	public final static String KEY_THUMB_URL = "thumb_url";
-	public final static String KEY_DATE = "date";
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list_comment);
+		setContentView(R.layout.activity_content);
 		
 		getSupportActionBar().setBackgroundDrawable(
 				new ColorDrawable(Color.parseColor("#FFFFFF")));
@@ -60,12 +45,12 @@ public class CommentActivity extends SherlockActivity {
 			}
 		});
 	}
-	
 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.kosong, menu);
-		return true;
-	}
-
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.kosong, menu);
+//		return true;
+//	}
 
 }

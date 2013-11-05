@@ -9,6 +9,7 @@ import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 import id.artefact.kiblat.help.LazyAdapterAbove;
 import id.artefact.kiblat.help.LazyAdapterBehindMenu;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class AboveFragment extends ListFragment {
@@ -24,7 +26,7 @@ public class AboveFragment extends ListFragment {
 	public final static String KEY_TITLE = "title";
 	public final static String KEY_THUMB_URL = "thumb_url";
 	public final static String KEY_DATE = "date";
-
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.list_above, null);
@@ -71,6 +73,14 @@ public class AboveFragment extends ListFragment {
 			this.tag = tag;
 			this.iconRes = iconRes;
 		}
+	}
+	
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		// TODO Auto-generated method stub
+
+		Intent i = new Intent(v.getContext(), CommentActivity.class);
+		startActivity(i);
 	}
 
 	public class SampleAdapter extends ArrayAdapter<SampleItem> {

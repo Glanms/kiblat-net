@@ -1,29 +1,24 @@
 package id.artefact.kiblat;
 
-import id.artefact.kiblat.help.Util;
 
-import java.util.ArrayList;
-import java.util.List;
+//import id.artefact.kiblat.help.Util;
+
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
@@ -71,6 +66,7 @@ public class BaseActivity extends SlidingFragmentActivity {
 
 		ImageView logo = (ImageView) findViewById(R.id.kiblat_logo);
 		ImageView home = (ImageView) findViewById(R.id.home);
+		home.setBackgroundResource(R.drawable.menu);
 		home.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
@@ -89,20 +85,47 @@ public class BaseActivity extends SlidingFragmentActivity {
 			}
 		});
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		SubMenu subMenu1 = menu.addSubMenu(0, Menu.FIRST, Menu.NONE, "");
+		subMenu1.add(0, 1, Menu.NONE, "Comment");
+		
+		MenuItem SubMenu1Item = subMenu1.getItem();
+		SubMenu1Item.setIcon(R.drawable.ic_action_overflow);
+		SubMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()){
+		case 1:
+			Intent icomment = new Intent(this, CommentActivity.class);
+			startActivity(icomment);
+			return true;
+		
+		default:
+		return super.onOptionsItemSelected(item);
+		}
+	}
+	
 
 //	public boolean onOptionsItemSelected(MenuItem item) {
 //		switch (item.getItemId()) {
 //		case R.id.github:
-//			Intent i = new Intent(this, MainActivity.class);
+//			Intent i = new Intent(this, CommentActivity.class);
 //			startActivity(i);
 //			return true;
 //
 //		}
 //		return onOptionsItemSelected(item);
 //	}
-
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.kosong, menu);
-		return true;
-	}
+//	
+//
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		getSupportMenuInflater().inflate(R.menu.main, menu);
+//		return true;
+//	}
 }

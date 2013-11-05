@@ -1,15 +1,15 @@
 package id.artefact.kiblat;
 
+import id.artefact.kiblat.help.EntryAdapter;
+import id.artefact.kiblat.help.EntryItem;
 import id.artefact.kiblat.help.LazyAdapterBehindMenu;
+import id.artefact.kiblat.help.SectionItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
-
+import id.artefact.kiblat.help.Item;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,7 +23,11 @@ import android.widget.ListView;
 public class BehindFragment extends ListFragment {
 	public final static String KEY_TITLE = "title";
 	public final static String KEY_THUMB_URL = "thumb_url";
+
+	ArrayList<Item> items = new ArrayList<Item>();
+
 	LazyAdapterBehindMenu adapter;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -33,29 +37,41 @@ public class BehindFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		String[] colors = getResources().getStringArray(R.array.color_names);
+		// String[] colors = getResources().getStringArray(R.array.color_names);
+		//
+		// ArrayList<HashMap<String, String>> colorlist = new
+		// ArrayList<HashMap<String, String>>();
+		// // looping through all song nodes <song>
+		// for (String c : colors) {
+		// // creating new HashMap
+		// HashMap<String, String> map = new HashMap<String, String>();
+		//
+		// // adding each child node to HashMap key => value
+		// map.put(KEY_TITLE, c);
+		//
+		// map.put(KEY_THUMB_URL, null);
+		//
+		// // adding HashList to ArrayList
+		// colorlist.add(map);
+		// }
+		//
+		// //list = (ListView) findViewById(R.id.list);
+		//
+		// // Getting adapter by passing xml data ArrayList
+		// adapter = new LazyAdapterBehindMenu(getActivity(), colorlist);
+		// setListAdapter(adapter);
 
-		ArrayList<HashMap<String, String>> colorlist = new ArrayList<HashMap<String, String>>();
-		// looping through all song nodes <song>
-		for (String c : colors) {
-			// creating new HashMap
-			HashMap<String, String> map = new HashMap<String, String>();
-
-			// adding each child node to HashMap key => value
-			map.put(KEY_TITLE, c);
-
-			map.put(KEY_THUMB_URL, null);
-
-			// adding HashList to ArrayList
-			colorlist.add(map);
-		}
-
-		//list = (ListView) findViewById(R.id.list);
-		
-		// Getting adapter by passing xml data ArrayList
-		adapter = new LazyAdapterBehindMenu(getActivity(), colorlist);
-		setListAdapter(adapter);
-
+		items.add(new EntryItem(R.drawable.search, "Search"));
+		items.add(new EntryItem(R.drawable.terkini, "Berita Terbaru"));
+		items.add(new EntryItem(R.drawable.popular, "Berita Populer"));
+		items.add(new SectionItem("Category"));
+		items.add(new EntryItem(R.drawable.category, "Analisis"));
+		items.add(new EntryItem(R.drawable.category, "Investigasi"));
+		items.add(new EntryItem(R.drawable.category, "Siyasah"));
+		items.add(new EntryItem(R.drawable.category, "Artikel"));
+		items.add(new EntryItem(R.drawable.category, "Kolom"));
+		EntryAdapter adapter = new EntryAdapter(getListView().getContext(), items);
+		getListView().setAdapter(adapter);
 	}
 
 	@Override

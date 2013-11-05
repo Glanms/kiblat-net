@@ -2,12 +2,17 @@
 <resources>
 
     <string-array name="color_names">
-        <item>Red</item>
-        <item>Green</item>
-        <item>Blue</item>
-        <item>White</item>
-        <item>Black</item>
-        <item>Biru Danker</item>
+        <item>Search</item>
+        <item>Berita Terbaru</item>
+        <item>Populer</item>
+        <item>Kategori 1</item>
+        <item>Kategori 2</item>
+        <item>Kategori 3</item>
+        <item>Kategori 4</item>
+        <item>Kategori 5</item>
+        <item>Kategori 6</item>
+        <item>Kategori 7</item>
+        <item>Kategori 8</item>
     </string-array>
 
 

@@ -2,6 +2,9 @@ package id.artefact.kiblat;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 
 import android.os.Bundle;
 import android.content.Intent;
@@ -46,11 +49,29 @@ public class ContentActivity extends SherlockActivity {
 		});
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.kosong, menu);
-//		return true;
-//	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		SubMenu subMenu1 = menu.addSubMenu(0, Menu.FIRST, Menu.NONE, "");
+		subMenu1.add(0, 1, Menu.NONE, "Comment");
+		
+		MenuItem SubMenu1Item = subMenu1.getItem();
+		SubMenu1Item.setIcon(R.drawable.ic_action_overflow);
+		SubMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()){
+		case 1:
+			Intent icomment = new Intent(this, CommentActivity.class);
+			startActivity(icomment);
+			return true;
+		
+		default:
+		return super.onOptionsItemSelected(item);
+		}
+	}
 
 }

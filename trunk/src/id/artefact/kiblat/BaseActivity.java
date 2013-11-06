@@ -89,26 +89,8 @@ public class BaseActivity extends SlidingFragmentActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		SubMenu subMenu1 = menu.addSubMenu(0, Menu.FIRST, Menu.NONE, "");
-		subMenu1.add(0, 1, Menu.NONE, "Comment");
-		
-		MenuItem SubMenu1Item = subMenu1.getItem();
-		SubMenu1Item.setIcon(R.drawable.ic_action_overflow);
-		SubMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		
+		getSupportMenuInflater().inflate(R.menu.kosong, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()){
-		case 1:
-			Intent icomment = new Intent(this, CommentActivity.class);
-			startActivity(icomment);
-			return true;
-		
-		default:
-		return super.onOptionsItemSelected(item);
-		}
-	}
 }

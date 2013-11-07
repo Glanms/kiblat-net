@@ -8,6 +8,9 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
 
+    
+     <uses-permission android:name="android.permission.INTERNET" />
+    
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -33,6 +36,10 @@
         </activity>
         <activity
             android:name="id.artefact.kiblat.ContentActivity"
+            android:label="@string/title_activity_content" >
+        </activity>
+          <activity
+            android:name="id.artefact.kiblat.AboutActivity"
             android:label="@string/title_activity_content" >
         </activity>
     </application>

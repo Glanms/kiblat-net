@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import id.artefact.kiblat.help.Item;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -70,6 +71,7 @@ public class BehindFragment extends ListFragment {
 		items.add(new EntryItem(R.drawable.category, "Siyasah"));
 		items.add(new EntryItem(R.drawable.category, "Artikel"));
 		items.add(new EntryItem(R.drawable.category, "Kolom"));
+		items.add(new EntryItem(R.drawable.about, "About"));
 		EntryAdapter adapter = new EntryAdapter(getListView().getContext(), items);
 		getListView().setAdapter(adapter);
 	}
@@ -95,6 +97,19 @@ public class BehindFragment extends ListFragment {
 			break;
 		case 5:
 			newContent = new ColorFragment(R.color.biru_danker);
+			break;
+		case 6:
+			newContent = new ColorFragment(R.color.blue);
+			break;
+		case 7:
+			newContent = new ColorFragment(android.R.color.white);
+			break;
+		case 8:
+			newContent = new ColorFragment(android.R.color.black);
+			break;
+		case 9:
+			Intent i = new Intent(getActivity(), AboutActivity.class);
+			startActivity(i);
 			break;
 		}
 		if (newContent != null)

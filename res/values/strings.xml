@@ -16,5 +16,7 @@
     <string name="pull_to_refresh_tap_label">Klick to Refresh..</string>
     <string name="title_activity_comment">CommentActivity</string>
     <string name="title_activity_content">ContentActivity</string>
+    <string name="title_activity_about">AboutActivity</string>
+    <string name="title_app">KiblatNet</string>
 
 </resources>

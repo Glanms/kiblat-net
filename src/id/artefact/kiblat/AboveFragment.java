@@ -8,8 +8,11 @@ import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 
 import id.artefact.kiblat.help.LazyAdapterAbove;
 import id.artefact.kiblat.help.LazyAdapterBehindMenu;
+import id.artefact.kiblat.help.ServiceHelper;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -19,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class AboveFragment extends ListFragment {
 
@@ -26,7 +30,7 @@ public class AboveFragment extends ListFragment {
 	public final static String KEY_TITLE = "title";
 	public final static String KEY_THUMB_URL = "thumb_url";
 	public final static String KEY_DATE = "date";
-	
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.list_above, null);
@@ -40,13 +44,14 @@ public class AboveFragment extends ListFragment {
 		// android.R.drawable.ic_menu_search));
 		// }
 		// setListAdapter(adapter);
-		((PullToRefreshListView) getListView()).setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Do work to refresh the list here.
-               // new GetDataTask().execute();
-            }
-        });
+		((PullToRefreshListView) getListView())
+				.setOnRefreshListener(new OnRefreshListener() {
+					@Override
+					public void onRefresh() {
+						// Do work to refresh the list here.
+						// new GetDataTask().execute();
+					}
+				});
 
 		ArrayList<HashMap<String, String>> abovelist = new ArrayList<HashMap<String, String>>();
 		for (int i = 0; i < 20; i++) {
@@ -54,7 +59,8 @@ public class AboveFragment extends ListFragment {
 			HashMap<String, String> map = new HashMap<String, String>();
 
 			// adding each child node to HashMap key => value
-			map.put(KEY_TITLE, "Ini Title Panjang Banget Sumpeh Sampe Tiga Line Yeeeewwww");
+			map.put(KEY_TITLE,
+					"Ini Title Panjang Banget Sumpeh Sampe Tiga Line Yeeeewwww");
 			map.put(KEY_DATE, "2013-10-10 23:00");
 			map.put(KEY_THUMB_URL, null);
 
@@ -63,6 +69,8 @@ public class AboveFragment extends ListFragment {
 		}
 		adapter = new LazyAdapterAbove(getActivity(), abovelist);
 		setListAdapter(adapter);
+		// execute
+		new UpdateTask().execute();
 	}
 
 	private class SampleItem {
@@ -74,8 +82,7 @@ public class AboveFragment extends ListFragment {
 			this.iconRes = iconRes;
 		}
 	}
-	
-	
+
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub
@@ -105,5 +112,31 @@ public class AboveFragment extends ListFragment {
 			return convertView;
 		}
 
+	}
+
+	private class UpdateTask extends AsyncTask<String, Void, Boolean> {
+		private ProgressDialog dialog = new ProgressDialog(getActivity());
+
+		protected void onPreExecute() {
+			dialog.setMessage("Loading....");
+			dialog.show();
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			// TODO Auto-generated method stub
+			dialog.dismiss();
+		}
+
+		@Override
+		protected Boolean doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			ServiceHelper srv = new ServiceHelper();
+			if (srv.getPost(getActivity()) != null) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 }

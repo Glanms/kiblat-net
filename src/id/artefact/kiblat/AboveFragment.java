@@ -50,6 +50,8 @@ public class AboveFragment extends ListFragment {
 					public void onRefresh() {
 						// Do work to refresh the list here.
 						// new GetDataTask().execute();
+						// execute
+						new UpdateTask().execute();
 					}
 				});
 
@@ -69,8 +71,7 @@ public class AboveFragment extends ListFragment {
 		}
 		adapter = new LazyAdapterAbove(getActivity(), abovelist);
 		setListAdapter(adapter);
-		// execute
-		new UpdateTask().execute();
+
 	}
 
 	private class SampleItem {

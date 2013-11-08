@@ -18,7 +18,8 @@ import org.json.JSONObject;
 import com.markupartist.android.widget.PullToRefreshListView;
 import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 
-
+import id.artefact.kiblat.db.DatabaseHandler;
+import id.artefact.kiblat.db.Post;
 import id.artefact.kiblat.help.LazyAdapterAbove;
 import id.artefact.kiblat.help.LazyAdapterBehindMenu;
 import id.artefact.kiblat.help.ServiceHelper;
@@ -36,6 +37,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -49,6 +51,9 @@ public class AboveFragment extends ListFragment {
 	public final static String KEY_THUMB_URL = "thumb_url";
 	public final static String KEY_DATE = "date";
 
+	DatabaseHandler db;
+	ServiceHelper srv;
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.list_above, null);
@@ -57,6 +62,9 @@ public class AboveFragment extends ListFragment {
 	@SuppressLint("NewApi")
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		db = new DatabaseHandler(getActivity());
+		srv = new ServiceHelper();
+
 		// SampleAdapter adapter = new SampleAdapter(getActivity());
 		// for (int i = 0; i < 20; i++) {
 		// adapter.add(new SampleItem("Sample List",
@@ -74,24 +82,7 @@ public class AboveFragment extends ListFragment {
 					}
 				});
 
-		ArrayList<HashMap<String, String>> abovelist = new ArrayList<HashMap<String, String>>();
-		for (int i = 0; i < 20; i++) {
-			// creating new HashMap
-			HashMap<String, String> map = new HashMap<String, String>();
-
-			// adding each child node to HashMap key => value
-			map.put(KEY_TITLE,
-					"Ini Title Panjang Banget Sumpeh Sampe Tiga Line Yeeeewwww");
-			map.put(KEY_DATE, "2013-10-10 23:00");
-			map.put(KEY_THUMB_URL, null);
-
-			// adding HashList to ArrayList
-			abovelist.add(map);
-		}
-		adapter = new LazyAdapterAbove(getActivity(), abovelist);
-		setListAdapter(adapter);
-		View header = getActivity().getLayoutInflater().inflate(R.layout.headerlist, null);
-		getListView().addHeaderView(header);
+		setList();
 	}
 
 	private class SampleItem {
@@ -147,6 +138,7 @@ public class AboveFragment extends ListFragment {
 		protected void onPostExecute(Boolean result) {
 			// TODO Auto-generated method stub
 			((PullToRefreshListView) getListView()).onRefreshComplete();
+			setList();
 			// dialog.dismiss();
 		}
 
@@ -154,9 +146,33 @@ public class AboveFragment extends ListFragment {
 		protected Boolean doInBackground(String... params) {
 			// TODO Auto-generated method stub
 			try {
-				ServiceHelper srv = new ServiceHelper();
 				String srvberitaterkini = srv.tes();
 				Log.i("xmlrpc", srvberitaterkini);
+
+				try {
+					Log.i("xmlrpc", "try mulai insert");
+					JSONArray jsonArray = new JSONArray("[" + srvberitaterkini
+							+ "]");
+					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
+					db.deletePostbyTipe("terkini");
+					Log.i("xmlrpc", "deleted");
+					for (int i = 0; i < innerJsonArray.length(); i++) {
+						JSONObject json = innerJsonArray.getJSONObject(i);
+						Post p = new Post();
+						p.setId_post(json.getString("ID"));
+						p.setDate_post(json.getString("post_date"));
+						p.setContent(json.getString("post_content"));
+						p.setTitle(json.getString("post_title"));
+						p.setGuid(json.getString("guid"));
+						p.setTax(json.getString("name"));
+						p.setTipe("terkini");
+
+						db.addPost(p);
+						Log.i("xmlrpc", "insert");
+					}
+				} catch (Exception e) {
+					Log.i("xmlrpc", "gagal jadi array");
+				}
 				return true;
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -164,5 +180,37 @@ public class AboveFragment extends ListFragment {
 			}
 		}
 	}
-	
+
+	public void setList() {
+		List<Post> posts = db.getPostsByTipe("terkini");
+		ArrayList<HashMap<String, String>> postitem = new ArrayList<HashMap<String, String>>();
+		// creating new HashMap
+
+		int y = 0;
+		for (Post p : posts) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			// adding each child node to HashMap key => value
+			if (y == 0) {
+				View header = getActivity().getLayoutInflater().inflate(
+						R.layout.headerlist, null);
+				getListView().addHeaderView(header);
+				TextView title= (TextView) header.findViewById(R.id.headJudul);
+				TextView tgl= (TextView) header.findViewById(R.id.headerDate);
+				title.setText(p.getTitle().toString());
+				tgl.setText(p.getDate_post().toString());
+			} else {
+				map.put(KEY_TITLE, p.getTitle().toString());
+				map.put(KEY_DATE, p.getDate_post().toString());
+				map.put(KEY_THUMB_URL, null);
+				// adding HashList to ArrayList
+				postitem.add(map);
+			}
+
+			y++;
+		}
+		adapter = new LazyAdapterAbove(getActivity(), postitem);
+		setListAdapter(adapter);
+
+	}
+
 }

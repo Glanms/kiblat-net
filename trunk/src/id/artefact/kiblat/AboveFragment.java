@@ -53,7 +53,7 @@ public class AboveFragment extends ListFragment {
 
 	DatabaseHandler db;
 	ServiceHelper srv;
-
+	View header;
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.list_above, null);
@@ -64,6 +64,8 @@ public class AboveFragment extends ListFragment {
 		super.onActivityCreated(savedInstanceState);
 		db = new DatabaseHandler(getActivity());
 		srv = new ServiceHelper();
+		header = getActivity().getLayoutInflater().inflate(
+				R.layout.headerlist, null);
 
 		// SampleAdapter adapter = new SampleAdapter(getActivity());
 		// for (int i = 0; i < 20; i++) {
@@ -182,22 +184,21 @@ public class AboveFragment extends ListFragment {
 	}
 
 	public void setList() {
+		
 		List<Post> posts = db.getPostsByTipe("terkini");
 		ArrayList<HashMap<String, String>> postitem = new ArrayList<HashMap<String, String>>();
 		// creating new HashMap
-
+		getListView().removeHeaderView(header);
 		int y = 0;
 		for (Post p : posts) {
 			HashMap<String, String> map = new HashMap<String, String>();
 			// adding each child node to HashMap key => value
 			if (y == 0) {
-				View header = getActivity().getLayoutInflater().inflate(
-						R.layout.headerlist, null);
-				getListView().addHeaderView(header);
 				TextView title= (TextView) header.findViewById(R.id.headJudul);
 				TextView tgl= (TextView) header.findViewById(R.id.headerDate);
 				title.setText(p.getTitle().toString());
 				tgl.setText(p.getDate_post().toString());
+				getListView().addHeaderView(header);
 			} else {
 				map.put(KEY_TITLE, p.getTitle().toString());
 				map.put(KEY_DATE, p.getDate_post().toString());

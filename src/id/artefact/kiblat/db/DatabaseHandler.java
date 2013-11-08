@@ -1,7 +1,11 @@
 package id.artefact.kiblat.db;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -71,6 +75,67 @@ public class DatabaseHandler  extends SQLiteOpenHelper{
 		onCreate(db);
 	}
 	
+	public void addPost(Post post) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(KEY_ID_POST, post.getId_post());
+		values.put(KEY_POST_DATE, post.getDate_post());
+		values.put(KEY_TITLE, post.getTitle());
+		values.put(KEY_CONTENT, post.getContent());
+		values.put(KEY_TAX, post.getTax());
+		values.put(KEY_GUID, post.getGuid());
+		values.put(KEY_TIPE_POST, post.getTipe());
+		Log.i("post", "diinsert");
+		// tessss
+		
+		db.insert(TABLE_POST, null, values);
+		db.close(); //
+		
+	}
+	
+	public void deletePostbyTipe(String tipe) {
+	    SQLiteDatabase db = this.getWritableDatabase();
+	    db.delete(TABLE_POST, KEY_TIPE_POST + " = ?",
+	            new String[] { tipe });
+	    db.close();
+	}
+	
+	public void deletePostbyTag(String tag) {
+	    SQLiteDatabase db = this.getWritableDatabase();
+	    db.delete(TABLE_POST, KEY_TAX + " = ?",
+	            new String[] { tag });
+	    db.close();
+	}
+	
+	 public List<Post> getPostsByTipe(String tipe) {
+	        List<Post> posts = new ArrayList<Post>();
+	        // Select All Query
+	        String selectQuery = "SELECT * FROM " + TABLE_POST + " WHERE "+KEY_TIPE_POST+"= '"+tipe+"'";
+	 
+	        SQLiteDatabase db = this.getWritableDatabase();
+	        Cursor cursor = db.rawQuery(selectQuery, null);
+	 
+	        // looping through all rows and adding to list
+	        if (cursor.moveToFirst()) {
+	            do {
+	                Post po = new Post();
+
+	                po.setId_post(cursor.getString(0));
+	                po.setTitle(cursor.getString(1));
+	                po.setContent(cursor.getString(2));
+	                po.setTax(cursor.getString(3));
+	                po.setDate_post(cursor.getString(4));
+	                po.setGuid(cursor.getString(5));
+	               
+	                po.setTipe("terkini");
+	                // Adding contact to list
+	                posts.add(po);
+	            } while (cursor.moveToNext());
+	        }
+	 
+	        // return contact list
+	        return posts;
+	    }
 	
 	
 }

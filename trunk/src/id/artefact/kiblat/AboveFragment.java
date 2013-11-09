@@ -15,6 +15,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.markupartist.android.widget.PullAndLoadListView;
+import com.markupartist.android.widget.PullAndLoadListView.OnLoadMoreListener;
 import com.markupartist.android.widget.PullToRefreshListView;
 import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 
@@ -74,7 +76,7 @@ public class AboveFragment extends ListFragment {
 		// android.R.drawable.ic_menu_search));
 		// }
 		// setListAdapter(adapter);
-		((PullToRefreshListView) getListView())
+		((PullAndLoadListView) getListView())
 				.setOnRefreshListener(new OnRefreshListener() {
 					@Override
 					public void onRefresh() {
@@ -84,6 +86,17 @@ public class AboveFragment extends ListFragment {
 						new UpdateTask().execute();
 					}
 				});
+	     ((PullAndLoadListView) getListView()).setOnLoadMoreListener(new OnLoadMoreListener() {
+			
+			@Override
+			public void onLoadMore() {
+				// TODO Auto-generated method stub
+				
+				new LoadTask().execute();
+				
+			}
+		});
+
 
 		setList();
 	}
@@ -140,7 +153,7 @@ public class AboveFragment extends ListFragment {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			// TODO Auto-generated method stub
-			((PullToRefreshListView) getListView()).onRefreshComplete();
+			((PullAndLoadListView) getListView()).onRefreshComplete();
 			setList();
 			// dialog.dismiss();
 		}
@@ -188,6 +201,70 @@ public class AboveFragment extends ListFragment {
 				// TODO: handle exception
 				return false;
 			}
+		}
+	}
+	
+	private class LoadTask extends AsyncTask<String, Void, Boolean> {
+		private ProgressDialog dialog = new ProgressDialog(getActivity());
+
+		protected void onPreExecute() {
+			// dialog.setMessage("Loading....");
+			// dialog.show();
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			// TODO Auto-generated method stub
+			((PullAndLoadListView) getListView()).onRefreshComplete();
+			setList();
+			// dialog.dismiss();
+		}
+
+		@Override
+		protected Boolean doInBackground(String... params) {
+			// TODO Auto-generated method stub
+//			try {
+//				String srvberitaterkini = srv.beritaterkini();
+//				Log.i("xmlrpc", srvberitaterkini);
+//
+//				try {
+//					Log.i("xmlrpc", "try mulai insert");
+//					JSONArray jsonArray = new JSONArray("[" + srvberitaterkini
+//							+ "]");
+//					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
+//					db.deletePostbyTipe("terkini");
+//					Log.i("xmlrpc", "deleted");
+//					for (int i = 0; i < innerJsonArray.length(); i++) {
+//						JSONObject json = innerJsonArray.getJSONObject(i);
+//						Post p = new Post();
+//						p.setId_post(json.getString("ID"));
+//						p.setDate_post(json.getString("post_date"));
+//						p.setContent(json.getString("post_content"));
+//						p.setTitle(json.getString("post_title"));
+//						p.setGuid(json.getString("guid"));
+//						p.setTax(json.getString("name"));
+//						p.setTipe("terkini");
+//						p.setCount("");
+//						String url_img=json.getString("img");
+//						Log.i("img",url_img);
+//						//donlod gambar disini
+//						//kalau berhasil disimpen path nya
+//						
+//						p.setImg("diisi path");
+//						
+//						db.addPost(p);
+//						Log.i("xmlrpc", "insert");
+//					}
+//				} catch (Exception e) {
+//					Log.i("xmlrpc", "gagal jadi array");
+//				}
+//				return true;
+//			} catch (Exception e) {
+//				// TODO: handle exception
+//				return false;
+//			}
+			Log.wtf("Loadmore", "You've got mine !");
+			return true;
 		}
 	}
 

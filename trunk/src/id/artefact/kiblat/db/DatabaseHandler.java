@@ -138,6 +138,9 @@ public class DatabaseHandler  extends SQLiteOpenHelper{
 	                posts.add(po);
 	            } while (cursor.moveToNext());
 	        }
+	        
+	        cursor.close();
+	        db.close();
 	 
 	        // return contact list
 	        return posts;

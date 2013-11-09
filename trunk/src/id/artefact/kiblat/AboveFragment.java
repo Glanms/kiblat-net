@@ -35,6 +35,7 @@ import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -148,7 +149,7 @@ public class AboveFragment extends ListFragment {
 		protected Boolean doInBackground(String... params) {
 			// TODO Auto-generated method stub
 			try {
-				String srvberitaterkini = srv.tes();
+				String srvberitaterkini = srv.beritaterkini();
 				Log.i("xmlrpc", srvberitaterkini);
 
 				try {
@@ -168,7 +169,14 @@ public class AboveFragment extends ListFragment {
 						p.setGuid(json.getString("guid"));
 						p.setTax(json.getString("name"));
 						p.setTipe("terkini");
-
+						p.setCount("");
+						String url_img=json.getString("img");
+						Log.i("img",url_img);
+						//donlod gambar disini
+						//kalau berhasil disimpen path nya
+						
+						p.setImg("diisi path");
+						
 						db.addPost(p);
 						Log.i("xmlrpc", "insert");
 					}
@@ -211,7 +219,17 @@ public class AboveFragment extends ListFragment {
 		}
 		adapter = new LazyAdapterAbove(getActivity(), postitem);
 		setListAdapter(adapter);
-
+		
+		header.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				//Toast.makeText(getActivity(), "asdasd", Toast.LENGTH_LONG).show();
+			}
+		});
+		
+		
+		
 	}
 
 }

@@ -9,7 +9,8 @@ public class Post {
 	String tax;
 	String guid;
 	String tipe;
-	
+	String img;
+	String count;
 	public String getId_post() {
 		return id_post;
 	}
@@ -52,7 +53,18 @@ public class Post {
 	public void setTipe(String tipe) {
 		this.tipe = tipe;
 	}
-	
+	public String getImg() {
+		return img;
+	}
+	public void setImg(String img) {
+		this.img = img;
+	}
+	public String getCount() {
+		return count;
+	}
+	public void setCount(String count) {
+		this.count = count;
+	}
 	
 	
 }

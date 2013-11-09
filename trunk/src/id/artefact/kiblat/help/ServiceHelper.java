@@ -49,11 +49,11 @@ public class ServiceHelper {
 		return text;
 	}
 
-	public String beritaterkini() {
+	public String beritaterkini(String date) {
 		String data = "";
 		try {
 			Log.i("xmlrpc", "masuk try");
-			data = (String) client.call("getPost");
+			data = (String) client.call("beritaterkini",date);
 			Log.i("xmlrpc", data);
 		} catch (XMLRPCException e) {
 			e.printStackTrace();

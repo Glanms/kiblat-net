@@ -1,12 +1,5 @@
 package id.artefact.kiblat;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +7,9 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xmlrpc.android.FileHelper;
+import org.xmlrpc.android.InternetHelper;
+import org.xmlrpc.android.MCrypt;
 
 import com.markupartist.android.widget.PullAndLoadListView;
 import com.markupartist.android.widget.PullAndLoadListView.OnLoadMoreListener;
@@ -33,6 +29,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract.CommonDataKinds.Im;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,6 +54,7 @@ public class AboveFragment extends ListFragment {
 	DatabaseHandler db;
 	ServiceHelper srv;
 	View header;
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.list_above, null);
@@ -67,8 +65,8 @@ public class AboveFragment extends ListFragment {
 		super.onActivityCreated(savedInstanceState);
 		db = new DatabaseHandler(getActivity());
 		srv = new ServiceHelper();
-		header = getActivity().getLayoutInflater().inflate(
-				R.layout.headerlist, null);
+		header = getActivity().getLayoutInflater().inflate(R.layout.headerlist,
+				null);
 
 		// SampleAdapter adapter = new SampleAdapter(getActivity());
 		// for (int i = 0; i < 20; i++) {
@@ -86,17 +84,17 @@ public class AboveFragment extends ListFragment {
 						new UpdateTask().execute();
 					}
 				});
-	     ((PullAndLoadListView) getListView()).setOnLoadMoreListener(new OnLoadMoreListener() {
-			
-			@Override
-			public void onLoadMore() {
-				// TODO Auto-generated method stub
-				
-				new LoadTask().execute();
-				
-			}
-		});
+		((PullAndLoadListView) getListView())
+				.setOnLoadMoreListener(new OnLoadMoreListener() {
 
+					@Override
+					public void onLoadMore() {
+						// TODO Auto-generated method stub
+
+						new LoadTask().execute();
+
+					}
+				});
 
 		setList();
 	}
@@ -161,6 +159,9 @@ public class AboveFragment extends ListFragment {
 		@Override
 		protected Boolean doInBackground(String... params) {
 			// TODO Auto-generated method stub
+			InternetHelper inet = new InternetHelper();
+			MCrypt mc = new MCrypt();
+			byte[] en;
 			try {
 				String srvberitaterkini = srv.beritaterkini();
 				Log.i("xmlrpc", srvberitaterkini);
@@ -183,13 +184,23 @@ public class AboveFragment extends ListFragment {
 						p.setTax(json.getString("name"));
 						p.setTipe("terkini");
 						p.setCount("");
-						String url_img=json.getString("img");
-						Log.i("img",url_img);
-						//donlod gambar disini
-						//kalau berhasil disimpen path nya
-						
+						String url_img = json.getString("img");
+						Log.i("img", url_img);
+						// donlod gambar disini
+						// kalau berhasil disimpen path nya
+						if (!url_img.equals("null")) {
+							try {
+								en = mc.encrypt(json.getString("ID") + ".jpg");
+								inet.downloadImage(url_img, mc.bytesToHex(en));
+								Log.i("download", "downloaded");
+							} catch (Exception e) {
+								// TODO: handle exception
+								e.printStackTrace();
+							}
+						}
+
 						p.setImg("diisi path");
-						
+
 						db.addPost(p);
 						Log.i("xmlrpc", "insert");
 					}
@@ -203,7 +214,7 @@ public class AboveFragment extends ListFragment {
 			}
 		}
 	}
-	
+
 	private class LoadTask extends AsyncTask<String, Void, Boolean> {
 		private ProgressDialog dialog = new ProgressDialog(getActivity());
 
@@ -223,53 +234,53 @@ public class AboveFragment extends ListFragment {
 		@Override
 		protected Boolean doInBackground(String... params) {
 			// TODO Auto-generated method stub
-//			try {
-//				String srvberitaterkini = srv.beritaterkini();
-//				Log.i("xmlrpc", srvberitaterkini);
-//
-//				try {
-//					Log.i("xmlrpc", "try mulai insert");
-//					JSONArray jsonArray = new JSONArray("[" + srvberitaterkini
-//							+ "]");
-//					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
-//					db.deletePostbyTipe("terkini");
-//					Log.i("xmlrpc", "deleted");
-//					for (int i = 0; i < innerJsonArray.length(); i++) {
-//						JSONObject json = innerJsonArray.getJSONObject(i);
-//						Post p = new Post();
-//						p.setId_post(json.getString("ID"));
-//						p.setDate_post(json.getString("post_date"));
-//						p.setContent(json.getString("post_content"));
-//						p.setTitle(json.getString("post_title"));
-//						p.setGuid(json.getString("guid"));
-//						p.setTax(json.getString("name"));
-//						p.setTipe("terkini");
-//						p.setCount("");
-//						String url_img=json.getString("img");
-//						Log.i("img",url_img);
-//						//donlod gambar disini
-//						//kalau berhasil disimpen path nya
-//						
-//						p.setImg("diisi path");
-//						
-//						db.addPost(p);
-//						Log.i("xmlrpc", "insert");
-//					}
-//				} catch (Exception e) {
-//					Log.i("xmlrpc", "gagal jadi array");
-//				}
-//				return true;
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//				return false;
-//			}
+			// try {
+			// String srvberitaterkini = srv.beritaterkini();
+			// Log.i("xmlrpc", srvberitaterkini);
+			//
+			// try {
+			// Log.i("xmlrpc", "try mulai insert");
+			// JSONArray jsonArray = new JSONArray("[" + srvberitaterkini
+			// + "]");
+			// JSONArray innerJsonArray = jsonArray.getJSONArray(0);
+			// db.deletePostbyTipe("terkini");
+			// Log.i("xmlrpc", "deleted");
+			// for (int i = 0; i < innerJsonArray.length(); i++) {
+			// JSONObject json = innerJsonArray.getJSONObject(i);
+			// Post p = new Post();
+			// p.setId_post(json.getString("ID"));
+			// p.setDate_post(json.getString("post_date"));
+			// p.setContent(json.getString("post_content"));
+			// p.setTitle(json.getString("post_title"));
+			// p.setGuid(json.getString("guid"));
+			// p.setTax(json.getString("name"));
+			// p.setTipe("terkini");
+			// p.setCount("");
+			// String url_img=json.getString("img");
+			// Log.i("img",url_img);
+			// //donlod gambar disini
+			// //kalau berhasil disimpen path nya
+			//
+			// p.setImg("diisi path");
+			//
+			// db.addPost(p);
+			// Log.i("xmlrpc", "insert");
+			// }
+			// } catch (Exception e) {
+			// Log.i("xmlrpc", "gagal jadi array");
+			// }
+			// return true;
+			// } catch (Exception e) {
+			// // TODO: handle exception
+			// return false;
+			// }
 			Log.wtf("Loadmore", "You've got mine !");
 			return true;
 		}
 	}
 
 	public void setList() {
-		
+
 		List<Post> posts = db.getPostsByTipe("terkini");
 		ArrayList<HashMap<String, String>> postitem = new ArrayList<HashMap<String, String>>();
 		// creating new HashMap
@@ -279,8 +290,8 @@ public class AboveFragment extends ListFragment {
 			HashMap<String, String> map = new HashMap<String, String>();
 			// adding each child node to HashMap key => value
 			if (y == 0) {
-				TextView title= (TextView) header.findViewById(R.id.headJudul);
-				TextView tgl= (TextView) header.findViewById(R.id.headerDate);
+				TextView title = (TextView) header.findViewById(R.id.headJudul);
+				TextView tgl = (TextView) header.findViewById(R.id.headerDate);
 				title.setText(p.getTitle().toString());
 				tgl.setText(p.getDate_post().toString());
 				getListView().addHeaderView(header);
@@ -296,17 +307,16 @@ public class AboveFragment extends ListFragment {
 		}
 		adapter = new LazyAdapterAbove(getActivity(), postitem);
 		setListAdapter(adapter);
-		
+
 		header.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				//Toast.makeText(getActivity(), "asdasd", Toast.LENGTH_LONG).show();
+				// Toast.makeText(getActivity(), "asdasd",
+				// Toast.LENGTH_LONG).show();
 			}
 		});
-		
-		
-		
+
 	}
 
 }

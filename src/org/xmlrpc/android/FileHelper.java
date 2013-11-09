@@ -7,7 +7,7 @@ public class FileHelper {
 	private String path;
 	
 	public FileHelper(){
-		path = "mnt/sdcard/mobilelearning/";
+		path = "mnt/sdcard/kiblatartefact/";
 	}
 	
 	public String getPath(){

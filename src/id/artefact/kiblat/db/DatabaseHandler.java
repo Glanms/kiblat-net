@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-	private static final int DATABASE_VERSION = 11;
+	private static final int DATABASE_VERSION = 14;
 	private static final String DATABASE_NAME = "kiblat";
 
 	private static final String TABLE_POST = "post";
@@ -107,12 +107,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		db.close();
 	}
 
-	public String getminberitaterkinidate() {
+	public String getminidterkini() {
 		String id = "0";
 		List<Post> posts = new ArrayList<Post>();
 		// Select All Query
-		String selectQuery = "SELECT MIN(" + KEY_ID_POST +") "
-				+ " FROM " + TABLE_POST;
+		String selectQuery = "SELECT MIN(" + KEY_ID_POST + ") " + " FROM "
+				+ TABLE_POST + " WHERE " + KEY_TIPE_POST + "= 'terkini'";
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -121,7 +121,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		if (cursor.moveToFirst()) {
 
 			String min_id = cursor.getString(0);
-		
+
 			id = min_id;
 		}
 
@@ -132,11 +132,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		return id;
 	}
 
-	public List<Post> getPostsByTipe(String tipe) {
+	public Boolean is_least_id(String tipe, String id) {
+		Boolean result = true;
+		String selectQuery = "SELECT " + KEY_ID_POST + " FROM " + TABLE_POST
+				+ " where " + KEY_ID_POST + " = " + id + " AND "
+				+ KEY_TIPE_POST + " = '" + tipe + "' ORDER BY " + KEY_ID_POST
+				+ " desc ";
+		try {
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery(selectQuery, null);
+
+			if (cursor.getCount() == 0) {
+				result = false;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		return result;
+	}
+
+	public List<Post> getPostsByTipe(String tipe, String least_id) {
 		List<Post> posts = new ArrayList<Post>();
 		// Select All Query
 		String selectQuery = "SELECT * FROM " + TABLE_POST + " WHERE "
-				+ KEY_TIPE_POST + "= '" + tipe + "'";
+				+ KEY_TIPE_POST + "= '" + tipe + "' AND " + KEY_ID_POST + "<"
+				+ least_id + " ORDER BY " + KEY_ID_POST + " DESC LIMIT 10";
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);

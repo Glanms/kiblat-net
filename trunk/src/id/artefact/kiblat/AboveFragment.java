@@ -55,6 +55,10 @@ public class AboveFragment extends ListFragment {
 	public final static String KEY_ID = "id";
 	private LinkedList<String> mListItems;
 
+	String last_id_list = "0";
+	
+	String last_list="0";
+
 	ArrayList<HashMap<String, String>> postitem;
 	DatabaseHandler db;
 	ServiceHelper srv;
@@ -117,12 +121,12 @@ public class AboveFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub
-		TextView id_post= (TextView) v.findViewById(R.id.id);
-		String id_p=id_post.getText().toString();
+		TextView id_post = (TextView) v.findViewById(R.id.id);
+		String id_p = id_post.getText().toString();
 		Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
-		
-		//Intent i = new Intent(v.getContext(), ContentActivity.class);
-		//startActivity(i);
+
+		// Intent i = new Intent(v.getContext(), ContentActivity.class);
+		// startActivity(i);
 	}
 
 	public class SampleAdapter extends ArrayAdapter<SampleItem> {
@@ -227,22 +231,87 @@ public class AboveFragment extends ListFragment {
 
 		@Override
 		protected Void doInBackground(Void... params) {
+			//last_id_list = db.getminidterkini();
+			//Log.i("xmlrpc", "min id " + last_id_list);
+			InternetHelper inet = new InternetHelper();
+			MCrypt mc = new MCrypt();
+			byte[] en;
 
-			return null;
+			if (Integer.parseInt(last_list)==Integer.parseInt(db.getminidterkini())) {
+				try {
+					String srvberitaterkini = srv.beritaterkini(last_list);
+					Log.i("xmlrpc", srvberitaterkini);
+
+					try {
+						Log.i("xmlrpc", "try mulai insert");
+						JSONArray jsonArray = new JSONArray("["
+								+ srvberitaterkini + "]");
+						JSONArray innerJsonArray = jsonArray.getJSONArray(0);
+						//db.deletePostbyTipe("terkini");
+						Log.i("xmlrpc", "deleted");
+						for (int i = 0; i < innerJsonArray.length(); i++) {
+							JSONObject json = innerJsonArray.getJSONObject(i);
+							Post p = new Post();
+							p.setId_post(json.getString("ID"));
+							p.setDate_post(json.getString("post_date"));
+							p.setContent(json.getString("content"));
+							p.setTitle(json.getString("title"));
+							p.setGuid(json.getString("guid"));
+							p.setTax("");
+							p.setTipe("terkini");
+							p.setCount("");
+							String url_img = json.getString("img");
+							Log.i("img", url_img);
+							// donlod gambar disini
+							// kalau berhasil disimpen path nya
+							if (!url_img.equals("null")) {
+								try {
+									en = mc.encrypt(json.getString("ID")
+											+ ".jpg");
+									inet.downloadImage(url_img,
+											mc.bytesToHex(en));
+									Log.i("download", json.getString("ID")
+											+ ".jpg");
+								} catch (Exception e) {
+									// TODO: handle exception
+									e.printStackTrace();
+								}
+							}
+
+							p.setImg("diisi path");
+
+							db.addPost(p);
+							Log.i("xmlrpc", "insert");
+						}
+					} catch (Exception e) {
+						Log.i("xmlrpc", "gagal jadi array");
+					}
+					return null;
+				} catch (Exception e) {
+					// TODO: handle exception
+					return null;
+				}
+			} else
+				return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
-			// mListItems.add("Added after load more");
-			// String last_date=db.getminberitaterkinidate();
-			// Log.i("xmlrpc", "last date "+last_date);
-			// We need notify the adapter that the data have been changed
-			HashMap<String, String> map = new HashMap<String, String>();
-			map.put(KEY_TITLE, "title added");
-			map.put(KEY_DATE, "20-20-2013");
-			map.put(KEY_THUMB_URL, null);
-			map.put(KEY_ID, "gak ada id");
-			postitem.add(map);
+
+			List<Post> posts = db.getPostsByTipe("terkini", last_list);
+
+			for (Post p : posts) {
+				HashMap<String, String> map = new HashMap<String, String>();
+				// adding each child node to HashMap key => value
+				map.put(KEY_ID, p.getId_post().toString());
+				last_list=p.getId_post().toString();
+				map.put(KEY_TITLE, p.getTitle().toString());
+				map.put(KEY_DATE, p.getDate_post().toString());
+				map.put(KEY_THUMB_URL, null);
+				// adding HashList to ArrayList
+				postitem.add(map);
+			}
+
 			((LazyAdapterAbove) getListAdapter()).notifyDataSetChanged();
 
 			// Call onLoadMoreComplete when the LoadMore task, has finished
@@ -260,7 +329,7 @@ public class AboveFragment extends ListFragment {
 
 	public void setList() {
 
-		List<Post> posts = db.getPostsByTipe("terkini");
+		List<Post> posts = db.getPostsByTipe("terkini", "10000000000000");
 		postitem = new ArrayList<HashMap<String, String>>();
 		// creating new HashMap
 		getListView().removeHeaderView(header);
@@ -276,6 +345,7 @@ public class AboveFragment extends ListFragment {
 				getListView().addHeaderView(header);
 			} else {
 				map.put(KEY_ID, p.getId_post().toString());
+				last_list=p.getId_post().toString();
 				map.put(KEY_TITLE, p.getTitle().toString());
 				map.put(KEY_DATE, p.getDate_post().toString());
 				map.put(KEY_THUMB_URL, null);

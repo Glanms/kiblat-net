@@ -52,7 +52,7 @@ public class LazyAdapterAbove extends BaseAdapter {
 			vi = inflater.inflate(R.layout.row_above, null);
 		TextView date = (TextView) vi.findViewById(R.id.rowabove_date);
 		TextView title = (TextView) vi.findViewById(R.id.rowabove_title); // title
-
+		TextView id = (TextView) vi.findViewById(R.id.id);
 		ImageView thumb_image = (ImageView) vi.findViewById(R.id.rowabove_icon); // thumb
 																					// image
 
@@ -62,6 +62,7 @@ public class LazyAdapterAbove extends BaseAdapter {
 		// Setting all values in listview
 		title.setText(behindmenu.get(AboveFragment.KEY_TITLE));
 		date.setText(behindmenu.get(AboveFragment.KEY_DATE));
+		id.setText(behindmenu.get(AboveFragment.KEY_ID));
 
 		imageLoader.DisplayImage(behindmenu.get(AboveFragment.KEY_THUMB_URL),
 				thumb_image);

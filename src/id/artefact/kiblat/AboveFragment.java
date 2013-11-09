@@ -52,6 +52,7 @@ public class AboveFragment extends ListFragment {
 	public final static String KEY_TITLE = "title";
 	public final static String KEY_THUMB_URL = "thumb_url";
 	public final static String KEY_DATE = "date";
+	public final static String KEY_ID = "id";
 	private LinkedList<String> mListItems;
 
 	ArrayList<HashMap<String, String>> postitem;
@@ -116,9 +117,12 @@ public class AboveFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub
-
-		Intent i = new Intent(v.getContext(), ContentActivity.class);
-		startActivity(i);
+		TextView id_post= (TextView) v.findViewById(R.id.id);
+		String id_p=id_post.getText().toString();
+		Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
+		
+		//Intent i = new Intent(v.getContext(), ContentActivity.class);
+		//startActivity(i);
 	}
 
 	public class SampleAdapter extends ArrayAdapter<SampleItem> {
@@ -167,7 +171,7 @@ public class AboveFragment extends ListFragment {
 			MCrypt mc = new MCrypt();
 			byte[] en;
 			try {
-				String srvberitaterkini = srv.beritaterkini();
+				String srvberitaterkini = srv.beritaterkini("now()");
 				Log.i("xmlrpc", srvberitaterkini);
 
 				try {
@@ -182,10 +186,10 @@ public class AboveFragment extends ListFragment {
 						Post p = new Post();
 						p.setId_post(json.getString("ID"));
 						p.setDate_post(json.getString("post_date"));
-						p.setContent(json.getString("post_content"));
-						p.setTitle(json.getString("post_title"));
+						p.setContent(json.getString("content"));
+						p.setTitle(json.getString("title"));
 						p.setGuid(json.getString("guid"));
-						p.setTax(json.getString("name"));
+						p.setTax("");
 						p.setTipe("terkini");
 						p.setCount("");
 						String url_img = json.getString("img");
@@ -230,17 +234,19 @@ public class AboveFragment extends ListFragment {
 		@Override
 		protected void onPostExecute(Void result) {
 			// mListItems.add("Added after load more");
-
+			// String last_date=db.getminberitaterkinidate();
+			// Log.i("xmlrpc", "last date "+last_date);
 			// We need notify the adapter that the data have been changed
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put(KEY_TITLE, "title added");
 			map.put(KEY_DATE, "20-20-2013");
 			map.put(KEY_THUMB_URL, null);
+			map.put(KEY_ID, "gak ada id");
 			postitem.add(map);
 			((LazyAdapterAbove) getListAdapter()).notifyDataSetChanged();
 
 			// Call onLoadMoreComplete when the LoadMore task, has finished
-			 ((PullAndLoadListView) getListView()).onLoadMoreComplete();
+			((PullAndLoadListView) getListView()).onLoadMoreComplete();
 
 			// super.onPostExecute(result);
 		}
@@ -269,6 +275,7 @@ public class AboveFragment extends ListFragment {
 				tgl.setText(p.getDate_post().toString());
 				getListView().addHeaderView(header);
 			} else {
+				map.put(KEY_ID, p.getId_post().toString());
 				map.put(KEY_TITLE, p.getTitle().toString());
 				map.put(KEY_DATE, p.getDate_post().toString());
 				map.put(KEY_THUMB_URL, null);

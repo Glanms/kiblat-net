@@ -7,6 +7,8 @@ import id.artefact.kiblat.help.LazyAdapterComment;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 
 
 
@@ -55,16 +57,23 @@ public class CommentActivity extends SherlockActivity {
 			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplicationContext(), MainActivity.class);
+				Intent i = new Intent(getApplicationContext(), ContentActivity.class);
 				startActivity(i);
 			}
 		});
 	}
 	
 
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.kosong, menu);
-		return true;
+		SubMenu subMenu1 = menu.addSubMenu("");
+		
+		MenuItem SubMenu1Item = subMenu1.getItem();
+		SubMenu1Item.setIcon(R.drawable.img_kosong);
+		SubMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+		
+		return super.onCreateOptionsMenu(menu);
 	}
 
 

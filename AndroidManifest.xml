@@ -8,13 +8,12 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
 
-    
-     <uses-permission android:name="android.permission.INTERNET" />
-    
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:icon="@drawable/icon_kiblat"
+        android:label="@string/title_app"
         android:theme="@style/AppTheme" >
         <activity
             android:name="id.artefact.kiblat.MainActivity"
@@ -38,9 +37,13 @@
             android:name="id.artefact.kiblat.ContentActivity"
             android:label="@string/title_activity_content" >
         </activity>
-          <activity
+        <activity
             android:name="id.artefact.kiblat.AboutActivity"
             android:label="@string/title_activity_content" >
+        </activity>
+        <activity
+            android:name="id.artefact.kiblat.ShareActivity"
+            android:label="@string/title_activity_share" >
         </activity>
     </application>
 

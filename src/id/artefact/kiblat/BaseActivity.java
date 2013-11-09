@@ -89,7 +89,13 @@ public class BaseActivity extends SlidingFragmentActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.kosong, menu);
+		SubMenu subMenu1 = menu.addSubMenu("");
+		
+		MenuItem SubMenu1Item = subMenu1.getItem();
+		SubMenu1Item.setIcon(R.drawable.img_kosong);
+		SubMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+		
 		return super.onCreateOptionsMenu(menu);
 	}
 	

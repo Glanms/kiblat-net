@@ -19,5 +19,12 @@
         android:layout_height="match_parent"
         android:padding="5dip"
         android:src="@drawable/logo" />
+    
+    <ImageView
+        android:id="@+id/im_kosong"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dip"
+        android:src="@drawable/img_kosong" />
 
 </LinearLayout>

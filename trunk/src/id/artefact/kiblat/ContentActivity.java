@@ -1,5 +1,6 @@
 package id.artefact.kiblat;
 
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -10,6 +11,8 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -51,12 +54,14 @@ public class ContentActivity extends SherlockActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		SubMenu subMenu1 = menu.addSubMenu(0, Menu.FIRST, Menu.NONE, "");
+		SubMenu subMenu1 = menu.addSubMenu("");
 		subMenu1.add(0, 1, Menu.NONE, "Comment");
+		subMenu1.add(0, 2, Menu.NONE, "Share");
 		
 		MenuItem SubMenu1Item = subMenu1.getItem();
 		SubMenu1Item.setIcon(R.drawable.ic_action_overflow);
 		SubMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
 		
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -68,7 +73,12 @@ public class ContentActivity extends SherlockActivity {
 			Intent icomment = new Intent(this, CommentActivity.class);
 			startActivity(icomment);
 			return true;
-		
+		case 2:
+			Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+			sharingIntent.setType("text/html");
+			sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, Html.fromHtml("<p>Thank You..</p>"));
+			startActivity(Intent.createChooser(sharingIntent,"Share using"));
+			return true;
 		default:
 		return super.onOptionsItemSelected(item);
 		}

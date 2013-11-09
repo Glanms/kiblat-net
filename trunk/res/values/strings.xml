@@ -18,5 +18,6 @@
     <string name="title_activity_content">ContentActivity</string>
     <string name="title_activity_about">AboutActivity</string>
     <string name="title_app">KiblatNet</string>
+    <string name="title_activity_share">Share This</string>
 
 </resources>

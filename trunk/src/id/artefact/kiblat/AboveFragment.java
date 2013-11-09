@@ -2,8 +2,9 @@ package id.artefact.kiblat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-
+import android.widget.BaseAdapter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +12,7 @@ import org.xmlrpc.android.FileHelper;
 import org.xmlrpc.android.InternetHelper;
 import org.xmlrpc.android.MCrypt;
 
+import com.markupartist.android.widget.LoadMoreListView;
 import com.markupartist.android.widget.PullAndLoadListView;
 import com.markupartist.android.widget.PullAndLoadListView.OnLoadMoreListener;
 import com.markupartist.android.widget.PullToRefreshListView;
@@ -50,7 +52,9 @@ public class AboveFragment extends ListFragment {
 	public final static String KEY_TITLE = "title";
 	public final static String KEY_THUMB_URL = "thumb_url";
 	public final static String KEY_DATE = "date";
+	private LinkedList<String> mListItems;
 
+	ArrayList<HashMap<String, String>> postitem;
 	DatabaseHandler db;
 	ServiceHelper srv;
 	View header;
@@ -91,7 +95,7 @@ public class AboveFragment extends ListFragment {
 					public void onLoadMore() {
 						// TODO Auto-generated method stub
 
-						new LoadTask().execute();
+						new LoadDataTask().execute();
 
 					}
 				});
@@ -192,7 +196,7 @@ public class AboveFragment extends ListFragment {
 							try {
 								en = mc.encrypt(json.getString("ID") + ".jpg");
 								inet.downloadImage(url_img, mc.bytesToHex(en));
-								Log.i("download", "downloaded");
+								Log.i("download", json.getString("ID") + ".jpg");
 							} catch (Exception e) {
 								// TODO: handle exception
 								e.printStackTrace();
@@ -215,74 +219,43 @@ public class AboveFragment extends ListFragment {
 		}
 	}
 
-	private class LoadTask extends AsyncTask<String, Void, Boolean> {
-		private ProgressDialog dialog = new ProgressDialog(getActivity());
+	private class LoadDataTask extends AsyncTask<Void, Void, Void> {
 
-		protected void onPreExecute() {
-			// dialog.setMessage("Loading....");
-			// dialog.show();
+		@Override
+		protected Void doInBackground(Void... params) {
+
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
-			// TODO Auto-generated method stub
-			((PullAndLoadListView) getListView()).onRefreshComplete();
-			setList();
-			// dialog.dismiss();
+		protected void onPostExecute(Void result) {
+			// mListItems.add("Added after load more");
+
+			// We need notify the adapter that the data have been changed
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put(KEY_TITLE, "title added");
+			map.put(KEY_DATE, "20-20-2013");
+			map.put(KEY_THUMB_URL, null);
+			postitem.add(map);
+			((LazyAdapterAbove) getListAdapter()).notifyDataSetChanged();
+
+			// Call onLoadMoreComplete when the LoadMore task, has finished
+			 ((PullAndLoadListView) getListView()).onLoadMoreComplete();
+
+			// super.onPostExecute(result);
 		}
 
 		@Override
-		protected Boolean doInBackground(String... params) {
-			// TODO Auto-generated method stub
-			// try {
-			// String srvberitaterkini = srv.beritaterkini();
-			// Log.i("xmlrpc", srvberitaterkini);
-			//
-			// try {
-			// Log.i("xmlrpc", "try mulai insert");
-			// JSONArray jsonArray = new JSONArray("[" + srvberitaterkini
-			// + "]");
-			// JSONArray innerJsonArray = jsonArray.getJSONArray(0);
-			// db.deletePostbyTipe("terkini");
-			// Log.i("xmlrpc", "deleted");
-			// for (int i = 0; i < innerJsonArray.length(); i++) {
-			// JSONObject json = innerJsonArray.getJSONObject(i);
-			// Post p = new Post();
-			// p.setId_post(json.getString("ID"));
-			// p.setDate_post(json.getString("post_date"));
-			// p.setContent(json.getString("post_content"));
-			// p.setTitle(json.getString("post_title"));
-			// p.setGuid(json.getString("guid"));
-			// p.setTax(json.getString("name"));
-			// p.setTipe("terkini");
-			// p.setCount("");
-			// String url_img=json.getString("img");
-			// Log.i("img",url_img);
-			// //donlod gambar disini
-			// //kalau berhasil disimpen path nya
-			//
-			// p.setImg("diisi path");
-			//
-			// db.addPost(p);
-			// Log.i("xmlrpc", "insert");
-			// }
-			// } catch (Exception e) {
-			// Log.i("xmlrpc", "gagal jadi array");
-			// }
-			// return true;
-			// } catch (Exception e) {
-			// // TODO: handle exception
-			// return false;
-			// }
-			Log.wtf("Loadmore", "You've got mine !");
-			return true;
+		protected void onCancelled() {
+			// Notify the loading more operation has finished
+			((LoadMoreListView) getListView()).onLoadMoreComplete();
 		}
 	}
 
 	public void setList() {
 
 		List<Post> posts = db.getPostsByTipe("terkini");
-		ArrayList<HashMap<String, String>> postitem = new ArrayList<HashMap<String, String>>();
+		postitem = new ArrayList<HashMap<String, String>>();
 		// creating new HashMap
 		getListView().removeHeaderView(header);
 		int y = 0;

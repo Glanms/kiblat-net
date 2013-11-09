@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class DatabaseHandler  extends SQLiteOpenHelper{
-	private static final int DATABASE_VERSION = 7;
+	private static final int DATABASE_VERSION = 9;
 	private static final String DATABASE_NAME = "kiblat";
 	
 	private static final String TABLE_POST = "post";
@@ -22,6 +22,8 @@ public class DatabaseHandler  extends SQLiteOpenHelper{
 	private static final String KEY_POST_DATE = "post_date";
 	private static final String KEY_GUID = "guid";
 	private static final String KEY_TIPE_POST = "tipe"; //kategori atau tag atau kosong
+	private static final String KEY_IMG = "img";
+	private static final String KEY_COUNT_POST = "count";
 	
 	private static final String TABLE_POPTAG = "poptag";
 	private static final String KEY_TAG = "tag";
@@ -53,7 +55,9 @@ public class DatabaseHandler  extends SQLiteOpenHelper{
 				KEY_TAX + " TEXT, " + 
 				KEY_POST_DATE + " TEXT, " + 
 				KEY_GUID + " TEXT, " + 
-				KEY_TIPE_POST + " TEXT " + 
+				KEY_TIPE_POST + " TEXT, " + 
+				KEY_IMG + " TEXT, " + 
+				KEY_COUNT_POST + " TEXT " + 
 		")";
 		
 		String query_table_taxonomy = "CREATE TABLE " + TABLE_POPTAG + "(" +  
@@ -85,6 +89,8 @@ public class DatabaseHandler  extends SQLiteOpenHelper{
 		values.put(KEY_TAX, post.getTax());
 		values.put(KEY_GUID, post.getGuid());
 		values.put(KEY_TIPE_POST, post.getTipe());
+		values.put(KEY_IMG, post.getImg());
+		values.put(KEY_COUNT_POST, post.getCount());
 		Log.i("post", "diinsert");
 		// tessss
 		

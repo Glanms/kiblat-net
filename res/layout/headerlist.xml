@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="15dp"
+            android:background="#CCFFFFFF"
             android:text="INI JUDUL PANJANG BANGET YEYEYEYEYYEYEYE"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold" />
@@ -29,6 +30,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignRight="@+id/headJudul"
             android:layout_marginTop="14dp"
+            android:background="#CCFFFFFF"
             android:text="20 Oktober 2013"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 

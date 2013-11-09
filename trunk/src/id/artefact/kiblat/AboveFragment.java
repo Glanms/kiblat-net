@@ -171,7 +171,7 @@ public class AboveFragment extends ListFragment {
 			MCrypt mc = new MCrypt();
 			byte[] en;
 			try {
-				String srvberitaterkini = srv.beritaterkini("now()");
+				String srvberitaterkini = srv.beritaterkini("100000000000000");
 				Log.i("xmlrpc", srvberitaterkini);
 
 				try {

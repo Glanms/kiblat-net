@@ -124,9 +124,9 @@ public class AboveFragment extends ListFragment {
 		TextView id_post = (TextView) v.findViewById(R.id.id);
 		String id_p = id_post.getText().toString();
 		Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
-
-		// Intent i = new Intent(v.getContext(), ContentActivity.class);
-		// startActivity(i);
+		Intent i = new Intent(v.getContext(), ContentActivity.class);
+		i.putExtra("id", id_p);
+		startActivity(i);
 	}
 
 	public class SampleAdapter extends ArrayAdapter<SampleItem> {
@@ -183,6 +183,8 @@ public class AboveFragment extends ListFragment {
 					JSONArray jsonArray = new JSONArray("[" + srvberitaterkini
 							+ "]");
 					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
+					
+					FileHelper fh = new FileHelper();
 					db.deletePostbyTipe("terkini");
 					Log.i("xmlrpc", "deleted");
 					for (int i = 0; i < innerJsonArray.length(); i++) {

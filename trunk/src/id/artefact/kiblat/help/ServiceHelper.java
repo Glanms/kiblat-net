@@ -18,7 +18,7 @@ import android.util.Log;
 public class ServiceHelper {
 
 	private URI uri = URI
-			.create("http://192.168.1.3/kiblat-webservice/index.php/server");
+			.create("http://192.168.140.1/kiblat-net/index.php/server");
 	private XMLRPCClient client = new XMLRPCClient(uri);
 
 	public boolean daftar(Context contex, String nama, String email,

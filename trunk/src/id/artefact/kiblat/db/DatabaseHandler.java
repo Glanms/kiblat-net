@@ -187,4 +187,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		return posts;
 	}
 
+	public Post getPostById(String id) {
+		Post p = new Post();
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cur = db.rawQuery("SELECT " + KEY_TITLE + "," + KEY_POST_DATE
+				+ "," + KEY_GUID + "," + KEY_CONTENT + " FROM " + TABLE_POST
+				+ " WHERE " + KEY_ID_POST + "=" + id, null);
+		if (cur != null)
+			cur.moveToFirst();
+		p.setTitle(cur.getString(cur.getColumnIndex(KEY_TITLE)));
+		p.setDate_post(cur.getString(cur.getColumnIndex(KEY_POST_DATE)));
+		p.setGuid(cur.getString(cur.getColumnIndex(KEY_GUID)));
+		p.setContent(cur.getString(cur.getColumnIndex(KEY_CONTENT)));
+
+		cur.close();
+		db.close();
+		return p;
+	}
+
 }

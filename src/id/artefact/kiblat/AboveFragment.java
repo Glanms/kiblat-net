@@ -21,6 +21,7 @@ import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 
 import id.artefact.kiblat.db.DatabaseHandler;
 import id.artefact.kiblat.db.Post;
+import id.artefact.kiblat.help.BitmapDecoder;
 import id.artefact.kiblat.help.LazyAdapterAbove;
 import id.artefact.kiblat.help.LazyAdapterBehindMenu;
 import id.artefact.kiblat.help.ServiceHelper;
@@ -349,12 +350,13 @@ public class AboveFragment extends ListFragment {
 				TextView title = (TextView) header.findViewById(R.id.headJudul);
 				TextView tgl = (TextView) header.findViewById(R.id.headerDate);
 				RelativeLayout ndas = (RelativeLayout) header.findViewById(R.id.headImg);
+				BitmapDecoder b = new BitmapDecoder();
 				MCrypt mc = new MCrypt();
 				File f;
 				try {
 					f = new File("/mnt/sdcard/kiblatartefact/"
 							+ mc.bytesToHex(mc.encrypt(p.getId_post() + ".jpg")) );
-					ndas.setBackgroundDrawable(Drawable.createFromPath(f.getAbsolutePath()));
+					ndas.setBackground(Drawable.createFromPath(f.getAbsolutePath()));
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

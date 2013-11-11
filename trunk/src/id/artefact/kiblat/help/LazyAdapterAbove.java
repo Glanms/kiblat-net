@@ -3,16 +3,26 @@ package id.artefact.kiblat.help;
 import id.artefact.kiblat.AboveFragment;
 import id.artefact.kiblat.R;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.xmlrpc.android.MCrypt;
+
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 public class LazyAdapterAbove extends BaseAdapter {
@@ -59,9 +69,27 @@ public class LazyAdapterAbove extends BaseAdapter {
 		title.setText(behindmenu.get(AboveFragment.KEY_TITLE));
 		date.setText(behindmenu.get(AboveFragment.KEY_DATE));
 		id.setText(behindmenu.get(AboveFragment.KEY_ID));
+		BitmapDecoder b = new BitmapDecoder();
+		if (behindmenu.get(AboveFragment.KEY_THUMB_URL) != null) {
+			MCrypt mc = new MCrypt();
+			try {
+				File f = new File("/mnt/sdcard/kiblatartefact/"
+						+ mc.bytesToHex(mc.encrypt(behindmenu
+								.get(AboveFragment.KEY_THUMB_URL))));
+				if (f.exists()){
+					thumb_image.setImageBitmap(b.decodeFiles(f, 70));
+					thumb_image.setScaleType(ScaleType.FIT_XY);
+				}else {
+					imageLoader.DisplayImage(
+							behindmenu.get(AboveFragment.KEY_THUMB_URL),
+							thumb_image);
+				}
 
-		imageLoader.DisplayImage(behindmenu.get(AboveFragment.KEY_THUMB_URL),
-				thumb_image);
+				System.gc();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
 		return vi;
 	}
 }

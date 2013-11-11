@@ -6,6 +6,7 @@ import org.xmlrpc.android.MCrypt;
 
 import id.artefact.kiblat.db.DatabaseHandler;
 import id.artefact.kiblat.db.Post;
+import id.artefact.kiblat.help.BitmapDecoder;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -25,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 public class ContentActivity extends SherlockActivity {
@@ -74,12 +76,13 @@ public class ContentActivity extends SherlockActivity {
 		title.setText(p.getTitle());
 		tanggal.setText(p.getDate_post());
 		konten.setText(p.getContent());
+		BitmapDecoder b = new BitmapDecoder();
 		try {
 			File f = new File("/mnt/sdcard/kiblatartefact/"
-					+ mc.bytesToHex(mc.encrypt(id_post)) + ".jpg");
+					+ mc.bytesToHex(mc.encrypt(id_post + ".jpg")) );
 			if (f.exists())
-				gambar.setImageBitmap(BitmapFactory.decodeFile(f
-						.getAbsolutePath()));
+				gambar.setImageBitmap(b.decodeFiles(f, 100));
+				gambar.setScaleType(ScaleType.FIT_XY);
 			Log.d("drawable", String.valueOf(Drawable.createFromPath(f
 					.getAbsolutePath())));
 		} catch (Exception e) {

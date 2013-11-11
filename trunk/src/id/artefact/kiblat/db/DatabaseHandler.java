@@ -173,8 +173,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				po.setTax(cursor.getString(3));
 				po.setDate_post(cursor.getString(4));
 				po.setGuid(cursor.getString(5));
-
 				po.setTipe("terkini");
+				po.setImg(cursor.getString(7));
 				// Adding contact to list
 				posts.add(po);
 			} while (cursor.moveToNext());

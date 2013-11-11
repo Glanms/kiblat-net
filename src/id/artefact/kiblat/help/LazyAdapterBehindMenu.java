@@ -1,7 +1,5 @@
 package id.artefact.kiblat.help;
 
-import id.artefact.kiblat.BaseActivity;
-
 import id.artefact.kiblat.BehindFragment;
 
 import id.artefact.kiblat.R;

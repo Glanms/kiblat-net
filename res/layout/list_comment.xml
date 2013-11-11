@@ -22,143 +22,18 @@
             android:text="Ini Judul Arikel Panjang"
             android:textColor="#FFFFFF" />
     </LinearLayout>
-    
-<!--     <ListView -->
-<!--         android:id="@android:id/list" -->
-<!--         tools:listitem="@layout/row_comment" -->
-<!--         android:layout_width="match_parent" -->
-<!--         android:layout_height="wrap_content" > -->
-<!--     </ListView> -->
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textNama"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Komentar :"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:layout_marginTop="5dp"
-	    android:layout_marginBottom="5dp">
-	    <ImageView
-	        android:id="@+id/imageView1"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:src="@drawable/ic_launcher" />
-	    
-	    <LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical">
-	    <TextView
-        android:id="@+id/textnama"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14dp"
-        android:text="Karsiman"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-	    
-	    <TextView
-            android:id="@+id/textdate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:text="2013-11-01 00:00:20"
-            android:textSize="10dp" />
-	    
-	    <TextView
-        android:id="@+id/textkomentar1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12dp"
-        android:text="ini komentar pertama"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-	    </LinearLayout>
-	</LinearLayout>
-	
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:layout_marginTop="5dp"
-	    android:layout_marginBottom="5dp">
-	    <ImageView
-	        android:id="@+id/imageView2"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:src="@drawable/ic_launcher" />
-	    
-	    <LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical">
-	    <TextView
-        android:id="@+id/textnama2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14dp"
-        android:text="Darman"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-	    
-	    <TextView
-            android:id="@+id/textdate2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:text="2013-11-01 00:10:20"
-            android:textSize="10dp" />
-	    
-	    <TextView
-        android:id="@+id/textkomentar2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12dp"
-        android:text="ini komentar kedua"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-	    </LinearLayout>
-	</LinearLayout>
-	
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:layout_marginTop="5dp"
-	    android:layout_marginBottom="5dp">
-	    <ImageView
-	        android:id="@+id/imageView1"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:src="@drawable/ic_launcher" />
-	    
-	    <LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical">
-	    <TextView
-        android:id="@+id/textnama3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14dp"
-        android:text="Budiman"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-	    
-	    <TextView
-            android:id="@+id/textdate3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:text="2013-11-01 00:20:20"
-            android:textSize="10dp" />
-	    
-	    <TextView
-        android:id="@+id/textkomentar3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12dp"
-        android:text="ini komentar ketiga"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-	    </LinearLayout>
-	</LinearLayout>
+    
+    <ListView
+        android:id="@+id/listComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+    
 </LinearLayout>

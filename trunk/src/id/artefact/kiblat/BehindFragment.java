@@ -6,8 +6,6 @@ import id.artefact.kiblat.help.LazyAdapterBehindMenu;
 import id.artefact.kiblat.help.SectionItem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
 
 import id.artefact.kiblat.help.Item;
 
@@ -18,7 +16,6 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class BehindFragment extends ListFragment {

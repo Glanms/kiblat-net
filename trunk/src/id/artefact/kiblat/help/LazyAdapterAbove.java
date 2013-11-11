@@ -1,10 +1,6 @@
 package id.artefact.kiblat.help;
 
 import id.artefact.kiblat.AboveFragment;
-import id.artefact.kiblat.BaseActivity;
-
-import id.artefact.kiblat.BehindFragment;
-
 import id.artefact.kiblat.R;
 
 import java.util.ArrayList;

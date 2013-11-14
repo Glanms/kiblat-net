@@ -30,7 +30,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 public class ContentActivity extends SherlockActivity {
-
+	String id_post;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,6 +62,7 @@ public class ContentActivity extends SherlockActivity {
 				Intent i = new Intent(getApplicationContext(),
 						MainActivity.class);
 				startActivity(i);
+				finish();
 			}
 		});
 		TextView title = (TextView) findViewById(R.id.postTitle);
@@ -70,7 +71,7 @@ public class ContentActivity extends SherlockActivity {
 		TextView konten = (TextView) findViewById(R.id.postContent);
 		MCrypt mc = new MCrypt();
 		Bundle extras = getIntent().getExtras();
-		String id_post = extras.getString("id");
+		id_post = extras.getString("id");
 		DatabaseHandler db = new DatabaseHandler(this);
 		Post p = db.getPostById(id_post);
 		title.setText(p.getTitle());
@@ -110,6 +111,7 @@ public class ContentActivity extends SherlockActivity {
 		switch (item.getItemId()) {
 		case 1:
 			Intent icomment = new Intent(this, CommentActivity.class);
+			icomment.putExtra("id", id_post);
 			startActivity(icomment);
 			return true;
 		case 2:

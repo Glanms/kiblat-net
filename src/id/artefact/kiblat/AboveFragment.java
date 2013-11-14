@@ -30,6 +30,8 @@ import android.app.ActionBar.LayoutParams;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -70,7 +72,8 @@ public class AboveFragment extends ListFragment {
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.list_above, null);
+		super.onCreateView(inflater, container, savedInstanceState); 
+		return inflater.inflate(R.layout.list_above, null); 
 		
 	}
 
@@ -356,7 +359,9 @@ public class AboveFragment extends ListFragment {
 				try {
 					f = new File("/mnt/sdcard/kiblatartefact/"
 							+ mc.bytesToHex(mc.encrypt(p.getId_post() + ".jpg")) );
-					ndas.setBackground(Drawable.createFromPath(f.getAbsolutePath()));
+					Bitmap bm = b.decodeFiles(f, 100);
+					Drawable d = new BitmapDrawable(getResources(), bm);
+					ndas.setBackgroundDrawable(d);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -402,10 +407,4 @@ public class AboveFragment extends ListFragment {
 
 	}
 
-	@Override
-	public void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		System.gc();
-	}
 }

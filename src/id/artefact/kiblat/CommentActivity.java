@@ -23,7 +23,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 
 public class CommentActivity extends SherlockActivity {
-	
+	String id_post;
 	private List<IsiComment> myComment = new ArrayList<IsiComment>();
 	
 	@Override
@@ -39,6 +39,8 @@ public class CommentActivity extends SherlockActivity {
 				new ColorDrawable(Color.parseColor("#FFFFFF")));
 		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); 
 		getSupportActionBar().setCustomView(R.layout.actionbar_custom);
+		Bundle extras = getIntent().getExtras();
+		id_post = extras.getString("id");
 		
 		ImageView logo = (ImageView) findViewById(R.id.kiblat_logo);
 		logo.setOnClickListener(new OnClickListener() {
@@ -48,6 +50,7 @@ public class CommentActivity extends SherlockActivity {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(getApplicationContext(), MainActivity.class);
 				startActivity(i);
+				finish();
 			}
 		});
 		
@@ -58,6 +61,7 @@ public class CommentActivity extends SherlockActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(getApplicationContext(), ContentActivity.class);
+				i.putExtra("id", id_post);
 				startActivity(i);
 			}
 		});

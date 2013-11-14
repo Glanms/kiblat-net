@@ -83,6 +83,7 @@ public class BaseActivity extends SlidingFragmentActivity {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(getApplicationContext(), MainActivity.class);
 				startActivity(i);
+				finish();
 			}
 		});
 	}

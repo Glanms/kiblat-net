@@ -7,6 +7,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 import android.os.Bundle;
 import android.graphics.Canvas;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.animation.Interpolator;
 
 public class MainActivity extends CustomAnimation {
@@ -70,6 +71,14 @@ public class MainActivity extends CustomAnimation {
 		.replace(R.id.content_frame, fragment)
 		.commit();
 		getSlidingMenu().showContent();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			this.finish();
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 }

@@ -33,7 +33,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:paddingBottom="5dp"
-        android:text="Developed By Artefact"
+        android:text="Developed By @artefact_id"
         android:fontFamily="classic-robot" />
 
 </RelativeLayout>

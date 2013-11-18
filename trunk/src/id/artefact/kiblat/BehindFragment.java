@@ -81,16 +81,15 @@ public class BehindFragment extends ListFragment {
 			newContent = new ColorFragment(R.color.red);
 			break;
 		case 1:
-			newContent = new ColorFragment(R.color.green);
+			Intent i = new Intent(getActivity(), MainActivity.class);
+			startActivity(i);
 			break;
 		case 2:
 			newContent = new ColorFragment(R.color.blue);
 			break;
-		case 3:
-			newContent = new ColorFragment(android.R.color.white);
-			break;
 		case 4:
-			newContent = new ColorFragment(android.R.color.black);
+			Intent k = new Intent(getActivity(), CategoryActivity.class);
+			startActivity(k);
 			break;
 		case 5:
 			newContent = new ColorFragment(R.color.biru_danker);
@@ -105,8 +104,8 @@ public class BehindFragment extends ListFragment {
 			newContent = new ColorFragment(android.R.color.black);
 			break;
 		case 9:
-			Intent i = new Intent(getActivity(), AboutActivity.class);
-			startActivity(i);
+			Intent j = new Intent(getActivity(), AboutActivity.class);
+			startActivity(j);
 			break;
 		}
 		if (newContent != null)

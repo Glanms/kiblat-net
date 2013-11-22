@@ -49,6 +49,10 @@
             android:name="id.artefact.kiblat.ShareActivity"
             android:label="@string/title_activity_share" >
         </activity>
+          <activity
+            android:name="id.artefact.kiblat.CategoryActivity"
+            android:label="@string/title_activity_share" >
+        </activity>
     </application>
 
 </manifest>

@@ -75,4 +75,17 @@ public class ServiceHelper {
 		return data;
 	}
 
+	public String category(String id_category) {
+		String data = "";
+		try {
+			Log.i("xmlrpc", "masuk try");
+			data = (String) client.call("beritabyidkategori",id_category);
+			Log.i("xmlrpc", data);
+		} catch (XMLRPCException e) {
+			e.printStackTrace();
+		}
+		Log.i("xmlrpc", "return: " + data);
+		return data;
+	}
+
 }

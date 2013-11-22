@@ -88,7 +88,7 @@ public class BehindFragment extends ListFragment {
 			newContent = new ColorFragment(R.color.blue);
 			break;
 		case 4:
-			Intent k = new Intent(getActivity(), CategoryActivity.class);
+			Intent k = new Intent(getActivity(), CategoryActiviy.class);
 			startActivity(k);
 			break;
 		case 5:

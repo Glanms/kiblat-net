@@ -10,9 +10,9 @@ import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.animation.Interpolator;
 
-public class CategoryActiviy extends CustomAnimation {
+public class CategoryActivity extends CustomAnimation {
 	
-	public CategoryActiviy() {
+	public CategoryActivity() {
 		// see the class CustomAnimation for how to attach 
 		// the CanvasTransformer to the SlidingMenu
 		super(R.string.anim_slide, new CanvasTransformer() {

@@ -43,7 +43,7 @@ public class MainActivity extends CustomAnimation {
 			mContent = getSupportFragmentManager().getFragment(
 					savedInstanceState, "mContent");
 		if (mContent == null)
-			mContent = new AboveFragment();
+			mContent = new AboveFragment("terkini");
 
 		// set the Above View
 		setContentView(R.layout.content_frame);

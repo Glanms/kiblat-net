@@ -43,7 +43,7 @@ public class CategoryActivity extends CustomAnimation {
 			mContent = getSupportFragmentManager().getFragment(
 					savedInstanceState, "mContent");
 		if (mContent == null)
-			mContent = new AboveCategory();
+			mContent = new AboveCategory("0","");
 
 		// set the Above View
 		setContentView(R.layout.content_frame);

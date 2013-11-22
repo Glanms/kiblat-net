@@ -1,6 +1,5 @@
 package id.artefact.kiblat;
 
-
 import id.artefact.kiblat.db.DatabaseHandler;
 import id.artefact.kiblat.db.Post;
 import id.artefact.kiblat.help.BitmapDecoder;
@@ -47,6 +46,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressLint("ValidFragment")
 public class AboveCategory extends ListFragment {
 
 	LazyAdapterAbove adapter;
@@ -57,7 +57,7 @@ public class AboveCategory extends ListFragment {
 	private LinkedList<String> mListItems;
 
 	String last_id_list = "0";
-	String id_category = "713";
+	String id_category = "0";
 	String tipe_category = "Analisis";
 	String last_list = "0";
 
@@ -65,12 +65,21 @@ public class AboveCategory extends ListFragment {
 	DatabaseHandler db;
 	ServiceHelper srv;
 
+	public AboveCategory(String id_kategori, String nama_kategori) {
+		id_category = id_kategori;
+		tipe_category = nama_kategori;
+		//setRetainInstance(true);
+		//Toast.makeText(getActivity(), "asdasdasdasd", Toast.LENGTH_LONG).show();
+	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState); 
-		return inflater.inflate(R.layout.list_above, null); 
+		super.onCreateView(inflater, container, savedInstanceState);
+		return inflater.inflate(R.layout.list_above, null);
 		
+		
+		
+
 	}
 
 	@SuppressLint("NewApi")
@@ -78,7 +87,7 @@ public class AboveCategory extends ListFragment {
 		super.onActivityCreated(savedInstanceState);
 		db = new DatabaseHandler(getActivity());
 		srv = new ServiceHelper();
-	
+
 		((PullAndLoadListView) getListView())
 				.setOnRefreshListener(new OnRefreshListener() {
 					@Override
@@ -176,8 +185,7 @@ public class AboveCategory extends ListFragment {
 
 				try {
 					Log.i("xmlrpc", "try mulai insert");
-					JSONArray jsonArray = new JSONArray("[" + srvice
-							+ "]");
+					JSONArray jsonArray = new JSONArray("[" + srvice + "]");
 					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
 
 					FileHelper fh = new FileHelper();
@@ -244,8 +252,7 @@ public class AboveCategory extends ListFragment {
 
 					try {
 						Log.i("xmlrpc", "try mulai insert");
-						JSONArray jsonArray = new JSONArray("["
-								+ srvice + "]");
+						JSONArray jsonArray = new JSONArray("[" + srvice + "]");
 						JSONArray innerJsonArray = jsonArray.getJSONArray(0);
 						// db.deletePostbyTipe("terkini");
 						Log.i("xmlrpc", "deleted");
@@ -336,13 +343,13 @@ public class AboveCategory extends ListFragment {
 		for (Post p : posts) {
 			HashMap<String, String> map = new HashMap<String, String>();
 			// adding each child node to HashMap key => value
-				map.put(KEY_ID, p.getId_post().toString());
-				last_list = p.getId_post().toString();
-				map.put(KEY_TITLE, p.getTitle().toString());
-				map.put(KEY_DATE, p.getDate_post().toString());
-				map.put(KEY_THUMB_URL, p.getImg());
-				// adding HashList to ArrayList
-				postitem.add(map);
+			map.put(KEY_ID, p.getId_post().toString());
+			last_list = p.getId_post().toString();
+			map.put(KEY_TITLE, p.getTitle().toString());
+			map.put(KEY_DATE, p.getDate_post().toString());
+			map.put(KEY_THUMB_URL, p.getImg());
+			// adding HashList to ArrayList
+			postitem.add(map);
 
 			y++;
 		}

@@ -52,6 +52,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressLint("ValidFragment")
 public class AboveFragment extends ListFragment {
 
 	LazyAdapterAbove adapter;
@@ -64,17 +65,24 @@ public class AboveFragment extends ListFragment {
 	String last_id_list = "0";
 
 	String last_list = "0";
-
+	String tipe = "";
 	ArrayList<HashMap<String, String>> postitem;
 	DatabaseHandler db;
 	ServiceHelper srv;
 	View header;
 
+	public AboveFragment(String tipez) {
+		tipe = tipez;
+
+	}
+	public AboveFragment() {
+	}
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState); 
-		return inflater.inflate(R.layout.list_above, null); 
-		
+		super.onCreateView(inflater, container, savedInstanceState);
+		return inflater.inflate(R.layout.list_above, null);
+
 	}
 
 	@SuppressLint("NewApi")
@@ -352,13 +360,16 @@ public class AboveFragment extends ListFragment {
 			if (y == 0) {
 				TextView title = (TextView) header.findViewById(R.id.headJudul);
 				TextView tgl = (TextView) header.findViewById(R.id.headerDate);
-				RelativeLayout ndas = (RelativeLayout) header.findViewById(R.id.headImg);
+				RelativeLayout ndas = (RelativeLayout) header
+						.findViewById(R.id.headImg);
 				BitmapDecoder b = new BitmapDecoder();
 				MCrypt mc = new MCrypt();
 				File f;
 				try {
-					f = new File("/mnt/sdcard/kiblatartefact/"
-							+ mc.bytesToHex(mc.encrypt(p.getId_post() + ".jpg")) );
+					f = new File(
+							"/mnt/sdcard/kiblatartefact/"
+									+ mc.bytesToHex(mc.encrypt(p.getId_post()
+											+ ".jpg")));
 					Bitmap bm = b.decodeFiles(f, 100);
 					Drawable d = new BitmapDrawable(getResources(), bm);
 					ndas.setBackgroundDrawable(d);
@@ -366,17 +377,18 @@ public class AboveFragment extends ListFragment {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-		
+
 				title.setText(p.getTitle().toString());
 				tgl.setText(p.getDate_post().toString());
 				getListView().addHeaderView(header);
 				final String id_p = p.getId_post().toString();
 				title.setOnClickListener(new OnClickListener() {
-					
+
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						Intent i = new Intent(v.getContext(), ContentActivity.class);
+						Intent i = new Intent(v.getContext(),
+								ContentActivity.class);
 						i.putExtra("id", id_p);
 						startActivity(i);
 					}

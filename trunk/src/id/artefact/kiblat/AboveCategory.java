@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -109,7 +110,9 @@ public class AboveCategory extends ListFragment {
 
 					}
 				});
-
+		
+		TextView subtitle = (TextView) getView().findViewById(R.id.subtitle);
+		subtitle.setText(tipe_category);
 		setList();
 	}
 
@@ -151,7 +154,7 @@ public class AboveCategory extends ListFragment {
 			TextView title = (TextView) convertView
 					.findViewById(R.id.rowbehind_title);
 			title.setText(getItem(position).tag);
-
+			
 			return convertView;
 		}
 
@@ -335,7 +338,7 @@ public class AboveCategory extends ListFragment {
 	}
 
 	public void setList() {
-
+		Log.i("tipe", tipe_category);
 		List<Post> posts = db.getPostsByTipe(tipe_category, "10000000000000");
 		postitem = new ArrayList<HashMap<String, String>>();
 		// creating new HashMap

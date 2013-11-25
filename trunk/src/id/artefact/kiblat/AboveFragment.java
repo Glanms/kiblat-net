@@ -75,6 +75,7 @@ public class AboveFragment extends ListFragment {
 		tipe = tipez;
 
 	}
+
 	public AboveFragment() {
 	}
 
@@ -246,6 +247,13 @@ public class AboveFragment extends ListFragment {
 		}
 	}
 
+	public Boolean getserverisnull(String dariserver) {
+		if (dariserver.equals("[]"))
+			return true;
+		else
+			return false;
+	}
+
 	private class LoadDataTask extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -257,55 +265,60 @@ public class AboveFragment extends ListFragment {
 			byte[] en;
 
 			if (Integer.parseInt(last_list) == Integer.parseInt(db
-					.getminidterkini())) {
+					.getminidbytipe("terkini", ""))) {
 				try {
 					String srvberitaterkini = srv.beritaterkini(last_list);
 					Log.i("xmlrpc", srvberitaterkini);
-
-					try {
-						Log.i("xmlrpc", "try mulai insert");
-						JSONArray jsonArray = new JSONArray("["
-								+ srvberitaterkini + "]");
-						JSONArray innerJsonArray = jsonArray.getJSONArray(0);
-						// db.deletePostbyTipe("terkini");
-						Log.i("xmlrpc", "deleted");
-						for (int i = 0; i < innerJsonArray.length(); i++) {
-							JSONObject json = innerJsonArray.getJSONObject(i);
-							Post p = new Post();
-							p.setId_post(json.getString("ID"));
-							p.setDate_post(json.getString("post_date"));
-							p.setContent(json.getString("content"));
-							p.setTitle(json.getString("title"));
-							p.setGuid(json.getString("guid"));
-							p.setTax("");
-							p.setTipe("terkini");
-							p.setCount("");
-							String url_img = json.getString("img");
-							Log.i("img", url_img);
-							// donlod gambar disini
-							// kalau berhasil disimpen path nya
-							if (url_img != null) {
-								try {
-									en = mc.encrypt(json.getString("ID")
-											+ ".jpg");
-									inet.downloadImage(url_img,
-											mc.bytesToHex(en));
-									Log.i("download", json.getString("ID")
-											+ ".jpg");
-									p.setImg(json.getString("ID") + ".jpg");
-								} catch (Exception e) {
-									// TODO: handle exception
-									e.printStackTrace();
+					if (!getserverisnull(srvberitaterkini)) {
+						try {
+							Log.i("xmlrpc", "try mulai insert");
+							JSONArray jsonArray = new JSONArray("["
+									+ srvberitaterkini + "]");
+							JSONArray innerJsonArray = jsonArray
+									.getJSONArray(0);
+							// db.deletePostbyTipe("terkini");
+							Log.i("xmlrpc", "deleted");
+							for (int i = 0; i < innerJsonArray.length(); i++) {
+								JSONObject json = innerJsonArray
+										.getJSONObject(i);
+								Post p = new Post();
+								p.setId_post(json.getString("ID"));
+								p.setDate_post(json.getString("post_date"));
+								p.setContent(json.getString("content"));
+								p.setTitle(json.getString("title"));
+								p.setGuid(json.getString("guid"));
+								p.setTax("");
+								p.setTipe("terkini");
+								p.setCount("");
+								String url_img = json.getString("img");
+								Log.i("img", url_img);
+								// donlod gambar disini
+								// kalau berhasil disimpen path nya
+								if (url_img != null) {
+									try {
+										en = mc.encrypt(json.getString("ID")
+												+ ".jpg");
+										inet.downloadImage(url_img,
+												mc.bytesToHex(en));
+										Log.i("download", json.getString("ID")
+												+ ".jpg");
+										p.setImg(json.getString("ID") + ".jpg");
+									} catch (Exception e) {
+										// TODO: handle exception
+										e.printStackTrace();
+									}
+								} else {
+									p.setImg(null);
 								}
-							} else {
-								p.setImg(null);
+								db.addPost(p);
+								Log.i("xmlrpc", "insert");
 							}
-							db.addPost(p);
-							Log.i("xmlrpc", "insert");
+						} catch (Exception e) {
+							Log.i("xmlrpc", "gagal jadi array");
 						}
-					} catch (Exception e) {
-						Log.i("xmlrpc", "gagal jadi array");
+
 					}
+
 					return null;
 				} catch (Exception e) {
 					// TODO: handle exception
@@ -318,7 +331,7 @@ public class AboveFragment extends ListFragment {
 		@Override
 		protected void onPostExecute(Void result) {
 
-			List<Post> posts = db.getPostsByTipe("terkini", last_list);
+			List<Post> posts = db.getPostsByTipe("terkini", "", last_list);
 
 			for (Post p : posts) {
 				HashMap<String, String> map = new HashMap<String, String>();
@@ -349,7 +362,7 @@ public class AboveFragment extends ListFragment {
 
 	public void setList() {
 
-		List<Post> posts = db.getPostsByTipe("terkini", "10000000000000");
+		List<Post> posts = db.getPostsByTipe("terkini", "", "10000000000000");
 		postitem = new ArrayList<HashMap<String, String>>();
 		// creating new HashMap
 		getListView().removeHeaderView(header);

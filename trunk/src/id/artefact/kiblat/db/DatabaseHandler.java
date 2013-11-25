@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-	private static final int DATABASE_VERSION = 14;
+	private static final int DATABASE_VERSION = 18;
 	private static final String DATABASE_NAME = "kiblat";
 
 	private static final String TABLE_POST = "post";
@@ -89,6 +89,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		values.put(KEY_IMG, post.getImg());
 		values.put(KEY_COUNT_POST, post.getCount());
 		Log.i("post", "diinsert");
+		Log.i("post", "tipe: " + post.getTipe() + ", tax: " + post.getTax());
 		// tessss
 
 		db.insert(TABLE_POST, null, values);
@@ -107,12 +108,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		db.close();
 	}
 
-	public String getminidterkini() {
+	public String getminidbytipe(String tipe, String tax) {
 		String id = "0";
 		List<Post> posts = new ArrayList<Post>();
 		// Select All Query
 		String selectQuery = "SELECT MIN(" + KEY_ID_POST + ") " + " FROM "
-				+ TABLE_POST + " WHERE " + KEY_TIPE_POST + "= 'terkini'";
+				+ TABLE_POST + " WHERE " + KEY_TIPE_POST + "= '" + tipe + "'"
+				+ " AND " + KEY_TAX + "= '" + tax + "'";
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -152,12 +154,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		return result;
 	}
 
-	public List<Post> getPostsByTipe(String tipe, String least_id) {
+	public List<Post> getPostsByTipe(String tipe, String tax, String least_id) {
 		List<Post> posts = new ArrayList<Post>();
 		// Select All Query
 		String selectQuery = "SELECT * FROM " + TABLE_POST + " WHERE "
-				+ KEY_TIPE_POST + "= '" + tipe + "' AND " + KEY_ID_POST + "<"
-				+ least_id + " ORDER BY " + KEY_ID_POST + " DESC LIMIT 10";
+				+ KEY_TIPE_POST + "= '" + tipe + "' " + " AND " + KEY_TAX
+				+ "= '" + tax + "' " + " AND " + KEY_ID_POST + "<" + least_id
+				+ " ORDER BY " + KEY_ID_POST + " DESC LIMIT 10";
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);

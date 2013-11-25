@@ -8,32 +8,31 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
+
+
 
 public class CommentActivity extends SherlockActivity {
 	String id_post;
-	private List<IsiComment> myComment = new ArrayList<IsiComment>();
-	
+	String guid;
+	WebView webDisqus;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_comment);
-		
-		populateCommentList();
-		populateListView();
 		
 		getSupportActionBar().setBackgroundDrawable(
 				new ColorDrawable(Color.parseColor("#FFFFFF")));
@@ -41,6 +40,7 @@ public class CommentActivity extends SherlockActivity {
 		getSupportActionBar().setCustomView(R.layout.actionbar_custom);
 		Bundle extras = getIntent().getExtras();
 		id_post = extras.getString("id");
+		guid = extras.getString("guid");
 		
 		ImageView logo = (ImageView) findViewById(R.id.kiblat_logo);
 		logo.setOnClickListener(new OnClickListener() {
@@ -65,67 +65,35 @@ public class CommentActivity extends SherlockActivity {
 				startActivity(i);
 			}
 		});
-	}
-
-	private void populateCommentList() {
-		myComment.add(new IsiComment("Abidarin Abas ke-1", "13-10-2013 22:10", R.drawable.abidarin, "Wah saya berani sumpah pocoooooong! bagus sekali artikel ini, DAFUQ"));
-		myComment.add(new IsiComment("Abidarin Abas ke-2", "13-10-2013 22:20", R.drawable.abidarin, "Wah saya berani sumpah pocoooooong! bagus sekali artikel ini, DAFUQ"));
-		myComment.add(new IsiComment("Abidarin Abas ke-3", "13-10-2013 22:30", R.drawable.abidarin, "Wah saya berani sumpah pocoooooong! bagus sekali artikel ini, DAFUQ"));
-		myComment.add(new IsiComment("Abidarin Abas ke-4", "13-10-2013 22:40", R.drawable.abidarin, "Wah saya berani sumpah pocoooooong! bagus sekali artikel ini, DAFUQ"));
-		myComment.add(new IsiComment("Abidarin Abas ke-5", "13-10-2013 22:50", R.drawable.abidarin, "Wah saya berani sumpah pocoooooong! bagus sekali artikel ini, DAFUQ"));
 		
-	}
-
-	private void populateListView() {
-		ArrayAdapter<IsiComment> adapter = new MyListAdapter();
-		ListView list = (ListView) findViewById(R.id.listComment);
-		list.setAdapter(adapter);
-
-	}
-	
-	private class MyListAdapter extends ArrayAdapter<IsiComment>{
-		public MyListAdapter(){
-			super(CommentActivity.this, R.layout.item_comment, myComment);
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View itemView = convertView;
-			if(itemView == null){
-				itemView = getLayoutInflater().inflate(R.layout.item_comment, parent, false);
-			}
-			
-			IsiComment currentIsi = myComment.get(position);
-			
-			//ambilgambar
-			ImageView imageView = (ImageView) itemView.findViewById(R.id.item_icon);
-			imageView.setImageResource(currentIsi.getIconID());
-			
-			//ambilnama
-			TextView namaText = (TextView) itemView.findViewById(R.id.item_textNama);
-			namaText.setText(currentIsi.getNama());
-			
-			//ambiltanggal
-			TextView tanggalText = (TextView) itemView.findViewById(R.id.item_textTanggal);
-			tanggalText.setText(currentIsi.getTanggal());
-			
-			//ambilisi
-			TextView isiText = (TextView) itemView.findViewById(R.id.item_textIsi);
-			isiText.setText(currentIsi.getIsi());
-			
-			return itemView;
-		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		SubMenu subMenu1 = menu.addSubMenu("");
 		
-		MenuItem SubMenu1Item = subMenu1.getItem();
-		SubMenu1Item.setIcon(R.drawable.img_kosong);
-		SubMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		
-		return super.onCreateOptionsMenu(menu);
+		String htmlComments = getHtmlComment(id_post +" "+guid, "kiblatnet");
+		Log.d("identifier", id_post+" "+guid);
+		webDisqus = (WebView) findViewById(R.id.disqus);
+		// set up disqus
+		WebSettings webSettings2 = webDisqus.getSettings();
+		webSettings2.setJavaScriptEnabled(true);
+		webSettings2.setBuiltInZoomControls(true);
+		webDisqus.requestFocusFromTouch();
+		webDisqus.setWebViewClient(new WebViewClient());
+		webDisqus.setWebChromeClient(new WebChromeClient());
+		webDisqus.loadData(htmlComments, "text/html", null);
+	}
+
+	public String getHtmlComment(String idPost, String shortName) {
+		 
+		return "<div id='disqus_thread'></div>"
+				+ "<script type='text/javascript'>"
+				+ "var disqus_identifier = '"
+				+ idPost
+				+ "';"
+				+ "var disqus_shortname = '"
+				+ shortName
+				+ "';"
+				+ " (function() { var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;"
+				+ "dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';"
+				+ "(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq); })();"
+				+ "</script>";
 	}
 
 

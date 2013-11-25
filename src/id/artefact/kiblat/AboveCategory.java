@@ -69,17 +69,15 @@ public class AboveCategory extends ListFragment {
 	public AboveCategory(String id_kategori, String nama_kategori) {
 		id_category = id_kategori;
 		tipe_category = nama_kategori;
-		//setRetainInstance(true);
-		//Toast.makeText(getActivity(), "asdasdasdasd", Toast.LENGTH_LONG).show();
+		// setRetainInstance(true);
+		// Toast.makeText(getActivity(), "asdasdasdasd",
+		// Toast.LENGTH_LONG).show();
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		return inflater.inflate(R.layout.list_above, null);
-		
-		
-		
 
 	}
 
@@ -110,7 +108,7 @@ public class AboveCategory extends ListFragment {
 
 					}
 				});
-		
+
 		TextView subtitle = (TextView) getView().findViewById(R.id.subtitle);
 		subtitle.setText(tipe_category);
 		setList();
@@ -154,7 +152,7 @@ public class AboveCategory extends ListFragment {
 			TextView title = (TextView) convertView
 					.findViewById(R.id.rowbehind_title);
 			title.setText(getItem(position).tag);
-			
+
 			return convertView;
 		}
 
@@ -183,7 +181,7 @@ public class AboveCategory extends ListFragment {
 			MCrypt mc = new MCrypt();
 			byte[] en;
 			try {
-				String srvice = srv.category(id_category);
+				String srvice = srv.category(id_category, "100000000000000");
 				Log.i("xmlrpc", srvice);
 
 				try {
@@ -203,7 +201,7 @@ public class AboveCategory extends ListFragment {
 						p.setTitle(json.getString("title"));
 						p.setGuid(json.getString("guid"));
 						p.setTax(json.getString("tax"));
-						p.setTipe(tipe_category);
+						p.setTipe("category");
 						p.setCount("");
 						String url_img = json.getString("img");
 						Log.i("img", url_img);
@@ -237,6 +235,13 @@ public class AboveCategory extends ListFragment {
 		}
 	}
 
+	public Boolean getserverisnull(String dariserver) {
+		if (dariserver.equals("[]"))
+			return true;
+		else
+			return false;
+	}
+
 	private class LoadDataTask extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -248,54 +253,61 @@ public class AboveCategory extends ListFragment {
 			byte[] en;
 
 			if (Integer.parseInt(last_list) == Integer.parseInt(db
-					.getminidterkini())) {
+					.getminidbytipe("category", tipe_category))) {
 				try {
-					String srvice = srv.category(id_category);
+					String srvice = srv.category(id_category, last_list);
 					Log.i("xmlrpc", srvice);
-
-					try {
-						Log.i("xmlrpc", "try mulai insert");
-						JSONArray jsonArray = new JSONArray("[" + srvice + "]");
-						JSONArray innerJsonArray = jsonArray.getJSONArray(0);
-						// db.deletePostbyTipe("terkini");
-						Log.i("xmlrpc", "deleted");
-						for (int i = 0; i < innerJsonArray.length(); i++) {
-							JSONObject json = innerJsonArray.getJSONObject(i);
-							Post p = new Post();
-							p.setId_post(json.getString("ID"));
-							p.setDate_post(json.getString("post_date"));
-							p.setContent(json.getString("content"));
-							p.setTitle(json.getString("title"));
-							p.setGuid(json.getString("guid"));
-							p.setTax(json.getString("tax"));
-							p.setTipe(tipe_category);
-							p.setCount("");
-							String url_img = json.getString("img");
-							Log.i("img", url_img);
-							// donlod gambar disini
-							// kalau berhasil disimpen path nya
-							if (url_img != null) {
-								try {
-									en = mc.encrypt(json.getString("ID")
-											+ ".jpg");
-									inet.downloadImage(url_img,
-											mc.bytesToHex(en));
-									Log.i("download", json.getString("ID")
-											+ ".jpg");
-									p.setImg(json.getString("ID") + ".jpg");
-								} catch (Exception e) {
-									// TODO: handle exception
-									e.printStackTrace();
+					if (!getserverisnull(srvice)) {
+						try {
+							Log.i("xmlrpc", "try mulai insert");
+							JSONArray jsonArray = new JSONArray("[" + srvice
+									+ "]");
+							JSONArray innerJsonArray = jsonArray
+									.getJSONArray(0);
+							// db.deletePostbyTipe("terkini");
+							Log.i("xmlrpc", "deleted");
+							for (int i = 0; i < innerJsonArray.length(); i++) {
+								JSONObject json = innerJsonArray
+										.getJSONObject(i);
+								Post p = new Post();
+								p.setId_post(json.getString("ID"));
+								p.setDate_post(json.getString("post_date"));
+								p.setContent(json.getString("content"));
+								p.setTitle(json.getString("title"));
+								p.setGuid(json.getString("guid"));
+								p.setTax(json.getString("tax"));
+								p.setTipe("category");
+								p.setCount("");
+								String url_img = json.getString("img");
+								Log.i("img", url_img);
+								// donlod gambar disini
+								// kalau berhasil disimpen path nya
+								if (url_img != null) {
+									try {
+										en = mc.encrypt(json.getString("ID")
+												+ ".jpg");
+										inet.downloadImage(url_img,
+												mc.bytesToHex(en));
+										Log.i("download", json.getString("ID")
+												+ ".jpg");
+										p.setImg(json.getString("ID") + ".jpg");
+									} catch (Exception e) {
+										// TODO: handle exception
+										e.printStackTrace();
+									}
+								} else {
+									p.setImg(null);
 								}
-							} else {
-								p.setImg(null);
+								db.addPost(p);
+								Log.i("xmlrpc", "insert");
 							}
-							db.addPost(p);
-							Log.i("xmlrpc", "insert");
+
+						} catch (Exception e) {
+							Log.i("xmlrpc", "gagal jadi array");
 						}
-					} catch (Exception e) {
-						Log.i("xmlrpc", "gagal jadi array");
+
 					}
+
 					return null;
 				} catch (Exception e) {
 					// TODO: handle exception
@@ -308,7 +320,8 @@ public class AboveCategory extends ListFragment {
 		@Override
 		protected void onPostExecute(Void result) {
 
-			List<Post> posts = db.getPostsByTipe(tipe_category, last_list);
+			List<Post> posts = db.getPostsByTipe("category", tipe_category,
+					last_list);
 
 			for (Post p : posts) {
 				HashMap<String, String> map = new HashMap<String, String>();
@@ -339,7 +352,8 @@ public class AboveCategory extends ListFragment {
 
 	public void setList() {
 		Log.i("tipe", tipe_category);
-		List<Post> posts = db.getPostsByTipe(tipe_category, "10000000000000");
+		List<Post> posts = db.getPostsByTipe("category", tipe_category,
+				"10000000000000");
 		postitem = new ArrayList<HashMap<String, String>>();
 		// creating new HashMap
 		int y = 0;

@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 public class ContentActivity extends SherlockActivity {
 	String id_post;
+	String guid;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,6 +78,7 @@ public class ContentActivity extends SherlockActivity {
 		title.setText(p.getTitle());
 		tanggal.setText(p.getDate_post());
 		konten.setText(p.getContent());
+		guid = p.getGuid();
 		BitmapDecoder b = new BitmapDecoder();
 		try {
 			File f = new File("/mnt/sdcard/kiblatartefact/"
@@ -112,13 +114,14 @@ public class ContentActivity extends SherlockActivity {
 		case 1:
 			Intent icomment = new Intent(this, CommentActivity.class);
 			icomment.putExtra("id", id_post);
+			icomment.putExtra("guid", guid);
 			startActivity(icomment);
 			return true;
 		case 2:
 			Intent sharingIntent = new Intent(Intent.ACTION_SEND);
 			sharingIntent.setType("text/html");
 			sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,
-					Html.fromHtml("<p>Thank You..</p>"));
+					Html.fromHtml(guid));
 			startActivity(Intent.createChooser(sharingIntent, "Share using"));
 			return true;
 		default:

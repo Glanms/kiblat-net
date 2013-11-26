@@ -18,7 +18,7 @@ import android.util.Log;
 public class ServiceHelper {
 
 	private URI uri = URI
-			.create("http://192.168.97.1/kiblat-net/index.php/server");
+			.create("http://www.kiblat.net/service/index.php/server");
 			//.create("http://192.168.1.6/kiblat-webservice/index.php/server");
 	private XMLRPCClient client = new XMLRPCClient(uri);
 

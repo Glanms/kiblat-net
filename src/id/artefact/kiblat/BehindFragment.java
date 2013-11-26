@@ -86,7 +86,7 @@ public class BehindFragment extends ListFragment {
 			newContent = new AboveFragment("terkini");
 			break;
 		case 2:
-			newContent = new ColorFragment(R.color.blue);
+			newContent = new AbovePopuler("populer");
 			break;
 		case 4:
 

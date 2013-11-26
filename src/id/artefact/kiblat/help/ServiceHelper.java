@@ -18,7 +18,8 @@ import android.util.Log;
 public class ServiceHelper {
 
 	private URI uri = URI
-			.create("http://192.168.97.1/kiblat-net/index.php/server");
+			//.create("http://192.168.97.1/kiblat-net/index.php/server");
+			.create("http://192.168.1.6/kiblat-webservice/index.php/server");
 	private XMLRPCClient client = new XMLRPCClient(uri);
 
 	public boolean daftar(Context contex, String nama, String email,
@@ -54,6 +55,19 @@ public class ServiceHelper {
 		try {
 			Log.i("xmlrpc", "masuk try");
 			data = (String) client.call("beritaterkini", date);
+			Log.i("xmlrpc", data);
+		} catch (XMLRPCException e) {
+			e.printStackTrace();
+		}
+		Log.i("xmlrpc", "return: " + data);
+		return data;
+	}
+	
+	public String beritapopuler() {
+		String data = "";
+		try {
+			Log.i("xmlrpc", "masuk try");
+			data = (String) client.call("beritapopuler");
 			Log.i("xmlrpc", data);
 		} catch (XMLRPCException e) {
 			e.printStackTrace();

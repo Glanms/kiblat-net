@@ -161,6 +161,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				+ KEY_TIPE_POST + "= '" + tipe + "' " + " AND " + KEY_TAX
 				+ "= '" + tax + "' " + " AND " + KEY_ID_POST + "<" + least_id
 				+ " ORDER BY " + KEY_ID_POST + " DESC LIMIT 10";
+		if (tipe.equals("populer")) {
+			selectQuery = "SELECT * FROM " + TABLE_POST + " WHERE "
+					+ KEY_TIPE_POST + "= '" + tipe + "' " + " AND " + KEY_TAX
+					+ "= '" + tax + "' " + " AND " + KEY_ID_POST + "<"
+					+ least_id + " LIMIT 20";
+		}
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);

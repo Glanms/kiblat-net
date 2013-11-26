@@ -60,10 +60,11 @@ public class ContentActivity extends SherlockActivity {
 
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplicationContext(),
-						MainActivity.class);
-				startActivity(i);
-				finish();
+//				Intent i = new Intent(getApplicationContext(),
+//						MainActivity.class);
+//				startActivity(i);
+				//finish();
+				onBackPressed(); 
 			}
 		});
 		TextView title = (TextView) findViewById(R.id.postTitle);

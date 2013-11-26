@@ -83,24 +83,7 @@ public class AboveSearch extends ListFragment {
 				null);
 		TextView subtitle = (TextView) getView().findViewById(R.id.subtitle);
 		subtitle.setText(tipe);
-		// SampleAdapter adapter = new SampleAdapter(getActivity());
-		// for (int i = 0; i < 20; i++) {
-		// adapter.add(new SampleItem("Sample List",
-		// android.R.drawable.ic_menu_search));
-		// }
-		// setListAdapter(adapter);
-		((PullAndLoadListView) getListView())
-				.setOnRefreshListener(new OnRefreshListener() {
-					@Override
-					public void onRefresh() {
-						// Do work to refresh the list here.
-						// new GetDataTask().execute();
-						// execute
-						new UpdateTask().execute();
-					}
-				});
-
-		setList();
+		new UpdateTask().execute();
 	}
 
 	private class SampleItem {
@@ -151,16 +134,16 @@ public class AboveSearch extends ListFragment {
 		private ProgressDialog dialog = new ProgressDialog(getActivity());
 
 		protected void onPreExecute() {
-			// dialog.setMessage("Loading....");
-			// dialog.show();
+			dialog.setMessage("Loading....");
+			dialog.show();
 		}
 
 		@Override
 		protected void onPostExecute(Boolean result) {
 			// TODO Auto-generated method stub
-			((PullAndLoadListView) getListView()).onRefreshComplete();
+			
 			setList();
-			// dialog.dismiss();
+			dialog.dismiss();
 		}
 
 		@Override

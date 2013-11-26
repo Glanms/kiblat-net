@@ -58,8 +58,6 @@ public class AboveSearch extends ListFragment {
 	DatabaseHandler db;
 	ServiceHelper srv;
 	View header;
-	
-	List<Post> posts;
 
 	public AboveSearch(String tipez, String paramz ) {
 		tipe = tipez;
@@ -165,7 +163,7 @@ public class AboveSearch extends ListFragment {
 					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
 
 					FileHelper fh = new FileHelper();
-					//db.deletePostbyTipe(tipe);
+					db.deletePostbyTipe(tipe);
 					Log.i("xmlrpc", "deleted");
 					for (int i = 0; i < innerJsonArray.length(); i++) {
 						JSONObject json = innerJsonArray.getJSONObject(i);
@@ -196,8 +194,7 @@ public class AboveSearch extends ListFragment {
 							p.setImg(null);
 						}
 
-						//db.addPost(p);
-						posts.add(p);
+						db.addPost(p);
 						Log.i("xmlrpc", "insert");
 					}
 				} catch (Exception e) {
@@ -220,7 +217,7 @@ public class AboveSearch extends ListFragment {
 
 	public void setList() {
 
-		posts = db.getPostsByTipe(tipe, "", "10000000000000");
+		List<Post> posts = db.getPostsByTipe(tipe, "", "10000000000000");
 		postitem = new ArrayList<HashMap<String, String>>();
 		// creating new HashMap
 		getListView().removeHeaderView(header);

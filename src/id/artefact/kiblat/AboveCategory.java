@@ -129,7 +129,7 @@ public class AboveCategory extends ListFragment {
 		// TODO Auto-generated method stub
 		TextView id_post = (TextView) v.findViewById(R.id.id);
 		String id_p = id_post.getText().toString();
-		Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
+		//Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
 		Intent i = new Intent(v.getContext(), ContentActivity.class);
 		i.putExtra("id", id_p);
 		startActivity(i);

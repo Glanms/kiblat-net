@@ -22,7 +22,7 @@
         </activity>
         <activity
             android:name="id.artefact.kiblat.SplashActivity"
-            android:label="@string/title_activity_splash"
+            android:label="@string/title_app"
             android:theme="@android:style/android:Theme.Light.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

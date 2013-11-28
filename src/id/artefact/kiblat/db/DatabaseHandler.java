@@ -153,6 +153,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 		return result;
 	}
+	
+	public boolean is_exist(){
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cur = db.rawQuery("SELECT " + KEY_ID_POST + " FROM " + TABLE_POST, null);
+		int i = 0;
+		if(cur.moveToFirst()){
+			do {
+				i++;
+			} while (cur.moveToNext());
+		}
+		cur.close();
+		db.close();
+		if(i > 0)
+			return true;
+		else
+		return false;
+		
+	}
 
 	public List<Post> getPostsByTipe(String tipe, String tax, String least_id) {
 		List<Post> posts = new ArrayList<Post>();

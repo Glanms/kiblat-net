@@ -1,6 +1,10 @@
 package id.artefact.kiblat;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 import org.xmlrpc.android.MCrypt;
 
@@ -32,6 +36,8 @@ import android.widget.TextView;
 public class ContentActivity extends SherlockActivity {
 	String id_post;
 	String guid;
+
+	@SuppressWarnings("null")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,11 +66,11 @@ public class ContentActivity extends SherlockActivity {
 
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-//				Intent i = new Intent(getApplicationContext(),
-//						MainActivity.class);
-//				startActivity(i);
-				//finish();
-				onBackPressed(); 
+				// Intent i = new Intent(getApplicationContext(),
+				// MainActivity.class);
+				// startActivity(i);
+				// finish();
+				onBackPressed();
 			}
 		});
 		TextView title = (TextView) findViewById(R.id.postTitle);
@@ -78,15 +84,33 @@ public class ContentActivity extends SherlockActivity {
 		Post p = db.getPostById(id_post);
 		title.setText(p.getTitle());
 		tanggal.setText(p.getDate_post());
-		konten.setText(p.getContent());
+		// konten.setText(Html.fromHtml(p.getContent()));
+		InputStream is = null;
+		BufferedReader reader;
+		String result = p.getContent();
+		try {
+			reader = new BufferedReader(
+					new InputStreamReader(is, "iso-8859-1"), 8);
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			is.close();
+			result = sb.toString();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		konten.setText(result.replaceAll("<[^>]*>","").replaceAll("&nbsp;",""));
 		guid = p.getGuid();
 		BitmapDecoder b = new BitmapDecoder();
 		try {
 			File f = new File("/mnt/sdcard/kiblatartefact/"
-					+ mc.bytesToHex(mc.encrypt(id_post + ".jpg")) );
+					+ mc.bytesToHex(mc.encrypt(id_post + ".jpg")));
 			if (f.exists())
 				gambar.setImageBitmap(b.decodeFiles(f, 100));
-				gambar.setScaleType(ScaleType.FIT_XY);
+			gambar.setScaleType(ScaleType.FIT_XY);
 			Log.d("drawable", String.valueOf(Drawable.createFromPath(f
 					.getAbsolutePath())));
 		} catch (Exception e) {

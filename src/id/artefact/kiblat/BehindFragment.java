@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -77,6 +78,7 @@ public class BehindFragment extends ListFragment {
 		items.add(new EntryItem(R.drawable.category, "Artikel"));
 		items.add(new EntryItem(R.drawable.category, "Kolom"));
 		items.add(new EntryItem(R.drawable.about, "About"));
+		items.add(new EntryItem(R.drawable.web, "Mobile Site"));
 		EntryAdapter adapter = new EntryAdapter(getListView().getContext(),
 				items);
 		getListView().setAdapter(adapter);
@@ -116,6 +118,11 @@ public class BehindFragment extends ListFragment {
 			Intent j = new Intent(getActivity(), AboutActivity.class);
 			startActivity(j);
 			break;
+		case 10:
+			String url = "http://m.kiblat.net";
+			Intent i = new Intent(Intent.ACTION_VIEW);
+			i.setData(Uri.parse(url));
+			startActivity(i);
 		}
 		if (newContent != null)
 			switchFragment(newContent);

@@ -22,6 +22,7 @@ import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 import id.artefact.kiblat.db.DatabaseHandler;
 import id.artefact.kiblat.db.Post;
 import id.artefact.kiblat.help.BitmapDecoder;
+import id.artefact.kiblat.help.FormatDate;
 import id.artefact.kiblat.help.LazyAdapterAbove;
 import id.artefact.kiblat.help.LazyAdapterBehindMenu;
 import id.artefact.kiblat.help.ServiceHelper;
@@ -180,7 +181,7 @@ public class AboveFragment extends ListFragment {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			// TODO Auto-generated method stub
-			((PullAndLoadListView) getListView()).onRefreshComplete();
+			//((PullAndLoadListView) getListView()).onRefreshComplete();
 			setList();
 			// dialog.dismiss();
 		}
@@ -361,7 +362,7 @@ public class AboveFragment extends ListFragment {
 	}
 
 	public void setList() {
-
+		FormatDate fd = new FormatDate();
 		List<Post> posts = db.getPostsByTipe("terkini", "", "10000000000000");
 		postitem = new ArrayList<HashMap<String, String>>();
 		// creating new HashMap
@@ -390,9 +391,8 @@ public class AboveFragment extends ListFragment {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
 				title.setText(p.getTitle().toString());
-				tgl.setText(p.getDate_post().toString());
+				tgl.setText(fd.convertTime(p.getDate_post().toString()));
 				getListView().addHeaderView(header);
 				final String id_p = p.getId_post().toString();
 				title.setOnClickListener(new OnClickListener() {
@@ -410,7 +410,7 @@ public class AboveFragment extends ListFragment {
 				map.put(KEY_ID, p.getId_post().toString());
 				last_list = p.getId_post().toString();
 				map.put(KEY_TITLE, p.getTitle().toString());
-				map.put(KEY_DATE, p.getDate_post().toString());
+				map.put(KEY_DATE, fd.convertTime(p.getDate_post().toString()));
 				map.put(KEY_THUMB_URL, p.getImg());
 				// adding HashList to ArrayList
 				postitem.add(map);

@@ -5,10 +5,16 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
 import android.os.Bundle;
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.animation.Interpolator;
+import android.widget.TextView;
 
 public class MainActivity extends CustomAnimation {
 	
@@ -76,7 +82,26 @@ public class MainActivity extends CustomAnimation {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-			this.finish();
+			LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
+			final View header = inflater.inflate(R.layout.dialog_customtitle, null);
+			TextView tx = (TextView) header.findViewById(R.id.text_title);
+			tx.setText("Exit ?");
+			new AlertDialog.Builder(MainActivity.this)
+			.setCustomTitle(header)
+			.setMessage("Apakah anda yakin akan keluar?")
+			.setPositiveButton("Ya",
+					new DialogInterface.OnClickListener() {
+						@TargetApi(11)
+						public void onClick(DialogInterface dialog, int id) {
+							finish();
+						}
+					})
+			.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+				@TargetApi(11)
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			}).show();
 		}
 		return super.onKeyDown(keyCode, event);
 	}

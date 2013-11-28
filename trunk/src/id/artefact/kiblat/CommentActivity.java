@@ -60,9 +60,7 @@ public class CommentActivity extends SherlockActivity {
 			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplicationContext(), ContentActivity.class);
-				i.putExtra("id", id_post);
-				startActivity(i);
+				onBackPressed(); 
 			}
 		});
 		

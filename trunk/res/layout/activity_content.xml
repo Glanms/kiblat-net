@@ -123,14 +123,28 @@
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin">
+                android:paddingTop="@dimen/activity_vertical_margin" >
 
                 <TextView
                     android:id="@+id/postContent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ini paragraf, isinya yaa isi konten ya dong. Ini paragraf, isinya yaa isi konten ya dong. Ini paragraf, isinya yaa isi konten ya dong. Ini paragraf, isinya yaa isi konten ya dong. Ini paragraf, isinya yaa isi konten ya dong. Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa..."
-                    android:textSize="14dp"/>
+                    android:textSize="14dp" />
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/related"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/iklan"
+                android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:background="#FF00"
+                android:orientation="vertical"
+                android:padding="2dip" >
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

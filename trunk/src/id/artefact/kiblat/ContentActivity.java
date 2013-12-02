@@ -11,6 +11,7 @@ import org.xmlrpc.android.MCrypt;
 import id.artefact.kiblat.db.DatabaseHandler;
 import id.artefact.kiblat.db.Post;
 import id.artefact.kiblat.help.BitmapDecoder;
+import id.artefact.kiblat.help.FormatDate;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -59,7 +60,7 @@ public class ContentActivity extends SherlockActivity {
 				startActivity(i);
 			}
 		});
-
+		FormatDate fd = new FormatDate();
 		ImageView home = (ImageView) findViewById(R.id.home);
 		home.setBackgroundResource(R.drawable.icon_back);
 		home.setOnClickListener(new OnClickListener() {
@@ -83,7 +84,7 @@ public class ContentActivity extends SherlockActivity {
 		DatabaseHandler db = new DatabaseHandler(this);
 		Post p = db.getPostById(id_post);
 		title.setText(p.getTitle());
-		tanggal.setText(p.getDate_post());
+		tanggal.setText(fd.convertTime(p.getDate_post()));
 		// konten.setText(Html.fromHtml(p.getContent()));
 		InputStream is = null;
 		BufferedReader reader;

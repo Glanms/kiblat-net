@@ -5,13 +5,19 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.xmlrpc.android.MCrypt;
 
 import id.artefact.kiblat.db.DatabaseHandler;
 import id.artefact.kiblat.db.Post;
 import id.artefact.kiblat.help.BitmapDecoder;
+import id.artefact.kiblat.help.CustomAdapter;
 import id.artefact.kiblat.help.FormatDate;
+import id.artefact.kiblat.help.LazyAdapterAbove;
+import id.artefact.kiblat.help.ScrollViewHelper;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -27,18 +33,18 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ImageView.ScaleType;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
-public class ContentActivity extends SherlockActivity {
+public class ContentActivity extends SherlockActivity{
 	String id_post;
 	String guid;
-
 	@SuppressWarnings("null")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +110,8 @@ public class ContentActivity extends SherlockActivity {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		konten.setText(result.replaceAll("<[^>]*>","").replaceAll("&nbsp;",""));
+		konten.setText(result.replaceAll("<[^>]*>", "")
+				.replaceAll("&nbsp;", ""));
 		guid = p.getGuid();
 		BitmapDecoder b = new BitmapDecoder();
 		try {
@@ -118,18 +125,20 @@ public class ContentActivity extends SherlockActivity {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
+
 		TextView closeiklan = (TextView) findViewById(R.id.closeiklan);
 		closeiklan.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				LinearLayout iklan = (LinearLayout) findViewById(R.id.iklan);
 				iklan.setVisibility(View.GONE);
-				
+
 			}
 		});
+		
+		setRelated(p.getTipe());
 
 	}
 
@@ -167,5 +176,24 @@ public class ContentActivity extends SherlockActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
+
+	public void setRelated(String tipe) {
+		ListView list = (ListView) findViewById(R.id.related);
+		ArrayList<HashMap<String, Object>> postitem = new ArrayList<HashMap<String, Object>>();
+		ListAdapter adapter;
+		String KEY_ID = "id", KEY_TITLE ="title";
+		DatabaseHandler db = new DatabaseHandler(getBaseContext());
+		List<Post> related = db.getRelatedPost(tipe);
+		for (Post p : related) {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put(KEY_ID, p.getId_post());
+			map.put(KEY_TITLE, p.getTitle());
+			postitem.add(map);
+		}
+		adapter = new CustomAdapter(getApplicationContext(), postitem, R.layout.list_related, new String[] {KEY_ID, KEY_TITLE}, new int[] { R.id.idpost, R.id.text_related});
+		list.setAdapter(adapter);
+		ScrollViewHelper.getListViewSize(list);
+	}
+
 
 }

@@ -24,7 +24,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
-
+import android.widget.AdapterView.OnItemClickListener;
 import android.os.Bundle;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -35,6 +35,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ImageView.ScaleType;
@@ -193,6 +194,19 @@ public class ContentActivity extends SherlockActivity{
 		adapter = new CustomAdapter(getApplicationContext(), postitem, R.layout.list_related, new String[] {KEY_ID, KEY_TITLE}, new int[] { R.id.idpost, R.id.text_related});
 		list.setAdapter(adapter);
 		ScrollViewHelper.getListViewSize(list);
+		list.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				// TODO Auto-generated method stub
+				TextView idpost = (TextView) arg1.findViewById(R.id.idpost);
+				String id = idpost.getText().toString();
+			    Intent i = new Intent(ContentActivity.this,ContentActivity.class);
+		        i.putExtra("id", id);
+			    startActivity(i);
+			}
+		});
 	}
 
 

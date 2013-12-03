@@ -31,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
@@ -84,7 +85,7 @@ public class ContentActivity extends SherlockActivity {
 		DatabaseHandler db = new DatabaseHandler(this);
 		Post p = db.getPostById(id_post);
 		title.setText(p.getTitle());
-		tanggal.setText(fd.convertTime(p.getDate_post()));
+		tanggal.setText(fd.convert(p.getDate_post()));
 		// konten.setText(Html.fromHtml(p.getContent()));
 		InputStream is = null;
 		BufferedReader reader;
@@ -117,6 +118,18 @@ public class ContentActivity extends SherlockActivity {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		
+		TextView closeiklan = (TextView) findViewById(R.id.closeiklan);
+		closeiklan.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				LinearLayout iklan = (LinearLayout) findViewById(R.id.iklan);
+				iklan.setVisibility(View.GONE);
+				
+			}
+		});
 
 	}
 

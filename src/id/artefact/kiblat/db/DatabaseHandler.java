@@ -153,23 +153,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 		return result;
 	}
-	
-	public boolean is_exist(){
+
+	public boolean is_exist() {
 		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor cur = db.rawQuery("SELECT " + KEY_ID_POST + " FROM " + TABLE_POST, null);
+		Cursor cur = db.rawQuery("SELECT " + KEY_ID_POST + " FROM "
+				+ TABLE_POST, null);
 		int i = 0;
-		if(cur.moveToFirst()){
+		if (cur.moveToFirst()) {
 			do {
 				i++;
 			} while (cur.moveToNext());
 		}
 		cur.close();
 		db.close();
-		if(i > 0)
+		if (i > 0)
 			return true;
 		else
-		return false;
-		
+			return false;
+
 	}
 
 	public List<Post> getPostsByTipe(String tipe, String tax, String least_id) {
@@ -218,18 +219,42 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		Post p = new Post();
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cur = db.rawQuery("SELECT " + KEY_TITLE + "," + KEY_POST_DATE
-				+ "," + KEY_GUID + "," + KEY_CONTENT + " FROM " + TABLE_POST
-				+ " WHERE " + KEY_ID_POST + "=" + id, null);
+				+ "," + KEY_GUID + "," + KEY_CONTENT + "," + KEY_TIPE_POST
+				+ " FROM " + TABLE_POST + " WHERE " + KEY_ID_POST + "=" + id,
+				null);
 		if (cur != null)
 			cur.moveToFirst();
 		p.setTitle(cur.getString(cur.getColumnIndex(KEY_TITLE)));
 		p.setDate_post(cur.getString(cur.getColumnIndex(KEY_POST_DATE)));
 		p.setGuid(cur.getString(cur.getColumnIndex(KEY_GUID)));
 		p.setContent(cur.getString(cur.getColumnIndex(KEY_CONTENT)));
-
+		p.setTipe(cur.getString(cur.getColumnIndex(KEY_TIPE_POST)));
 		cur.close();
 		db.close();
 		return p;
+	}
+
+	public List<Post> getRelatedPost(String Tipe) {
+		List<Post> posts = new ArrayList<Post>();
+		String selectQuery = "SELECT * FROM " + TABLE_POST
+				+ " WHERE " + KEY_TIPE_POST + "=" + "'"+Tipe
+				+ "'" + " ORDER BY RANDOM() LIMIT 3";
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		if (cursor.moveToFirst()) {
+			do {
+				Post po = new Post();
+				po.setId_post(cursor.getString(0));
+				po.setTitle(cursor.getString(1));
+				posts.add(po);
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+		db.close();
+
+		// return contact list
+		return posts;
+
 	}
 
 }

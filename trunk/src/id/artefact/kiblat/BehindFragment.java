@@ -79,6 +79,7 @@ public class BehindFragment extends ListFragment {
 		items.add(new EntryItem(R.drawable.category, "Kolom"));
 		items.add(new EntryItem(R.drawable.about, "About"));
 		items.add(new EntryItem(R.drawable.web, "Mobile Site"));
+		items.add(new EntryItem(R.drawable.email, "Feedback"));
 		EntryAdapter adapter = new EntryAdapter(getListView().getContext(),
 				items);
 		getListView().setAdapter(adapter);
@@ -123,6 +124,14 @@ public class BehindFragment extends ListFragment {
 			Intent i = new Intent(Intent.ACTION_VIEW);
 			i.setData(Uri.parse(url));
 			startActivity(i);
+		case 11:
+			Intent intent = new Intent(Intent.ACTION_SENDTO);
+			intent.setType("text/plain");
+			intent.putExtra(Intent.EXTRA_EMAIL, "kiblatmedia@gmail.com");
+			intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+			intent.putExtra(Intent.EXTRA_TEXT, "I'm email body.");
+
+			startActivity(Intent.createChooser(intent, "Send Email"));
 		}
 		if (newContent != null)
 			switchFragment(newContent);
@@ -160,7 +169,9 @@ public class BehindFragment extends ListFragment {
 
 							Log.d("texxxxxxxxxxxxxxxt...", txtSearch.getText()
 									.toString());
-							Fragment newContent = new AboveSearch("Hasil Pencarian", txtSearch.getText().toString());
+							Fragment newContent = new AboveSearch(
+									"Hasil Pencarian", txtSearch.getText()
+											.toString());
 							if (newContent != null)
 								switchFragment(newContent);
 						}

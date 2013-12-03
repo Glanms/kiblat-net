@@ -19,7 +19,8 @@ public class ServiceHelper {
 
 	private URI uri = URI
 			//.create("http://www.kiblat.net/service/index.php/server");
-			.create("http://192.168.97.1/kiblat-net/index.php/server");
+			//.create("http://192.168.97.1/kiblat-net/index.php/server");
+			.create("http://192.168.1.6/kiblat-webservice/index.php/server");
 	private XMLRPCClient client = new XMLRPCClient(uri);
 
 	public boolean daftar(Context contex, String nama, String email,
@@ -43,6 +44,17 @@ public class ServiceHelper {
 		String text = "";
 		try {
 			text = (String) client.call("getPost");
+		} catch (Exception e) {
+			// TODO: handle exception
+			text = "";
+		}
+		return text;
+	}
+	
+	public String ads() {
+		String text = "";
+		try {
+			text = (String) client.call("ads");
 		} catch (Exception e) {
 			// TODO: handle exception
 			text = "";

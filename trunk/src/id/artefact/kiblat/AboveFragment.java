@@ -1,6 +1,11 @@
 package id.artefact.kiblat;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,13 +30,16 @@ import id.artefact.kiblat.help.BitmapDecoder;
 import id.artefact.kiblat.help.FormatDate;
 import id.artefact.kiblat.help.LazyAdapterAbove;
 import id.artefact.kiblat.help.LazyAdapterBehindMenu;
+import id.artefact.kiblat.help.MemoryCache;
 import id.artefact.kiblat.help.ServiceHelper;
 import android.annotation.SuppressLint;
 import android.app.ActionBar.LayoutParams;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -40,12 +48,15 @@ import android.os.Environment;
 import android.provider.ContactsContract.CommonDataKinds.Im;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -62,15 +73,20 @@ public class AboveFragment extends ListFragment {
 	public final static String KEY_DATE = "date";
 	public final static String KEY_ID = "id";
 	private LinkedList<String> mListItems;
-
+	private static LayoutInflater inflater = null;
 	String last_id_list = "0";
-
+	FrameLayout fadsfl;
+	ImageView imgads;
 	String last_list = "0";
 	String tipe = "";
 	ArrayList<HashMap<String, String>> postitem;
 	DatabaseHandler db;
 	ServiceHelper srv;
 	View header;
+	View adsdel;
+	String urlads = "";
+	Bitmap bmp;
+	MemoryCache memoryCache = new MemoryCache();
 
 	public AboveFragment(String tipez) {
 		tipe = tipez;
@@ -83,6 +99,7 @@ public class AboveFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
+
 		return inflater.inflate(R.layout.list_above, null);
 
 	}
@@ -124,6 +141,20 @@ public class AboveFragment extends ListFragment {
 				});
 
 		setList();
+		new AdsTask().execute();
+		Button clsads = (Button) getActivity().findViewById(R.id.clsikl);
+		fadsfl = (FrameLayout) getActivity().findViewById(R.id.adsfl);
+		fadsfl.setVisibility(View.VISIBLE);
+		imgads = (ImageView) getActivity().findViewById(R.id.imgads);
+		clsads.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				fadsfl.setVisibility(View.GONE);
+			}
+		});
+		// tampilads();
 	}
 
 	private class SampleItem {
@@ -141,7 +172,7 @@ public class AboveFragment extends ListFragment {
 		// TODO Auto-generated method stub
 		TextView id_post = (TextView) v.findViewById(R.id.id);
 		String id_p = id_post.getText().toString();
-		//Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
+		// Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
 		Intent i = new Intent(v.getContext(), ContentActivity.class);
 		i.putExtra("id", id_p);
 		startActivity(i);
@@ -181,7 +212,7 @@ public class AboveFragment extends ListFragment {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			// TODO Auto-generated method stub
-			//((PullAndLoadListView) getListView()).onRefreshComplete();
+			// ((PullAndLoadListView) getListView()).onRefreshComplete();
 			setList();
 			// dialog.dismiss();
 		}
@@ -430,6 +461,125 @@ public class AboveFragment extends ListFragment {
 			}
 		});
 
+	}
+
+	// public void tampilads() {
+	// adsdel.setVisibility(View.GONE);
+	// inflater = (LayoutInflater) getActivity()
+	// .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	// FrameLayout fl=(FrameLayout)getActivity().findViewById(R.id.fl);
+	// View vi = inflater.inflate(R.layout.ads, null);
+	// android.widget.FrameLayout.LayoutParams lay = new
+	// FrameLayout.LayoutParams(LayoutParams.FILL_PARENT,50);
+	// lay.gravity=Gravity.BOTTOM;
+	// vi.setLayoutParams(lay);
+	// //vi.setMinimumHeight(30);
+	// fl.addView(vi);
+	// adsdel=vi;
+	// Button clsads=(Button) vi.findViewById(R.id.clsbtn);
+	// clsads.setOnClickListener(new OnClickListener() {
+	//
+	// @Override
+	// public void onClick(View v) {
+	// // TODO Auto-generated method stub
+	// adsdel.setVisibility(View.GONE);
+	// }
+	// });
+	// }
+
+	private class AdsTask extends AsyncTask<String, Void, Boolean> {
+
+		protected void onPreExecute() {
+			// dialog.setMessage("Loading....");
+			// dialog.show();
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			// TODO Auto-generated method stub
+			// ((PullAndLoadListView) getListView()).onRefreshComplete();
+			// tampilads();
+			// dialog.dismiss();
+			// imgads.set
+			if(bmp!=null)
+				imgads.setImageBitmap(bmp);
+
+			
+
+		}
+
+		@Override
+		protected Boolean doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			InputStream in = null;
+		    BufferedOutputStream out = null;
+			try {
+				urlads = srv.ads();
+				Log.i("ads", urlads);
+				 try {
+				        URL url = new URL(urlads);
+				        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+				        connection.setDoInput(true);
+				        connection.connect();
+				        InputStream input = connection.getInputStream();
+				        bmp = BitmapFactory.decodeStream(input);
+				        
+				    } catch (IOException e) {
+				        e.printStackTrace();
+				    
+				    }
+				//Log.i("ads", urlads);
+				//bmp= memoryCache.get(urlads);
+//				try {
+//					Log.i("xmlrpc", "try mulai insert");
+//					JSONArray jsonArray = new JSONArray("[" + srvberitaterkini
+//							+ "]");
+//					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
+//
+//					FileHelper fh = new FileHelper();
+//					db.deletePostbyTipe("terkini");
+//					Log.i("xmlrpc", "deleted");
+//					for (int i = 0; i < innerJsonArray.length(); i++) {
+//						JSONObject json = innerJsonArray.getJSONObject(i);
+//						Post p = new Post();
+//						p.setId_post(json.getString("ID"));
+//						p.setDate_post(json.getString("post_date"));
+//						p.setContent(json.getString("content"));
+//						p.setTitle(json.getString("title"));
+//						p.setGuid(json.getString("guid"));
+//						p.setTax("");
+//						p.setTipe("terkini");
+//						p.setCount("");
+//						String url_img = json.getString("img");
+//						Log.i("img", url_img);
+//						// donlod gambar disini
+//						// kalau berhasil disimpen path nya
+//						if (url_img != null) {
+//							try {
+//								en = mc.encrypt(json.getString("ID") + ".jpg");
+//								inet.downloadImage(url_img, mc.bytesToHex(en));
+//								Log.i("download", json.getString("ID") + ".jpg");
+//								p.setImg(json.getString("ID") + ".jpg");
+//							} catch (Exception e) {
+//								// TODO: handle exception
+//								e.printStackTrace();
+//							}
+//						} else {
+//							p.setImg(null);
+//						}
+//
+//						db.addPost(p);
+//						Log.i("xmlrpc", "insert");
+//					}
+//				} catch (Exception e) {
+//					Log.i("xmlrpc", "gagal jadi array");
+//				}
+				return true;
+			} catch (Exception e) {
+				// TODO: handle exception
+				return false;
+			}
+		}
 	}
 
 }

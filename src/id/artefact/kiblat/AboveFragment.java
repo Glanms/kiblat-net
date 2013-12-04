@@ -72,11 +72,9 @@ public class AboveFragment extends ListFragment {
 	public final static String KEY_THUMB_URL = "thumb_url";
 	public final static String KEY_DATE = "date";
 	public final static String KEY_ID = "id";
-	private LinkedList<String> mListItems;
-	private static LayoutInflater inflater = null;
+
 	String last_id_list = "0";
-	FrameLayout fadsfl;
-	ImageView imgads;
+	
 	String last_list = "0";
 	String tipe = "";
 	ArrayList<HashMap<String, String>> postitem;
@@ -87,6 +85,8 @@ public class AboveFragment extends ListFragment {
 	String urlads = "";
 	Bitmap bmp;
 	MemoryCache memoryCache = new MemoryCache();
+	FrameLayout fadsfl;
+	ImageView imgads;
 
 	public AboveFragment(String tipez) {
 		tipe = tipez;

@@ -1,15 +1,20 @@
 package id.artefact.kiblat;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.xmlrpc.android.MCrypt;
+
 
 import id.artefact.kiblat.db.DatabaseHandler;
 import id.artefact.kiblat.db.Post;
@@ -17,7 +22,9 @@ import id.artefact.kiblat.help.BitmapDecoder;
 import id.artefact.kiblat.help.CustomAdapter;
 import id.artefact.kiblat.help.FormatDate;
 import id.artefact.kiblat.help.LazyAdapterAbove;
+import id.artefact.kiblat.help.MemoryCache;
 import id.artefact.kiblat.help.ScrollViewHelper;
+import id.artefact.kiblat.help.ServiceHelper;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -25,8 +32,10 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import android.widget.AdapterView.OnItemClickListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -36,6 +45,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ImageView.ScaleType;
@@ -46,12 +57,20 @@ import android.widget.TextView;
 public class ContentActivity extends SherlockActivity{
 	String id_post;
 	String guid;
+	View adsdel;
+	String urlads = "";
+	Bitmap bmp;
+	MemoryCache memoryCache = new MemoryCache();
+	FrameLayout fadsfl;
+	ImageView imgads;
+	ServiceHelper srv;
+	
 	@SuppressWarnings("null")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_content);
-
+		srv = new ServiceHelper();
 		getSupportActionBar().setBackgroundDrawable(
 				new ColorDrawable(Color.parseColor("#FFFFFF")));
 		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -127,18 +146,19 @@ public class ContentActivity extends SherlockActivity{
 			// TODO: handle exception
 		}
 
-		TextView closeiklan = (TextView) findViewById(R.id.closeiklan);
-		closeiklan.setOnClickListener(new OnClickListener() {
+		new AdsTask().execute();
+		Button clsads = (Button) this.findViewById(R.id.clsikl);
+		fadsfl = (FrameLayout) this.findViewById(R.id.adsfl);
+		fadsfl.setVisibility(View.VISIBLE);
+		imgads = (ImageView) this.findViewById(R.id.imgads);
+		clsads.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				LinearLayout iklan = (LinearLayout) findViewById(R.id.iklan);
-				iklan.setVisibility(View.GONE);
-
+				fadsfl.setVisibility(View.GONE);
 			}
 		});
-		
 		setRelated(p.getTipe());
 
 	}
@@ -208,6 +228,53 @@ public class ContentActivity extends SherlockActivity{
 			}
 		});
 	}
+	private class AdsTask extends AsyncTask<String, Void, Boolean> {
 
+		protected void onPreExecute() {
+			// dialog.setMessage("Loading....");
+			// dialog.show();
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			// TODO Auto-generated method stub
+			// ((PullAndLoadListView) getListView()).onRefreshComplete();
+			// tampilads();
+			// dialog.dismiss();
+			// imgads.set
+			if (bmp != null)
+				imgads.setImageBitmap(bmp);
+
+		}
+
+		@Override
+		protected Boolean doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			InputStream in = null;
+			BufferedOutputStream out = null;
+			try {
+				urlads = srv.ads();
+				Log.i("ads", urlads);
+				try {
+					URL url = new URL(urlads);
+					HttpURLConnection connection = (HttpURLConnection) url
+							.openConnection();
+					connection.setDoInput(true);
+					connection.connect();
+					InputStream input = connection.getInputStream();
+					bmp = BitmapFactory.decodeStream(input);
+
+				} catch (IOException e) {
+					e.printStackTrace();
+
+				}
+
+				return true;
+			} catch (Exception e) {
+				// TODO: handle exception
+				return false;
+			}
+		}
+	}
 
 }

@@ -1,12 +1,19 @@
 package id.artefact.kiblat;
 
+
 import id.artefact.kiblat.db.DatabaseHandler;
 import id.artefact.kiblat.db.Post;
 import id.artefact.kiblat.help.BitmapDecoder;
 import id.artefact.kiblat.help.LazyAdapterAbove;
+import id.artefact.kiblat.help.MemoryCache;
 import id.artefact.kiblat.help.ServiceHelper;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -29,6 +36,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -41,6 +49,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -65,6 +75,13 @@ public class AboveCategory extends ListFragment {
 	ArrayList<HashMap<String, String>> postitem;
 	DatabaseHandler db;
 	ServiceHelper srv;
+
+	View adsdel;
+	String urlads = "";
+	Bitmap bmp;
+	MemoryCache memoryCache = new MemoryCache();
+	FrameLayout fadsfl;
+	ImageView imgads;
 
 	public AboveCategory(String id_kategori, String nama_kategori) {
 		id_category = id_kategori;
@@ -112,6 +129,19 @@ public class AboveCategory extends ListFragment {
 		TextView subtitle = (TextView) getView().findViewById(R.id.subtitle);
 		subtitle.setText(tipe_category);
 		setList();
+		new AdsTask().execute();
+		Button clsads = (Button) getActivity().findViewById(R.id.clsikl);
+		fadsfl = (FrameLayout) getActivity().findViewById(R.id.adsfl);
+		fadsfl.setVisibility(View.VISIBLE);
+		imgads = (ImageView) getActivity().findViewById(R.id.imgads);
+		clsads.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				fadsfl.setVisibility(View.GONE);
+			}
+		});
 	}
 
 	private class SampleItem {
@@ -129,7 +159,7 @@ public class AboveCategory extends ListFragment {
 		// TODO Auto-generated method stub
 		TextView id_post = (TextView) v.findViewById(R.id.id);
 		String id_p = id_post.getText().toString();
-		//Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
+		// Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
 		Intent i = new Intent(v.getContext(), ContentActivity.class);
 		i.putExtra("id", id_p);
 		startActivity(i);
@@ -375,4 +405,47 @@ public class AboveCategory extends ListFragment {
 
 	}
 
+	private class AdsTask extends AsyncTask<String, Void, Boolean> {
+
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+
+			if (bmp != null)
+				imgads.setImageBitmap(bmp);
+
+		}
+
+		@Override
+		protected Boolean doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			InputStream in = null;
+			BufferedOutputStream out = null;
+			try {
+				urlads = srv.ads();
+				Log.i("ads", urlads);
+				try {
+					URL url = new URL(urlads);
+					HttpURLConnection connection = (HttpURLConnection) url
+							.openConnection();
+					connection.setDoInput(true);
+					connection.connect();
+					InputStream input = connection.getInputStream();
+					bmp = BitmapFactory.decodeStream(input);
+
+				} catch (IOException e) {
+					e.printStackTrace();
+
+				}
+
+				return true;
+			} catch (Exception e) {
+				// TODO: handle exception
+				return false;
+			}
+		}
+	}
 }

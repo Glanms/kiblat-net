@@ -1,6 +1,11 @@
 package id.artefact.kiblat;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,11 +24,13 @@ import com.markupartist.android.widget.PullAndLoadListView.OnLoadMoreListener;
 import com.markupartist.android.widget.PullToRefreshListView;
 import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 
+
 import id.artefact.kiblat.db.DatabaseHandler;
 import id.artefact.kiblat.db.Post;
 import id.artefact.kiblat.help.BitmapDecoder;
 import id.artefact.kiblat.help.LazyAdapterAbove;
 import id.artefact.kiblat.help.LazyAdapterBehindMenu;
+import id.artefact.kiblat.help.MemoryCache;
 import id.artefact.kiblat.help.ServiceHelper;
 import android.annotation.SuppressLint;
 import android.app.ActionBar.LayoutParams;
@@ -31,6 +38,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -44,7 +52,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -70,6 +80,12 @@ public class AbovePopuler extends ListFragment {
 	DatabaseHandler db;
 	ServiceHelper srv;
 	View header;
+	View adsdel;
+	String urlads = "";
+	Bitmap bmp;
+	MemoryCache memoryCache = new MemoryCache();
+	FrameLayout fadsfl;
+	ImageView imgads;
 
 	public AbovePopuler(String tipez) {
 		tipe = tipez;
@@ -95,24 +111,30 @@ public class AbovePopuler extends ListFragment {
 				null);
 		TextView subtitle = (TextView) getView().findViewById(R.id.subtitle);
 		subtitle.setText(tipe);
-		// SampleAdapter adapter = new SampleAdapter(getActivity());
-		// for (int i = 0; i < 20; i++) {
-		// adapter.add(new SampleItem("Sample List",
-		// android.R.drawable.ic_menu_search));
-		// }
-		// setListAdapter(adapter);
+	
 		((PullAndLoadListView) getListView())
 				.setOnRefreshListener(new OnRefreshListener() {
 					@Override
 					public void onRefresh() {
-						// Do work to refresh the list here.
-						// new GetDataTask().execute();
-						// execute
+	
 						new UpdateTask().execute();
 					}
 				});
 
 		setList();
+		new AdsTask().execute();
+		Button clsads = (Button) getActivity().findViewById(R.id.clsikl);
+		fadsfl = (FrameLayout) getActivity().findViewById(R.id.adsfl);
+		fadsfl.setVisibility(View.VISIBLE);
+		imgads = (ImageView) getActivity().findViewById(R.id.imgads);
+		clsads.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				fadsfl.setVisibility(View.GONE);
+			}
+		});
 	}
 
 	private class SampleItem {
@@ -130,7 +152,7 @@ public class AbovePopuler extends ListFragment {
 		// TODO Auto-generated method stub
 		TextView id_post = (TextView) v.findViewById(R.id.id);
 		String id_p = id_post.getText().toString();
-		//Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
+		// Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
 		Intent i = new Intent(v.getContext(), ContentActivity.class);
 		i.putExtra("id", id_p);
 		startActivity(i);
@@ -279,4 +301,52 @@ public class AbovePopuler extends ListFragment {
 
 	}
 
+	private class AdsTask extends AsyncTask<String, Void, Boolean> {
+
+		protected void onPreExecute() {
+			// dialog.setMessage("Loading....");
+			// dialog.show();
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			// TODO Auto-generated method stub
+			// ((PullAndLoadListView) getListView()).onRefreshComplete();
+			// tampilads();
+			// dialog.dismiss();
+			// imgads.set
+			if (bmp != null)
+				imgads.setImageBitmap(bmp);
+
+		}
+
+		@Override
+		protected Boolean doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			InputStream in = null;
+			BufferedOutputStream out = null;
+			try {
+				urlads = srv.ads();
+				Log.i("ads", urlads);
+				try {
+					URL url = new URL(urlads);
+					HttpURLConnection connection = (HttpURLConnection) url
+							.openConnection();
+					connection.setDoInput(true);
+					connection.connect();
+					InputStream input = connection.getInputStream();
+					bmp = BitmapFactory.decodeStream(input);
+
+				} catch (IOException e) {
+					e.printStackTrace();
+
+				}
+
+				return true;
+			} catch (Exception e) {
+				// TODO: handle exception
+				return false;
+			}
+		}
+	}
 }

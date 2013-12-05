@@ -130,7 +130,9 @@ public class ContentActivity extends SherlockActivity{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		konten.setText(result.replaceAll("<[^>]*>", "")
+		
+		//System.out.print(result.substring(startIndex + 19, EndIndex));
+		konten.setText(result.replaceAll("(?s)<!--\\[if(.*?)\\[endif\\] *-->", "").replaceAll("</p>", "\n").replaceAll("<[^>]*>", "")
 				.replaceAll("&nbsp;", ""));
 		guid = p.getGuid();
 		BitmapDecoder b = new BitmapDecoder();

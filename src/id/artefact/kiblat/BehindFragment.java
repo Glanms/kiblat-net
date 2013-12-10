@@ -120,18 +120,11 @@ public class BehindFragment extends ListFragment {
 			startActivity(j);
 			break;
 		case 10:
-			String url = "http://m.kiblat.net";
-			Intent i = new Intent(Intent.ACTION_VIEW);
-			i.setData(Uri.parse(url));
-			startActivity(i);
+			GoTo("Web");
+			break;
 		case 11:
-			Intent intent = new Intent(Intent.ACTION_SENDTO);
-			intent.setType("text/plain");
-			intent.putExtra(Intent.EXTRA_EMAIL, "kiblatmedia@gmail.com");
-			intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-			intent.putExtra(Intent.EXTRA_TEXT, "I'm email body.");
-
-			startActivity(Intent.createChooser(intent, "Send Email"));
+			GoTo("Email");
+			break;
 		}
 		if (newContent != null)
 			switchFragment(newContent);
@@ -148,6 +141,21 @@ public class BehindFragment extends ListFragment {
 		} else {
 			MainActivity fca = (MainActivity) getActivity();
 			fca.switchContent(fragment);
+		}
+	}
+
+	private void GoTo(String Var) {
+		if (Var.equals("Web")) {
+			Intent l = new Intent(Intent.ACTION_VIEW,
+					Uri.parse("http://m.kiblat.net"));
+			startActivity(l);
+		} else if (Var.equals("Email")) {
+			Intent intent = new Intent(Intent.ACTION_SENDTO);
+			intent.setType("text/plain");
+			intent.putExtra(Intent.EXTRA_EMAIL, "kiblatmedia@gmail.com");
+			intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+			intent.putExtra(Intent.EXTRA_TEXT, "I'm email body.");
+			startActivity(Intent.createChooser(intent, "Send Email"));
 		}
 	}
 

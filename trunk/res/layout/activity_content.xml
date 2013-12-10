@@ -87,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ini paragraf, isinya yaa isi konten ya dong. Ini paragraf, isinya yaa isi konten ya dong. Ini paragraf, isinya yaa isi konten ya dong. Ini paragraf, isinya yaa isi konten ya dong. Ini paragraf, isinya yaa isi konten ya dong. Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa... Bla..Blaa..Blaaaaaaaaa..."
-                    android:textSize="14dp" />
+                    android:textSize="16dp" />
             </LinearLayout>
 
             <TextView

@@ -231,7 +231,7 @@ public class AboveCategory extends ListFragment {
 						p.setTitle(json.getString("title"));
 						p.setGuid(json.getString("guid"));
 						p.setTax(json.getString("tax"));
-						p.setTipe("category");
+						p.setTipe(tipe_category);
 						p.setCount("");
 						String url_img = json.getString("img");
 						Log.i("img", url_img);
@@ -306,7 +306,7 @@ public class AboveCategory extends ListFragment {
 								p.setTitle(json.getString("title"));
 								p.setGuid(json.getString("guid"));
 								p.setTax(json.getString("tax"));
-								p.setTipe("category");
+								p.setTipe(tipe_category);
 								p.setCount("");
 								String url_img = json.getString("img");
 								Log.i("img", url_img);
@@ -350,7 +350,7 @@ public class AboveCategory extends ListFragment {
 		@Override
 		protected void onPostExecute(Void result) {
 
-			List<Post> posts = db.getPostsByTipe("category", tipe_category,
+			List<Post> posts = db.getPostsByTipe(tipe_category, tipe_category,
 					last_list);
 
 			for (Post p : posts) {
@@ -382,7 +382,7 @@ public class AboveCategory extends ListFragment {
 
 	public void setList() {
 		Log.i("tipe", tipe_category);
-		List<Post> posts = db.getPostsByTipe("category", tipe_category,
+		List<Post> posts = db.getPostsByTipe(tipe_category, tipe_category,
 				"10000000000000");
 		postitem = new ArrayList<HashMap<String, String>>();
 		// creating new HashMap

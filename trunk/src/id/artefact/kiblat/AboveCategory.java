@@ -230,7 +230,7 @@ public class AboveCategory extends ListFragment {
 						p.setContent(json.getString("content"));
 						p.setTitle(json.getString("title"));
 						p.setGuid(json.getString("guid"));
-						p.setTax(json.getString("tax"));
+						p.setTax(tipe_category);
 						p.setTipe(tipe_category);
 						p.setCount("");
 						String url_img = json.getString("img");
@@ -305,7 +305,7 @@ public class AboveCategory extends ListFragment {
 								p.setContent(json.getString("content"));
 								p.setTitle(json.getString("title"));
 								p.setGuid(json.getString("guid"));
-								p.setTax(json.getString("tax"));
+								p.setTax(tipe_category);
 								p.setTipe(tipe_category);
 								p.setCount("");
 								String url_img = json.getString("img");

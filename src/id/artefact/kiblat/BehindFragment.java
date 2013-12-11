@@ -113,7 +113,7 @@ public class BehindFragment extends ListFragment {
 			newContent = new AboveCategory("20", "Artikel");
 			break;
 		case 8:
-			newContent = new AboveCategory("1842", "Kolom");
+			newContent = new AboveCategory("1002", "Kolom");
 			break;
 		case 9:
 			Intent j = new Intent(getActivity(), AboutActivity.class);

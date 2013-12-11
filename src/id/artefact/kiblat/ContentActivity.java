@@ -13,8 +13,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.xmlrpc.android.MCrypt;
-
 
 import id.artefact.kiblat.db.DatabaseHandler;
 import id.artefact.kiblat.db.Post;
@@ -32,6 +33,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import android.widget.AdapterView.OnItemClickListener;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Intent;
@@ -54,7 +56,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class ContentActivity extends SherlockActivity{
+public class ContentActivity extends SherlockActivity {
 	String id_post;
 	String guid;
 	View adsdel;
@@ -64,7 +66,7 @@ public class ContentActivity extends SherlockActivity{
 	FrameLayout fadsfl;
 	ImageView imgads;
 	ServiceHelper srv;
-	
+
 	@SuppressWarnings("null")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -130,9 +132,11 @@ public class ContentActivity extends SherlockActivity{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-		//System.out.print(result.substring(startIndex + 19, EndIndex));
-		konten.setText(result.replaceAll("(?s)<!--\\[if(.*?)\\[endif\\] *-->", "").replaceAll("</p>", "\n").replaceAll("<[^>]*>", "")
+
+		// System.out.print(result.substring(startIndex + 19, EndIndex));
+		konten.setText(result
+				.replaceAll("(?s)<!--\\[if(.*?)\\[endif\\] *-->", "")
+				.replaceAll("</p>", "\n").replaceAll("<[^>]*>", "")
 				.replaceAll("&nbsp;", ""));
 		guid = p.getGuid();
 		BitmapDecoder b = new BitmapDecoder();
@@ -204,7 +208,7 @@ public class ContentActivity extends SherlockActivity{
 		ListView list = (ListView) findViewById(R.id.related);
 		ArrayList<HashMap<String, Object>> postitem = new ArrayList<HashMap<String, Object>>();
 		ListAdapter adapter;
-		String KEY_ID = "id", KEY_TITLE ="title";
+		String KEY_ID = "id", KEY_TITLE = "title";
 		DatabaseHandler db = new DatabaseHandler(getBaseContext());
 		List<Post> related = db.getRelatedPost(tipe);
 		for (Post p : related) {
@@ -213,7 +217,9 @@ public class ContentActivity extends SherlockActivity{
 			map.put(KEY_TITLE, p.getTitle());
 			postitem.add(map);
 		}
-		adapter = new CustomAdapter(getApplicationContext(), postitem, R.layout.list_related, new String[] {KEY_ID, KEY_TITLE}, new int[] { R.id.idpost, R.id.text_related});
+		adapter = new CustomAdapter(getApplicationContext(), postitem,
+				R.layout.list_related, new String[] { KEY_ID, KEY_TITLE },
+				new int[] { R.id.idpost, R.id.text_related });
 		list.setAdapter(adapter);
 		ScrollViewHelper.getListViewSize(list);
 		list.setOnItemClickListener(new OnItemClickListener() {
@@ -224,12 +230,14 @@ public class ContentActivity extends SherlockActivity{
 				// TODO Auto-generated method stub
 				TextView idpost = (TextView) arg1.findViewById(R.id.idpost);
 				String id = idpost.getText().toString();
-			    Intent i = new Intent(ContentActivity.this,ContentActivity.class);
-		        i.putExtra("id", id);
-			    startActivity(i);
+				Intent i = new Intent(ContentActivity.this,
+						ContentActivity.class);
+				i.putExtra("id", id);
+				startActivity(i);
 			}
 		});
 	}
+
 	private class AdsTask extends AsyncTask<String, Void, Boolean> {
 
 		protected void onPreExecute() {
@@ -246,7 +254,15 @@ public class ContentActivity extends SherlockActivity{
 			// imgads.set
 			if (bmp != null)
 				imgads.setImageBitmap(bmp);
+				imgads.setOnClickListener(new OnClickListener() {
 
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent l = new Intent(Intent.ACTION_VIEW, Uri.parse(urlads));
+					startActivity(l);
+				}
+			});
 		}
 
 		@Override
@@ -255,22 +271,28 @@ public class ContentActivity extends SherlockActivity{
 			InputStream in = null;
 			BufferedOutputStream out = null;
 			try {
-				urlads = srv.ads();
-				Log.i("ads", urlads);
-				try {
-					URL url = new URL(urlads);
-					HttpURLConnection connection = (HttpURLConnection) url
-							.openConnection();
-					connection.setDoInput(true);
-					connection.connect();
-					InputStream input = connection.getInputStream();
-					bmp = BitmapFactory.decodeStream(input);
+				String ads = srv.ads();
+				Log.i("ads", ads);
+				JSONArray jsonArr = new JSONArray("[" + ads + "]");
+				for (int i = 0; i < jsonArr.length(); i++) {
+					JSONObject json = jsonArr.getJSONObject(i);
+					try {
+						URL url = new URL(json.getString("image"));
+						Log.i("img", json.getString("image"));
+						HttpURLConnection connection = (HttpURLConnection) url
+								.openConnection();
+						connection.setDoInput(true);
+						connection.connect();
+						InputStream input = connection.getInputStream();
+						bmp = BitmapFactory.decodeStream(input);
 
-				} catch (IOException e) {
-					e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
 
+					}
+					urlads = json.getString("url");
+					Log.i("url", json.getString("url"));
 				}
-
 				return true;
 			} catch (Exception e) {
 				// TODO: handle exception

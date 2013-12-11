@@ -1,6 +1,5 @@
 package id.artefact.kiblat;
 
-
 import id.artefact.kiblat.db.DatabaseHandler;
 import id.artefact.kiblat.db.Post;
 import id.artefact.kiblat.help.BitmapDecoder;
@@ -39,6 +38,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -416,7 +416,15 @@ public class AboveCategory extends ListFragment {
 
 			if (bmp != null)
 				imgads.setImageBitmap(bmp);
+			imgads.setOnClickListener(new OnClickListener() {
 
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent l = new Intent(Intent.ACTION_VIEW, Uri.parse(urlads));
+					startActivity(l);
+				}
+			});
 		}
 
 		@Override
@@ -425,22 +433,28 @@ public class AboveCategory extends ListFragment {
 			InputStream in = null;
 			BufferedOutputStream out = null;
 			try {
-				urlads = srv.ads();
-				Log.i("ads", urlads);
-				try {
-					URL url = new URL(urlads);
-					HttpURLConnection connection = (HttpURLConnection) url
-							.openConnection();
-					connection.setDoInput(true);
-					connection.connect();
-					InputStream input = connection.getInputStream();
-					bmp = BitmapFactory.decodeStream(input);
+				String ads = srv.ads();
+				Log.i("ads", ads);
+				JSONArray jsonArr = new JSONArray("[" + ads + "]");
+				for (int i = 0; i < jsonArr.length(); i++) {
+					JSONObject json = jsonArr.getJSONObject(i);
+					try {
+						URL url = new URL(json.getString("image"));
+						Log.i("img", json.getString("image"));
+						HttpURLConnection connection = (HttpURLConnection) url
+								.openConnection();
+						connection.setDoInput(true);
+						connection.connect();
+						InputStream input = connection.getInputStream();
+						bmp = BitmapFactory.decodeStream(input);
 
-				} catch (IOException e) {
-					e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
 
+					}
+					urlads = json.getString("url");
+					Log.i("url", json.getString("url"));
 				}
-
 				return true;
 			} catch (Exception e) {
 				// TODO: handle exception

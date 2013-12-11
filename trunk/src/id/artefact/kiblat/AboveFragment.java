@@ -42,6 +42,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -503,6 +504,16 @@ public class AboveFragment extends ListFragment {
 			// imgads.set
 			if(bmp!=null)
 				imgads.setImageBitmap(bmp);
+				imgads.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Intent l = new Intent(Intent.ACTION_VIEW,
+								Uri.parse(urlads));
+						startActivity(l);	
+					}
+				});
 
 			
 
@@ -514,10 +525,14 @@ public class AboveFragment extends ListFragment {
 			InputStream in = null;
 		    BufferedOutputStream out = null;
 			try {
-				urlads = srv.ads();
-				Log.i("ads", urlads);
+				String ads = srv.ads();
+				Log.i("ads", ads);
+				JSONArray jsonArr = new JSONArray("[" + ads + "]");
+				for(int i = 0; i < jsonArr.length(); i ++){
+					JSONObject json = jsonArr.getJSONObject(i);
 				 try {
-				        URL url = new URL(urlads);
+				        URL url = new URL(json.getString("image"));
+				        Log.i("img", json.getString("image"));
 				        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 				        connection.setDoInput(true);
 				        connection.connect();
@@ -528,52 +543,9 @@ public class AboveFragment extends ListFragment {
 				        e.printStackTrace();
 				    
 				    }
-				//Log.i("ads", urlads);
-				//bmp= memoryCache.get(urlads);
-//				try {
-//					Log.i("xmlrpc", "try mulai insert");
-//					JSONArray jsonArray = new JSONArray("[" + srvberitaterkini
-//							+ "]");
-//					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
-//
-//					FileHelper fh = new FileHelper();
-//					db.deletePostbyTipe("terkini");
-//					Log.i("xmlrpc", "deleted");
-//					for (int i = 0; i < innerJsonArray.length(); i++) {
-//						JSONObject json = innerJsonArray.getJSONObject(i);
-//						Post p = new Post();
-//						p.setId_post(json.getString("ID"));
-//						p.setDate_post(json.getString("post_date"));
-//						p.setContent(json.getString("content"));
-//						p.setTitle(json.getString("title"));
-//						p.setGuid(json.getString("guid"));
-//						p.setTax("");
-//						p.setTipe("terkini");
-//						p.setCount("");
-//						String url_img = json.getString("img");
-//						Log.i("img", url_img);
-//						// donlod gambar disini
-//						// kalau berhasil disimpen path nya
-//						if (url_img != null) {
-//							try {
-//								en = mc.encrypt(json.getString("ID") + ".jpg");
-//								inet.downloadImage(url_img, mc.bytesToHex(en));
-//								Log.i("download", json.getString("ID") + ".jpg");
-//								p.setImg(json.getString("ID") + ".jpg");
-//							} catch (Exception e) {
-//								// TODO: handle exception
-//								e.printStackTrace();
-//							}
-//						} else {
-//							p.setImg(null);
-//						}
-//
-//						db.addPost(p);
-//						Log.i("xmlrpc", "insert");
-//					}
-//				} catch (Exception e) {
-//					Log.i("xmlrpc", "gagal jadi array");
-//				}
+				    urlads = json.getString("url");
+				    Log.i("url", json.getString("url"));
+				}
 				return true;
 			} catch (Exception e) {
 				// TODO: handle exception

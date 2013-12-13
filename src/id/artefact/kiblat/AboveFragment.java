@@ -169,6 +169,7 @@ public class AboveFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
+		if(id != -1){
 		// TODO Auto-generated method stub
 		TextView id_post = (TextView) v.findViewById(R.id.id);
 		String id_p = id_post.getText().toString();
@@ -176,6 +177,7 @@ public class AboveFragment extends ListFragment {
 		Intent i = new Intent(v.getContext(), ContentActivity.class);
 		i.putExtra("id", id_p);
 		startActivity(i);
+		}
 	}
 
 	public class SampleAdapter extends ArrayAdapter<SampleItem> {

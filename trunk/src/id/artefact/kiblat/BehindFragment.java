@@ -150,12 +150,13 @@ public class BehindFragment extends ListFragment {
 					Uri.parse("http://m.kiblat.net"));
 			startActivity(l);
 		} else if (Var.equals("Email")) {
-			Intent intent = new Intent(Intent.ACTION_SENDTO);
-			intent.setType("text/plain");
-			intent.putExtra(Intent.EXTRA_EMAIL, "kiblatmedia@gmail.com");
-			intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-			intent.putExtra(Intent.EXTRA_TEXT, "I'm email body.");
-			startActivity(Intent.createChooser(intent, "Send Email"));
+			Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND); 
+			emailIntent.setType("plain/text");  
+			String aEmailList[] = { "kiblatmedia@gmail.com" };  
+			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, aEmailList); 
+			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Feedback");   
+			emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Tuliskan Saran untuk Kiblat.Net");
+			startActivityForResult(emailIntent, 0);
 		}
 	}
 

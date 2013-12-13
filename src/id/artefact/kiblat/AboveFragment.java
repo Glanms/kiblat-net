@@ -135,7 +135,6 @@ public class AboveFragment extends ListFragment {
 					@Override
 					public void onLoadMore() {
 						// TODO Auto-generated method stub
-
 						new LoadDataTask().execute();
 
 					}
@@ -293,6 +292,7 @@ public class AboveFragment extends ListFragment {
 		protected Void doInBackground(Void... params) {
 			// last_id_list = db.getminidterkini();
 			// Log.i("xmlrpc", "min id " + last_id_list);
+			
 			InternetHelper inet = new InternetHelper();
 			MCrypt mc = new MCrypt();
 			byte[] en;
@@ -363,7 +363,7 @@ public class AboveFragment extends ListFragment {
 
 		@Override
 		protected void onPostExecute(Void result) {
-
+			
 			List<Post> posts = db.getPostsByTipe("terkini", "", last_list);
 
 			for (Post p : posts) {

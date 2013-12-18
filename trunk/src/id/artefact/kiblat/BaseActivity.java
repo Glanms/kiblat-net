@@ -75,17 +75,6 @@ public class BaseActivity extends SlidingFragmentActivity {
 				showMenu();
 			}
 		});
-		
-		logo.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplicationContext(), MainActivity.class);
-				startActivity(i);
-				finish();
-			}
-		});
 	}
 	
 	@Override

@@ -222,23 +222,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				+ "," + KEY_GUID + "," + KEY_CONTENT + "," + KEY_TIPE_POST
 				+ " FROM " + TABLE_POST + " WHERE " + KEY_ID_POST + "=" + id,
 				null);
+		if(cur.getCount() > 0)
 		if (cur != null)
-			cur.moveToFirst();
-		p.setTitle(cur.getString(cur.getColumnIndex(KEY_TITLE)));
-		p.setDate_post(cur.getString(cur.getColumnIndex(KEY_POST_DATE)));
-		p.setGuid(cur.getString(cur.getColumnIndex(KEY_GUID)));
-		p.setContent(cur.getString(cur.getColumnIndex(KEY_CONTENT)));
-		p.setTipe(cur.getString(cur.getColumnIndex(KEY_TIPE_POST)));
-		cur.close();
-		db.close();
+				cur.moveToFirst();
+				p.setTitle(cur.getString(cur.getColumnIndex(KEY_TITLE)));
+				p.setDate_post(cur.getString(cur.getColumnIndex(KEY_POST_DATE)));
+				p.setGuid(cur.getString(cur.getColumnIndex(KEY_GUID)));
+				p.setContent(cur.getString(cur.getColumnIndex(KEY_CONTENT)));
+				p.setTipe(cur.getString(cur.getColumnIndex(KEY_TIPE_POST)));
+				cur.close();
+				db.close();
 		return p;
 	}
 
 	public List<Post> getRelatedPost(String Tipe) {
 		List<Post> posts = new ArrayList<Post>();
-		String selectQuery = "SELECT * FROM " + TABLE_POST
-				+ " WHERE " + KEY_TIPE_POST + "=" + "'"+Tipe
-				+ "'" + " ORDER BY RANDOM() LIMIT 3";
+		String selectQuery = "SELECT * FROM " + TABLE_POST + " WHERE "
+				+ KEY_TIPE_POST + "=" + "'" + Tipe + "'"
+				+ " ORDER BY RANDOM() LIMIT 3";
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		if (cursor.moveToFirst()) {

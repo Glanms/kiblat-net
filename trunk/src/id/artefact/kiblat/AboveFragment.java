@@ -75,7 +75,7 @@ public class AboveFragment extends ListFragment {
 	public final static String KEY_ID = "id";
 
 	String last_id_list = "0";
-	
+
 	String last_list = "0";
 	String tipe = "";
 	ArrayList<HashMap<String, String>> postitem;
@@ -139,7 +139,7 @@ public class AboveFragment extends ListFragment {
 
 					}
 				});
-
+		new UpdateTask().execute();
 		setList();
 		new AdsTask().execute();
 		Button clsads = (Button) getActivity().findViewById(R.id.clsikl);
@@ -169,14 +169,14 @@ public class AboveFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		if(id != -1){
-		// TODO Auto-generated method stub
 		TextView id_post = (TextView) v.findViewById(R.id.id);
 		String id_p = id_post.getText().toString();
-		// Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
-		Intent i = new Intent(v.getContext(), ContentActivity.class);
-		i.putExtra("id", id_p);
-		startActivity(i);
+		if (id != -1) {
+			// TODO Auto-generated method stub
+			// Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
+			Intent i = new Intent(v.getContext(), ContentActivity.class);
+			i.putExtra("id", id_p);
+			startActivity(i);
 		}
 	}
 
@@ -208,19 +208,26 @@ public class AboveFragment extends ListFragment {
 
 		protected void onPreExecute() {
 			// dialog.setMessage("Loading....");
-			// dialog.show();
+			// dialog.show()
 		}
 
 		@Override
 		protected void onPostExecute(Boolean result) {
 			// TODO Auto-generated method stub
-			// ((PullAndLoadListView) getListView()).onRefreshComplete();
+			//((PullAndLoadListView) getListView()).onRefreshComplete();
+			
 			setList();
 			// dialog.dismiss();
+		}
+		@Override
+		protected void onCancelled() {
+			// Notify the loading more operation has finished
+			((PullAndLoadListView) getListView()).onLoadMoreComplete();
 		}
 
 		@Override
 		protected Boolean doInBackground(String... params) {
+			
 			// TODO Auto-generated method stub
 			InternetHelper inet = new InternetHelper();
 			MCrypt mc = new MCrypt();
@@ -294,78 +301,83 @@ public class AboveFragment extends ListFragment {
 		protected Void doInBackground(Void... params) {
 			// last_id_list = db.getminidterkini();
 			// Log.i("xmlrpc", "min id " + last_id_list);
-			
+
 			InternetHelper inet = new InternetHelper();
 			MCrypt mc = new MCrypt();
 			byte[] en;
-
-			if (Integer.parseInt(last_list) == Integer.parseInt(db
-					.getminidbytipe("terkini", ""))) {
-				try {
-					String srvberitaterkini = srv.beritaterkini(last_list);
-					Log.i("xmlrpc", srvberitaterkini);
-					if (!getserverisnull(srvberitaterkini)) {
-						try {
-							Log.i("xmlrpc", "try mulai insert");
-							JSONArray jsonArray = new JSONArray("["
-									+ srvberitaterkini + "]");
-							JSONArray innerJsonArray = jsonArray
-									.getJSONArray(0);
-							// db.deletePostbyTipe("terkini");
-							Log.i("xmlrpc", "deleted");
-							for (int i = 0; i < innerJsonArray.length(); i++) {
-								JSONObject json = innerJsonArray
-										.getJSONObject(i);
-								Post p = new Post();
-								p.setId_post(json.getString("ID"));
-								p.setDate_post(json.getString("post_date"));
-								p.setContent(json.getString("content"));
-								p.setTitle(json.getString("title"));
-								p.setGuid(json.getString("guid"));
-								p.setTax("");
-								p.setTipe("terkini");
-								p.setCount("");
-								String url_img = json.getString("img");
-								Log.i("img", url_img);
-								// donlod gambar disini
-								// kalau berhasil disimpen path nya
-								if (url_img != null) {
-									try {
-										en = mc.encrypt(json.getString("ID")
-												+ ".jpg");
-										inet.downloadImage(url_img,
-												mc.bytesToHex(en));
-										Log.i("download", json.getString("ID")
-												+ ".jpg");
-										p.setImg(json.getString("ID") + ".jpg");
-									} catch (Exception e) {
-										// TODO: handle exception
-										e.printStackTrace();
+			String minidbytipe = db.getminidbytipe("terkini", "");
+			if (minidbytipe.equalsIgnoreCase(null)) {
+				if (Integer.parseInt(last_list) == Integer.parseInt(minidbytipe)) {
+					try {
+						String srvberitaterkini = srv.beritaterkini(last_list);
+						Log.i("xmlrpc", srvberitaterkini);
+						if (!getserverisnull(srvberitaterkini)) {
+							try {
+								Log.i("xmlrpc", "try mulai insert");
+								JSONArray jsonArray = new JSONArray("["
+										+ srvberitaterkini + "]");
+								JSONArray innerJsonArray = jsonArray
+										.getJSONArray(0);
+								// db.deletePostbyTipe("terkini");
+								Log.i("xmlrpc", "deleted");
+								for (int i = 0; i < innerJsonArray.length(); i++) {
+									JSONObject json = innerJsonArray
+											.getJSONObject(i);
+									Post p = new Post();
+									p.setId_post(json.getString("ID"));
+									p.setDate_post(json.getString("post_date"));
+									p.setContent(json.getString("content"));
+									p.setTitle(json.getString("title"));
+									p.setGuid(json.getString("guid"));
+									p.setTax("");
+									p.setTipe("terkini");
+									p.setCount("");
+									String url_img = json.getString("img");
+									Log.i("img", url_img);
+									// donlod gambar disini
+									// kalau berhasil disimpen path nya
+									if (url_img != null) {
+										try {
+											en = mc.encrypt(json
+													.getString("ID") + ".jpg");
+											inet.downloadImage(url_img,
+													mc.bytesToHex(en));
+											Log.i("download",
+													json.getString("ID")
+															+ ".jpg");
+											p.setImg(json.getString("ID")
+													+ ".jpg");
+										} catch (Exception e) {
+											// TODO: handle exception
+											e.printStackTrace();
+										}
+									} else {
+										p.setImg(null);
 									}
-								} else {
-									p.setImg(null);
+									db.addPost(p);
+									Log.i("xmlrpc", "insert");
 								}
-								db.addPost(p);
-								Log.i("xmlrpc", "insert");
+							} catch (Exception e) {
+								Log.i("xmlrpc", "gagal jadi array");
 							}
-						} catch (Exception e) {
-							Log.i("xmlrpc", "gagal jadi array");
+
 						}
 
+						return null;
+					} catch (Exception e) {
+						// TODO: handle exception
+						return null;
 					}
-
+				} else
 					return null;
-				} catch (Exception e) {
-					// TODO: handle exception
-					return null;
-				}
 			} else
 				return null;
+
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
-			
+
 			List<Post> posts = db.getPostsByTipe("terkini", "", last_list);
 
 			for (Post p : posts) {
@@ -454,7 +466,7 @@ public class AboveFragment extends ListFragment {
 		}
 		adapter = new LazyAdapterAbove(getActivity(), postitem);
 		setListAdapter(adapter);
-
+		
 		header.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -504,20 +516,17 @@ public class AboveFragment extends ListFragment {
 			// tampilads();
 			// dialog.dismiss();
 			// imgads.set
-			if(bmp!=null)
+			if (bmp != null)
 				imgads.setImageBitmap(bmp);
-				imgads.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						Intent l = new Intent(Intent.ACTION_VIEW,
-								Uri.parse(urlads));
-						startActivity(l);	
-					}
-				});
+			imgads.setOnClickListener(new OnClickListener() {
 
-			
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent l = new Intent(Intent.ACTION_VIEW, Uri.parse(urlads));
+					startActivity(l);
+				}
+			});
 
 		}
 
@@ -525,28 +534,29 @@ public class AboveFragment extends ListFragment {
 		protected Boolean doInBackground(String... params) {
 			// TODO Auto-generated method stub
 			InputStream in = null;
-		    BufferedOutputStream out = null;
+			BufferedOutputStream out = null;
 			try {
 				String ads = srv.ads();
 				Log.i("ads", ads);
 				JSONArray jsonArr = new JSONArray("[" + ads + "]");
-				for(int i = 0; i < jsonArr.length(); i ++){
+				for (int i = 0; i < jsonArr.length(); i++) {
 					JSONObject json = jsonArr.getJSONObject(i);
-				 try {
-				        URL url = new URL(json.getString("image"));
-				        Log.i("img", json.getString("image"));
-				        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-				        connection.setDoInput(true);
-				        connection.connect();
-				        InputStream input = connection.getInputStream();
-				        bmp = BitmapFactory.decodeStream(input);
-				        
-				    } catch (IOException e) {
-				        e.printStackTrace();
-				    
-				    }
-				    urlads = json.getString("url");
-				    Log.i("url", json.getString("url"));
+					try {
+						URL url = new URL(json.getString("image"));
+						Log.i("img", json.getString("image"));
+						HttpURLConnection connection = (HttpURLConnection) url
+								.openConnection();
+						connection.setDoInput(true);
+						connection.connect();
+						InputStream input = connection.getInputStream();
+						bmp = BitmapFactory.decodeStream(input);
+
+					} catch (IOException e) {
+						e.printStackTrace();
+
+					}
+					urlads = json.getString("url");
+					Log.i("url", json.getString("url"));
 				}
 				return true;
 			} catch (Exception e) {

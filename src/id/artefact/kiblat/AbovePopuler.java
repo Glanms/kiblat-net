@@ -24,7 +24,6 @@ import com.markupartist.android.widget.PullAndLoadListView.OnLoadMoreListener;
 import com.markupartist.android.widget.PullToRefreshListView;
 import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 
-
 import id.artefact.kiblat.db.DatabaseHandler;
 import id.artefact.kiblat.db.Post;
 import id.artefact.kiblat.help.BitmapDecoder;
@@ -111,12 +110,12 @@ public class AbovePopuler extends ListFragment {
 				null);
 		TextView subtitle = (TextView) getView().findViewById(R.id.subtitle);
 		subtitle.setText(tipe);
-	
+
 		((PullAndLoadListView) getListView())
 				.setOnRefreshListener(new OnRefreshListener() {
 					@Override
 					public void onRefresh() {
-	
+
 						new UpdateTask().execute();
 					}
 				});
@@ -152,10 +151,12 @@ public class AbovePopuler extends ListFragment {
 		// TODO Auto-generated method stub
 		TextView id_post = (TextView) v.findViewById(R.id.id);
 		String id_p = id_post.getText().toString();
-		// Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
-		Intent i = new Intent(v.getContext(), ContentActivity.class);
-		i.putExtra("id", id_p);
-		startActivity(i);
+		if (id != -1 || id_p.equals(null)) {
+			// Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
+			Intent i = new Intent(v.getContext(), ContentActivity.class);
+			i.putExtra("id", id_p);
+			startActivity(i);
+		}
 	}
 
 	public class SampleAdapter extends ArrayAdapter<SampleItem> {

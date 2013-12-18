@@ -159,10 +159,12 @@ public class AboveCategory extends ListFragment {
 		// TODO Auto-generated method stub
 		TextView id_post = (TextView) v.findViewById(R.id.id);
 		String id_p = id_post.getText().toString();
-		// Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
-		Intent i = new Intent(v.getContext(), ContentActivity.class);
-		i.putExtra("id", id_p);
-		startActivity(i);
+		if (id != -1) {
+			// Toast.makeText(getActivity(), id_p, Toast.LENGTH_LONG).show();
+			Intent i = new Intent(v.getContext(), ContentActivity.class);
+			i.putExtra("id", id_p);
+			startActivity(i);
+		}
 	}
 
 	public class SampleAdapter extends ArrayAdapter<SampleItem> {
@@ -192,16 +194,22 @@ public class AboveCategory extends ListFragment {
 		private ProgressDialog dialog = new ProgressDialog(getActivity());
 
 		protected void onPreExecute() {
-			// dialog.setMessage("Loading....");
+			// dialog.setMessage("Refresh....");
 			// dialog.show();
 		}
 
 		@Override
 		protected void onPostExecute(Boolean result) {
 			// TODO Auto-generated method stub
-			((PullAndLoadListView) getListView()).onRefreshComplete();
+			// ((PullAndLoadListView) getListView()).onRefreshComplete();
 			setList();
 			// dialog.dismiss();
+		}
+
+		@Override
+		protected void onCancelled() {
+			// Notify the loading more operation has finished
+			((PullAndLoadListView) getListView()).onLoadMoreComplete();
 		}
 
 		@Override
@@ -281,68 +289,72 @@ public class AboveCategory extends ListFragment {
 			InternetHelper inet = new InternetHelper();
 			MCrypt mc = new MCrypt();
 			byte[] en;
-
-			if (Integer.parseInt(last_list) == Integer.parseInt(db
-					.getminidbytipe("category", tipe_category))) {
-				try {
-					String srvice = srv.category(id_category, last_list);
-					Log.i("xmlrpc", srvice);
-					if (!getserverisnull(srvice)) {
-						try {
-							Log.i("xmlrpc", "try mulai insert");
-							JSONArray jsonArray = new JSONArray("[" + srvice
-									+ "]");
-							JSONArray innerJsonArray = jsonArray
-									.getJSONArray(0);
-							// db.deletePostbyTipe("terkini");
-							Log.i("xmlrpc", "deleted");
-							for (int i = 0; i < innerJsonArray.length(); i++) {
-								JSONObject json = innerJsonArray
-										.getJSONObject(i);
-								Post p = new Post();
-								p.setId_post(json.getString("ID"));
-								p.setDate_post(json.getString("post_date"));
-								p.setContent(json.getString("content"));
-								p.setTitle(json.getString("title"));
-								p.setGuid(json.getString("guid"));
-								p.setTax(tipe_category);
-								p.setTipe(tipe_category);
-								p.setCount("");
-								String url_img = json.getString("img");
-								Log.i("img", url_img);
-								// donlod gambar disini
-								// kalau berhasil disimpen path nya
-								if (url_img != null) {
-									try {
-										en = mc.encrypt(json.getString("ID")
-												+ ".jpg");
-										inet.downloadImage(url_img,
-												mc.bytesToHex(en));
-										Log.i("download", json.getString("ID")
-												+ ".jpg");
-										p.setImg(json.getString("ID") + ".jpg");
-									} catch (Exception e) {
-										// TODO: handle exception
-										e.printStackTrace();
+			String minibytipe = db.getminidbytipe("category", tipe_category);
+			if (minibytipe.equalsIgnoreCase(null)) {
+				if (Integer.parseInt(last_list) == Integer.parseInt(minibytipe)) {
+					try {
+						String srvice = srv.category(id_category, last_list);
+						Log.i("xmlrpc", srvice);
+						if (!getserverisnull(srvice)) {
+							try {
+								Log.i("xmlrpc", "try mulai insert");
+								JSONArray jsonArray = new JSONArray("["
+										+ srvice + "]");
+								JSONArray innerJsonArray = jsonArray
+										.getJSONArray(0);
+								// db.deletePostbyTipe("terkini");
+								Log.i("xmlrpc", "deleted");
+								for (int i = 0; i < innerJsonArray.length(); i++) {
+									JSONObject json = innerJsonArray
+											.getJSONObject(i);
+									Post p = new Post();
+									p.setId_post(json.getString("ID"));
+									p.setDate_post(json.getString("post_date"));
+									p.setContent(json.getString("content"));
+									p.setTitle(json.getString("title"));
+									p.setGuid(json.getString("guid"));
+									p.setTax(tipe_category);
+									p.setTipe(tipe_category);
+									p.setCount("");
+									String url_img = json.getString("img");
+									Log.i("img", url_img);
+									// donlod gambar disini
+									// kalau berhasil disimpen path nya
+									if (url_img != null) {
+										try {
+											en = mc.encrypt(json
+													.getString("ID") + ".jpg");
+											inet.downloadImage(url_img,
+													mc.bytesToHex(en));
+											Log.i("download",
+													json.getString("ID")
+															+ ".jpg");
+											p.setImg(json.getString("ID")
+													+ ".jpg");
+										} catch (Exception e) {
+											// TODO: handle exception
+											e.printStackTrace();
+										}
+									} else {
+										p.setImg(null);
 									}
-								} else {
-									p.setImg(null);
+									db.addPost(p);
+									Log.i("xmlrpc", "insert");
 								}
-								db.addPost(p);
-								Log.i("xmlrpc", "insert");
+
+							} catch (Exception e) {
+								Log.i("xmlrpc", "gagal jadi array");
 							}
 
-						} catch (Exception e) {
-							Log.i("xmlrpc", "gagal jadi array");
 						}
 
+						return null;
+					} catch (Exception e) {
+						// TODO: handle exception
+						return null;
 					}
-
+				} else
 					return null;
-				} catch (Exception e) {
-					// TODO: handle exception
-					return null;
-				}
 			} else
 				return null;
 		}

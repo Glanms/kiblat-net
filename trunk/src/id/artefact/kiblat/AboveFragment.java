@@ -139,7 +139,6 @@ public class AboveFragment extends ListFragment {
 
 					}
 				});
-		new UpdateTask().execute();
 		setList();
 		new AdsTask().execute();
 		Button clsads = (Button) getActivity().findViewById(R.id.clsikl);
@@ -214,15 +213,10 @@ public class AboveFragment extends ListFragment {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			// TODO Auto-generated method stub
-			//((PullAndLoadListView) getListView()).onRefreshComplete();
+			((PullAndLoadListView) getListView()).onRefreshComplete();
 			
 			setList();
 			// dialog.dismiss();
-		}
-		@Override
-		protected void onCancelled() {
-			// Notify the loading more operation has finished
-			((PullAndLoadListView) getListView()).onLoadMoreComplete();
 		}
 
 		@Override
@@ -243,8 +237,8 @@ public class AboveFragment extends ListFragment {
 					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
 
 					FileHelper fh = new FileHelper();
-					db.deletePostbyTipe("terkini");
-					Log.i("xmlrpc", "deleted");
+					//db.deletePostbyTipe("terkini");
+					//Log.i("xmlrpc", "deleted");
 					for (int i = 0; i < innerJsonArray.length(); i++) {
 						JSONObject json = innerJsonArray.getJSONObject(i);
 						Post p = new Post();
@@ -273,9 +267,14 @@ public class AboveFragment extends ListFragment {
 						} else {
 							p.setImg(null);
 						}
-
-						db.addPost(p);
-						Log.i("xmlrpc", "insert");
+						try {
+							db.addPost(p);
+							Log.i("xmlrpc", "insert");
+						} catch (Exception e) {
+							// TODO: handle exception
+							e.printStackTrace();
+						}
+						
 					}
 				} catch (Exception e) {
 					Log.i("xmlrpc", "gagal jadi array");
@@ -319,7 +318,7 @@ public class AboveFragment extends ListFragment {
 								JSONArray innerJsonArray = jsonArray
 										.getJSONArray(0);
 								// db.deletePostbyTipe("terkini");
-								Log.i("xmlrpc", "deleted");
+								//Log.i("xmlrpc", "deleted");
 								for (int i = 0; i < innerJsonArray.length(); i++) {
 									JSONObject json = innerJsonArray
 											.getJSONObject(i);
@@ -354,8 +353,13 @@ public class AboveFragment extends ListFragment {
 									} else {
 										p.setImg(null);
 									}
-									db.addPost(p);
-									Log.i("xmlrpc", "insert");
+									try {
+										db.addPost(p);
+										Log.i("xmlrpc", "insert");
+									} catch (Exception e) {
+										// TODO: handle exception
+										e.printStackTrace();
+									}
 								}
 							} catch (Exception e) {
 								Log.i("xmlrpc", "gagal jadi array");

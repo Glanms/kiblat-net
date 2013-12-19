@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-	private static final int DATABASE_VERSION = 18;
+	private static final int DATABASE_VERSION = 22;
 	private static final String DATABASE_NAME = "kiblat";
 
 	private static final String TABLE_POST = "post";
@@ -52,7 +52,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		// TODO Auto-generated method stub
 		Log.i("db", "create db");
 		String query_table_post = "CREATE TABLE " + TABLE_POST + "("
-				+ KEY_ID_POST + " INTEGER, " + KEY_TITLE + " TEXT, "
+				+ KEY_ID_POST + " INTEGER PRIMARY KEY, " + KEY_TITLE + " TEXT, "
 				+ KEY_CONTENT + " TEXT, " + KEY_TAX + " TEXT, " + KEY_POST_DATE
 				+ " TEXT, " + KEY_GUID + " TEXT, " + KEY_TIPE_POST + " TEXT, "
 				+ KEY_IMG + " TEXT, " + KEY_COUNT_POST + " TEXT " + ")";

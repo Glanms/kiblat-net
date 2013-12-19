@@ -215,8 +215,8 @@ public class AbovePopuler extends ListFragment {
 					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
 
 					FileHelper fh = new FileHelper();
-					db.deletePostbyTipe("populer");
-					Log.i("xmlrpc", "deleted");
+					//db.deletePostbyTipe("populer");
+					//Log.i("xmlrpc", "deleted");
 					for (int i = 0; i < innerJsonArray.length(); i++) {
 						JSONObject json = innerJsonArray.getJSONObject(i);
 						Post p = new Post();
@@ -245,9 +245,13 @@ public class AbovePopuler extends ListFragment {
 						} else {
 							p.setImg(null);
 						}
-
-						db.addPost(p);
-						Log.i("xmlrpc", "insert");
+						try {
+							db.addPost(p);
+							Log.i("xmlrpc", "insert");
+						} catch (Exception e) {
+							// TODO: handle exception
+							e.printStackTrace();
+						}
 					}
 				} catch (Exception e) {
 					Log.i("xmlrpc", "gagal jadi array");

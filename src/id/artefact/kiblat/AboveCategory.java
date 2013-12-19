@@ -201,7 +201,7 @@ public class AboveCategory extends ListFragment {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			// TODO Auto-generated method stub
-			// ((PullAndLoadListView) getListView()).onRefreshComplete();
+			((PullAndLoadListView) getListView()).onRefreshComplete();
 			setList();
 			// dialog.dismiss();
 		}
@@ -228,8 +228,8 @@ public class AboveCategory extends ListFragment {
 					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
 
 					FileHelper fh = new FileHelper();
-					db.deletePostbyTipe(tipe_category);
-					Log.i("xmlrpc", "deleted");
+					//db.deletePostbyTipe(tipe_category);
+					//Log.i("xmlrpc", "deleted");
 					for (int i = 0; i < innerJsonArray.length(); i++) {
 						JSONObject json = innerJsonArray.getJSONObject(i);
 						Post p = new Post();
@@ -259,8 +259,13 @@ public class AboveCategory extends ListFragment {
 							p.setImg(null);
 						}
 
-						db.addPost(p);
-						Log.i("xmlrpc", "insert");
+						try {
+							db.addPost(p);
+							Log.i("xmlrpc", "insert");
+						} catch (Exception e) {
+							// TODO: handle exception
+							e.printStackTrace();
+						}
 					}
 				} catch (Exception e) {
 					Log.i("xmlrpc", "gagal jadi array");
@@ -303,7 +308,7 @@ public class AboveCategory extends ListFragment {
 								JSONArray innerJsonArray = jsonArray
 										.getJSONArray(0);
 								// db.deletePostbyTipe("terkini");
-								Log.i("xmlrpc", "deleted");
+								//Log.i("xmlrpc", "deleted");
 								for (int i = 0; i < innerJsonArray.length(); i++) {
 									JSONObject json = innerJsonArray
 											.getJSONObject(i);
@@ -338,8 +343,13 @@ public class AboveCategory extends ListFragment {
 									} else {
 										p.setImg(null);
 									}
-									db.addPost(p);
-									Log.i("xmlrpc", "insert");
+									try {
+										db.addPost(p);
+										Log.i("xmlrpc", "insert");
+									} catch (Exception e) {
+										// TODO: handle exception
+										e.printStackTrace();
+									}
 								}
 
 							} catch (Exception e) {

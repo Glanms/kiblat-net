@@ -72,6 +72,7 @@ public class SplashActivity extends Activity {
 					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
 
 					FileHelper fh = new FileHelper();
+					fh.deleteData();
 					db.deletePostbyTipe("terkini");
 					Log.i("xmlrpc", "deleted");
 					for (int i = 0; i < innerJsonArray.length(); i++) {

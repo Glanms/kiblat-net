@@ -52,10 +52,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		// TODO Auto-generated method stub
 		Log.i("db", "create db");
 		String query_table_post = "CREATE TABLE " + TABLE_POST + "("
-				+ KEY_ID_POST + " INTEGER PRIMARY KEY, " + KEY_TITLE + " TEXT, "
-				+ KEY_CONTENT + " TEXT, " + KEY_TAX + " TEXT, " + KEY_POST_DATE
-				+ " TEXT, " + KEY_GUID + " TEXT, " + KEY_TIPE_POST + " TEXT, "
-				+ KEY_IMG + " TEXT, " + KEY_COUNT_POST + " TEXT " + ")";
+				+ KEY_ID_POST + " INTEGER PRIMARY KEY, " + KEY_TITLE
+				+ " TEXT, " + KEY_CONTENT + " TEXT, " + KEY_TAX + " TEXT, "
+				+ KEY_POST_DATE + " TEXT, " + KEY_GUID + " TEXT, "
+				+ KEY_TIPE_POST + " TEXT, " + KEY_IMG + " TEXT, "
+				+ KEY_COUNT_POST + " TEXT " + ")";
 
 		String query_table_taxonomy = "CREATE TABLE " + TABLE_POPTAG + "("
 				+ KEY_COUNT + " TEXT, " + KEY_TAG + " TEXT " +
@@ -173,6 +174,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	}
 
+	public boolean is_exis_cat(String tipe) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cur = db.rawQuery("SELECT " + KEY_ID_POST + " FROM "
+				+ TABLE_POST + " WHERE " + KEY_TIPE_POST + "='" + tipe + "'",
+				null);
+		int i = 0;
+		if (cur.moveToFirst()) {
+			do {
+				i++;
+			} while (cur.moveToNext());
+		}
+		cur.close();
+		db.close();
+		if (i > 0)
+			return true;
+		else
+			return false;
+	}
+
 	public List<Post> getPostsByTipe(String tipe, String tax, String least_id) {
 		List<Post> posts = new ArrayList<Post>();
 		// Select All Query
@@ -222,16 +242,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				+ "," + KEY_GUID + "," + KEY_CONTENT + "," + KEY_TIPE_POST
 				+ " FROM " + TABLE_POST + " WHERE " + KEY_ID_POST + "=" + id,
 				null);
-		if(cur.getCount() > 0)
-		if (cur != null)
+		if (cur.getCount() > 0)
+			if (cur != null)
 				cur.moveToFirst();
-				p.setTitle(cur.getString(cur.getColumnIndex(KEY_TITLE)));
-				p.setDate_post(cur.getString(cur.getColumnIndex(KEY_POST_DATE)));
-				p.setGuid(cur.getString(cur.getColumnIndex(KEY_GUID)));
-				p.setContent(cur.getString(cur.getColumnIndex(KEY_CONTENT)));
-				p.setTipe(cur.getString(cur.getColumnIndex(KEY_TIPE_POST)));
-				cur.close();
-				db.close();
+		p.setTitle(cur.getString(cur.getColumnIndex(KEY_TITLE)));
+		p.setDate_post(cur.getString(cur.getColumnIndex(KEY_POST_DATE)));
+		p.setGuid(cur.getString(cur.getColumnIndex(KEY_GUID)));
+		p.setContent(cur.getString(cur.getColumnIndex(KEY_CONTENT)));
+		p.setTipe(cur.getString(cur.getColumnIndex(KEY_TIPE_POST)));
+		cur.close();
+		db.close();
 		return p;
 	}
 

@@ -119,7 +119,9 @@ public class AbovePopuler extends ListFragment {
 						new UpdateTask().execute();
 					}
 				});
-
+		if(db.is_exis_cat("populer") == false){
+			new UpdateTask().execute();
+		}
 		setList();
 		new AdsTask().execute();
 		Button clsads = (Button) getActivity().findViewById(R.id.clsikl);
@@ -186,8 +188,8 @@ public class AbovePopuler extends ListFragment {
 		private ProgressDialog dialog = new ProgressDialog(getActivity());
 
 		protected void onPreExecute() {
-			// dialog.setMessage("Loading....");
-			// dialog.show();
+			 dialog.setMessage("Loading....");
+			 dialog.show();
 		}
 
 		@Override
@@ -195,7 +197,7 @@ public class AbovePopuler extends ListFragment {
 			// TODO Auto-generated method stub
 			((PullAndLoadListView) getListView()).onRefreshComplete();
 			setList();
-			// dialog.dismiss();
+			dialog.dismiss();
 		}
 
 		@Override
@@ -294,7 +296,7 @@ public class AbovePopuler extends ListFragment {
 		}
 		adapter = new LazyAdapterAbove(getActivity(), postitem);
 		setListAdapter(adapter);
-
+		adapter.notifyDataSetChanged();
 		header.setOnClickListener(new OnClickListener() {
 
 			@Override

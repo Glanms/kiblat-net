@@ -23,11 +23,12 @@ public class SplashActivity extends Activity {
 	private static int SPLASH_TIME_OUT = 3500;
 	DatabaseHandler db = new DatabaseHandler(this);
 	ServiceHelper srv = new ServiceHelper();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
-		
+
 		new Handler().postDelayed(new Runnable() {
 
 			/*
@@ -39,16 +40,21 @@ public class SplashActivity extends Activity {
 			public void run() {
 				// This method will be executed once the timer is over
 				// Start your app main activity
-				
+
+				// if (!db.is_exist()) {
+				new getData().execute();
+				// close this activity
+				// }
+
+				// }
 				if (!db.is_exist()) {
+					FileHelper fh = new FileHelper();
+					fh.deleteData();
 					new getData().execute();
-					// close this activity
-				} else {
-					Intent i = new Intent(SplashActivity.this,
-							MainActivity.class);
-					startActivity(i);
-					finish();
 				}
+				Intent i = new Intent(SplashActivity.this, MainActivity.class);
+				startActivity(i);
+				finish();
 			}
 		}, SPLASH_TIME_OUT);
 	}
@@ -71,9 +77,8 @@ public class SplashActivity extends Activity {
 							+ "]");
 					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
 
-					FileHelper fh = new FileHelper();
-					fh.deleteData();
-					db.deletePostbyTipe("terkini");
+					// fh.deleteData();
+					// db.deletePostbyTipe("terkini");
 					Log.i("xmlrpc", "deleted");
 					for (int i = 0; i < innerJsonArray.length(); i++) {
 						JSONObject json = innerJsonArray.getJSONObject(i);
@@ -117,14 +122,14 @@ public class SplashActivity extends Activity {
 			}
 		}
 
-		@Override
-		protected void onPostExecute(Boolean result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			Intent i = new Intent(SplashActivity.this, MainActivity.class);
-			startActivity(i);
-			finish();
-		}
+		// @Override
+		// protected void onPostExecute(Boolean result) {
+		// // TODO Auto-generated method stub
+		// super.onPostExecute(result);
+		// Intent i = new Intent(SplashActivity.this, MainActivity.class);
+		// startActivity(i);
+		// finish();
+		// }
 
 	}
 

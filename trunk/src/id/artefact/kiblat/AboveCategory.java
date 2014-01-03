@@ -128,6 +128,9 @@ public class AboveCategory extends ListFragment {
 
 		TextView subtitle = (TextView) getView().findViewById(R.id.subtitle);
 		subtitle.setText(tipe_category);
+		if(db.is_exis_cat(tipe_category) == false){
+			new UpdateTask().execute();
+		}
 		setList();
 		new AdsTask().execute();
 		Button clsads = (Button) getActivity().findViewById(R.id.clsikl);
@@ -194,8 +197,8 @@ public class AboveCategory extends ListFragment {
 		private ProgressDialog dialog = new ProgressDialog(getActivity());
 
 		protected void onPreExecute() {
-			// dialog.setMessage("Refresh....");
-			// dialog.show();
+			dialog.setMessage("Refresh....");
+			dialog.show();
 		}
 
 		@Override
@@ -203,7 +206,7 @@ public class AboveCategory extends ListFragment {
 			// TODO Auto-generated method stub
 			((PullAndLoadListView) getListView()).onRefreshComplete();
 			setList();
-			// dialog.dismiss();
+			dialog.dismiss();
 		}
 
 		@Override
@@ -294,8 +297,8 @@ public class AboveCategory extends ListFragment {
 			InternetHelper inet = new InternetHelper();
 			MCrypt mc = new MCrypt();
 			byte[] en;
-			String minibytipe = db.getminidbytipe("category", tipe_category);
-			if (minibytipe.equalsIgnoreCase(null)) {
+			String minibytipe = "0";
+			minibytipe = db.getminidbytipe(tipe_category, tipe_category);
 				if (Integer.parseInt(last_list) == Integer.parseInt(minibytipe)) {
 					try {
 						String srvice = srv.category(id_category, last_list);
@@ -365,8 +368,6 @@ public class AboveCategory extends ListFragment {
 					}
 				} else
 					return null;
-			} else
-				return null;
 		}
 
 		@Override

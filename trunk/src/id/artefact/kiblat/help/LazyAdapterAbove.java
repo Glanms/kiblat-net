@@ -76,10 +76,10 @@ public class LazyAdapterAbove extends BaseAdapter {
 				File f = new File("/mnt/sdcard/kiblatartefact/"
 						+ mc.bytesToHex(mc.encrypt(behindmenu
 								.get(AboveFragment.KEY_THUMB_URL))));
-				if (f.exists()){
+				if (f.exists()) {
 					thumb_image.setImageBitmap(b.decodeFiles(f, 70));
-					thumb_image.setScaleType(ScaleType.FIT_XY);
-				}else {
+					// thumb_image.setScaleType(ScaleType.FIT_XY);
+				} else {
 					imageLoader.DisplayImage(
 							behindmenu.get(AboveFragment.KEY_THUMB_URL),
 							thumb_image);

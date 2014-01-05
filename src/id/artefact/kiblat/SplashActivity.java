@@ -41,20 +41,22 @@ public class SplashActivity extends Activity {
 				// This method will be executed once the timer is over
 				// Start your app main activity
 
-				// if (!db.is_exist()) {
-				new getData().execute();
-				// close this activity
-				// }
-
-				// }
 				if (!db.is_exist()) {
 					FileHelper fh = new FileHelper();
 					fh.deleteData();
 					new getData().execute();
-				}
-				Intent i = new Intent(SplashActivity.this, MainActivity.class);
-				startActivity(i);
-				finish();
+					Intent i = new Intent(SplashActivity.this,
+							MainActivity.class);
+					startActivity(i);
+					finish();
+				} 
+				
+					new getData().execute();
+					Intent i = new Intent(SplashActivity.this,
+							MainActivity.class);
+					startActivity(i);
+					finish();
+
 			}
 		}, SPLASH_TIME_OUT);
 	}
@@ -128,7 +130,6 @@ public class SplashActivity extends Activity {
 		// super.onPostExecute(result);
 		// Intent i = new Intent(SplashActivity.this, MainActivity.class);
 		// startActivity(i);
-		// finish();
 		// }
 
 	}

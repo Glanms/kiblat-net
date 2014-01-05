@@ -77,6 +77,8 @@ public class BehindFragment extends ListFragment {
 		items.add(new EntryItem(R.drawable.category, "Siyasah"));
 		items.add(new EntryItem(R.drawable.category, "Artikel"));
 		items.add(new EntryItem(R.drawable.category, "Kolom"));
+		items.add(new EntryItem(R.drawable.category, "Rohah"));
+		items.add(new EntryItem(R.drawable.category, "Profil"));
 		items.add(new EntryItem(R.drawable.about, "About"));
 		items.add(new EntryItem(R.drawable.web, "Mobile Site"));
 		items.add(new EntryItem(R.drawable.email, "Feedback"));
@@ -116,13 +118,19 @@ public class BehindFragment extends ListFragment {
 			newContent = new AboveCategory("1002", "Kolom");
 			break;
 		case 9:
+			newContent = new AboveCategory("1901", "Rohah");
+			break;
+		case 10:
+			newContent = new AboveCategory("1844", "Profil");
+			break;
+		case 11:
 			Intent j = new Intent(getActivity(), AboutActivity.class);
 			startActivity(j);
 			break;
-		case 10:
+		case 12:
 			GoTo("Web");
 			break;
-		case 11:
+		case 13:
 			GoTo("Email");
 			break;
 		}
@@ -150,12 +158,15 @@ public class BehindFragment extends ListFragment {
 					Uri.parse("http://m.kiblat.net"));
 			startActivity(l);
 		} else if (Var.equals("Email")) {
-			Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND); 
-			emailIntent.setType("plain/text");  
-			String aEmailList[] = { "kiblatmedia@gmail.com" };  
-			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, aEmailList); 
-			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Feedback");   
-			emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Tuliskan Saran untuk Kiblat.Net");
+			Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+			emailIntent.setType("plain/text");
+			String aEmailList[] = { "kiblatmedia@gmail.com" };
+			emailIntent
+					.putExtra(android.content.Intent.EXTRA_EMAIL, aEmailList);
+			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+					"Feedback");
+			emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+					"Tuliskan Saran untuk Kiblat.Net");
 			startActivityForResult(emailIntent, 0);
 		}
 	}

@@ -36,7 +36,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -193,15 +197,48 @@ public class ContentActivity extends SherlockActivity {
 			startActivity(icomment);
 			return true;
 		case 2:
-			Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-			sharingIntent.setType("text/html");
-			sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,
-					Html.fromHtml(guid));
-			startActivity(Intent.createChooser(sharingIntent, "Share using"));
+			shareIt();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void shareIt() {
+		// TODO Auto-generated method stub
+		Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+		sharingIntent.setType("text/html");
+		sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+				Html.fromHtml(guid));
+
+		PackageManager pm = getBaseContext().getPackageManager();
+		List<ResolveInfo> activityList = pm.queryIntentActivities(
+				sharingIntent, 0);
+		for (ResolveInfo app : activityList) {
+			if ("com.twitter.android.PostActivity"
+					.equals(app.activityInfo.name)) {
+				final ActivityInfo activity = app.activityInfo;
+				final ComponentName name = new ComponentName(
+						activity.applicationInfo.packageName, activity.name);
+				sharingIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+				sharingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+						| Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+				sharingIntent.setComponent(name);
+				this.startActivity(sharingIntent);
+				break;
+			}
+			if ((app.activityInfo.name).contains("facebook")) {
+				final ActivityInfo activity = app.activityInfo;
+				final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
+				sharingIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+				sharingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+				sharingIntent.setComponent(name);
+				this.startActivity(sharingIntent);
+				break;
+				}
+		}
+
+		startActivity(Intent.createChooser(sharingIntent, "Share using"));
 	}
 
 	public void setRelated(String tipe) {
@@ -254,7 +291,7 @@ public class ContentActivity extends SherlockActivity {
 			// imgads.set
 			if (bmp != null)
 				imgads.setImageBitmap(bmp);
-				imgads.setOnClickListener(new OnClickListener() {
+			imgads.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {

@@ -45,17 +45,12 @@ public class SplashActivity extends Activity {
 					FileHelper fh = new FileHelper();
 					fh.deleteData();
 					new getData().execute();
-					Intent i = new Intent(SplashActivity.this,
-							MainActivity.class);
-					startActivity(i);
-					finish();
-				} 
-				
-					new getData().execute();
-					Intent i = new Intent(SplashActivity.this,
-							MainActivity.class);
-					startActivity(i);
-					finish();
+				}
+
+				new getData().execute();
+				Intent i = new Intent(SplashActivity.this, MainActivity.class);
+				startActivity(i);
+				finish();
 
 			}
 		}, SPLASH_TIME_OUT);

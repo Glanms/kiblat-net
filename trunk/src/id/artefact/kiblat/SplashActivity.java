@@ -46,12 +46,9 @@ public class SplashActivity extends Activity {
 					fh.deleteData();
 					new getData().execute();
 				}
-
-				new getData().execute();
+				
 				Intent i = new Intent(SplashActivity.this, MainActivity.class);
 				startActivity(i);
-				finish();
-
 			}
 		}, SPLASH_TIME_OUT);
 	}
@@ -119,13 +116,13 @@ public class SplashActivity extends Activity {
 			}
 		}
 
-		// @Override
-		// protected void onPostExecute(Boolean result) {
-		// // TODO Auto-generated method stub
-		// super.onPostExecute(result);
-		// Intent i = new Intent(SplashActivity.this, MainActivity.class);
-		// startActivity(i);
-		// }
+		@Override
+		protected void onPostExecute(Boolean result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			Intent i = new Intent(SplashActivity.this, MainActivity.class);
+			startActivity(i);
+		}
 
 	}
 

@@ -101,11 +101,6 @@ public class ContentActivity extends SherlockActivity {
 		home.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				// Intent i = new Intent(getApplicationContext(),
-				// MainActivity.class);
-				// startActivity(i);
-				// finish();
 				onBackPressed();
 			}
 		});

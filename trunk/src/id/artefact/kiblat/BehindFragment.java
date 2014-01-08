@@ -44,30 +44,6 @@ public class BehindFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		// String[] colors = getResources().getStringArray(R.array.color_names);
-		//
-		// ArrayList<HashMap<String, String>> colorlist = new
-		// ArrayList<HashMap<String, String>>();
-		// // looping through all song nodes <song>
-		// for (String c : colors) {
-		// // creating new HashMap
-		// HashMap<String, String> map = new HashMap<String, String>();
-		//
-		// // adding each child node to HashMap key => value
-		// map.put(KEY_TITLE, c);
-		//
-		// map.put(KEY_THUMB_URL, null);
-		//
-		// // adding HashList to ArrayList
-		// colorlist.add(map);
-		// }
-		//
-		// //list = (ListView) findViewById(R.id.list);
-		//
-		// // Getting adapter by passing xml data ArrayList
-		// adapter = new LazyAdapterBehindMenu(getActivity(), colorlist);
-		// setListAdapter(adapter);
-
 		items.add(new EntryItem(R.drawable.search, "Search"));
 		items.add(new EntryItem(R.drawable.terkini, "Berita Terbaru"));
 		items.add(new EntryItem(R.drawable.popular, "Berita Populer"));
@@ -79,6 +55,12 @@ public class BehindFragment extends ListFragment {
 		items.add(new EntryItem(R.drawable.category, "Kolom"));
 		items.add(new EntryItem(R.drawable.category, "Rohah"));
 		items.add(new EntryItem(R.drawable.category, "Profil"));
+		items.add(new EntryItem(R.drawable.category, "Manhaj"));
+		items.add(new EntryItem(R.drawable.category, "Munaqosyah"));
+		items.add(new EntryItem(R.drawable.category, "Tarbiyah Jihadiyah"));
+		items.add(new EntryItem(R.drawable.category, "Opini"));
+		items.add(new EntryItem(R.drawable.category, "Info Event"));
+		items.add(new EntryItem(R.drawable.category, "Suara Pembaca"));
 		items.add(new EntryItem(R.drawable.about, "About"));
 		items.add(new EntryItem(R.drawable.web, "Mobile Site"));
 		items.add(new EntryItem(R.drawable.email, "Feedback"));
@@ -124,13 +106,31 @@ public class BehindFragment extends ListFragment {
 			newContent = new AboveCategory("1844", "Profil");
 			break;
 		case 11:
+			newContent = new AboveCategory("1935", "Manhaj");
+			break;
+		case 12:
+			newContent = new AboveCategory("1902", "Munaqosyah");
+			break;
+		case 13:
+			newContent = new AboveCategory("1964", "Tarbiyah Jihadiyah");
+			break;
+		case 14:
+			newContent = new AboveCategory("767", "Opini");
+			break;
+		case 15:
+			newContent = new AboveCategory("771", "Info Event");
+			break;
+		case 16:
+			newContent = new AboveCategory("770", "Suara Pembaca");
+			break;
+		case 17:
 			Intent j = new Intent(getActivity(), AboutActivity.class);
 			startActivity(j);
 			break;
-		case 12:
+		case 18:
 			GoTo("Web");
 			break;
-		case 13:
+		case 19:
 			GoTo("Email");
 			break;
 		}

@@ -214,14 +214,14 @@ public class AboveFragment extends ListFragment {
 		protected void onPostExecute(Boolean result) {
 			// TODO Auto-generated method stub
 			((PullAndLoadListView) getListView()).onRefreshComplete();
-			
+
 			setList();
 			// dialog.dismiss();
 		}
 
 		@Override
 		protected Boolean doInBackground(String... params) {
-			
+
 			// TODO Auto-generated method stub
 			InternetHelper inet = new InternetHelper();
 			MCrypt mc = new MCrypt();
@@ -237,8 +237,8 @@ public class AboveFragment extends ListFragment {
 					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
 
 					FileHelper fh = new FileHelper();
-					//db.deletePostbyTipe("terkini");
-					//Log.i("xmlrpc", "deleted");
+					// db.deletePostbyTipe("terkini");
+					// Log.i("xmlrpc", "deleted");
 					for (int i = 0; i < innerJsonArray.length(); i++) {
 						JSONObject json = innerJsonArray.getJSONObject(i);
 						Post p = new Post();
@@ -274,7 +274,7 @@ public class AboveFragment extends ListFragment {
 							// TODO: handle exception
 							e.printStackTrace();
 						}
-						
+
 					}
 				} catch (Exception e) {
 					Log.i("xmlrpc", "gagal jadi array");
@@ -306,7 +306,8 @@ public class AboveFragment extends ListFragment {
 			byte[] en;
 			String minidbytipe = db.getminidbytipe("terkini", "");
 			if (minidbytipe.equalsIgnoreCase(null)) {
-				if (Integer.parseInt(last_list) == Integer.parseInt(minidbytipe)) {
+				if (Integer.parseInt(last_list) == Integer
+						.parseInt(minidbytipe)) {
 					try {
 						String srvberitaterkini = srv.beritaterkini(last_list);
 						Log.i("xmlrpc", srvberitaterkini);
@@ -318,7 +319,7 @@ public class AboveFragment extends ListFragment {
 								JSONArray innerJsonArray = jsonArray
 										.getJSONArray(0);
 								// db.deletePostbyTipe("terkini");
-								//Log.i("xmlrpc", "deleted");
+								// Log.i("xmlrpc", "deleted");
 								for (int i = 0; i < innerJsonArray.length(); i++) {
 									JSONObject json = innerJsonArray
 											.getJSONObject(i);
@@ -434,9 +435,13 @@ public class AboveFragment extends ListFragment {
 							"/mnt/sdcard/kiblatartefact/"
 									+ mc.bytesToHex(mc.encrypt(p.getId_post()
 											+ ".jpg")));
-					Bitmap bm = b.decodeFiles(f, 100);
-					Drawable d = new BitmapDrawable(getResources(), bm);
-					ndas.setBackgroundDrawable(d);
+					if (f.exists()) {
+						Bitmap bm = b.decodeFiles(f, 100);
+						Drawable d = new BitmapDrawable(getResources(), bm);
+						ndas.setBackgroundDrawable(d);
+					} else {
+						ndas.setBackgroundResource(R.drawable.no_image);
+					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -470,7 +475,7 @@ public class AboveFragment extends ListFragment {
 		}
 		adapter = new LazyAdapterAbove(getActivity(), postitem);
 		setListAdapter(adapter);
-		
+
 		header.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -481,31 +486,6 @@ public class AboveFragment extends ListFragment {
 		});
 
 	}
-
-	// public void tampilads() {
-	// adsdel.setVisibility(View.GONE);
-	// inflater = (LayoutInflater) getActivity()
-	// .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	// FrameLayout fl=(FrameLayout)getActivity().findViewById(R.id.fl);
-	// View vi = inflater.inflate(R.layout.ads, null);
-	// android.widget.FrameLayout.LayoutParams lay = new
-	// FrameLayout.LayoutParams(LayoutParams.FILL_PARENT,50);
-	// lay.gravity=Gravity.BOTTOM;
-	// vi.setLayoutParams(lay);
-	// //vi.setMinimumHeight(30);
-	// fl.addView(vi);
-	// adsdel=vi;
-	// Button clsads=(Button) vi.findViewById(R.id.clsbtn);
-	// clsads.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// // TODO Auto-generated method stub
-	// adsdel.setVisibility(View.GONE);
-	// }
-	// });
-	// }
-
 	private class AdsTask extends AsyncTask<String, Void, Boolean> {
 
 		protected void onPreExecute() {

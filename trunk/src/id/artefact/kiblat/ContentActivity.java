@@ -193,13 +193,13 @@ public class ContentActivity extends SherlockActivity {
 			startActivity(icomment);
 			return true;
 		case 2:
-			shareWTF();
+			shareIt();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
+	
 	private void shareIt() {
 		// TODO Auto-generated method stub
 		Intent sharingIntent = new Intent(Intent.ACTION_SEND);
@@ -223,7 +223,7 @@ public class ContentActivity extends SherlockActivity {
 				this.startActivity(sharingIntent);
 				break;
 			}
-			if ((app.activityInfo.name).contains("facebook")) {
+			if ((app.activityInfo.name).equals("com.facebook.katana")) {
 				final ActivityInfo activity = app.activityInfo;
 				final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
 				sharingIntent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -235,38 +235,6 @@ public class ContentActivity extends SherlockActivity {
 		}
 
 		startActivity(Intent.createChooser(sharingIntent, "Share using"));
-	}
-	
-	public void shareWTF(){
-		List<Intent> targetedShareIntents = new ArrayList<Intent>();
-	    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-	    sharingIntent.setType("text/plain");
-	    String shareBody = guid + "via KiblatNet for Android";
-
-	    PackageManager pm = getBaseContext().getPackageManager();
-	    List<ResolveInfo> activityList = pm.queryIntentActivities(sharingIntent, 0);
-	    for(final ResolveInfo app : activityList) {
-
-	         String packageName = app.activityInfo.packageName;
-	         Intent targetedShareIntent = new Intent(android.content.Intent.ACTION_SEND);
-	         targetedShareIntent.setType("text/plain");
-	         targetedShareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "share");
-	         if(TextUtils.equals(packageName, "com.facebook.katana")){
-	             targetedShareIntent.putExtra(android.content.Intent.EXTRA_TEXT, guid);
-	         } else {
-	             targetedShareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-	         }
-
-	         targetedShareIntent.setPackage(packageName);
-	         targetedShareIntents.add(targetedShareIntent);
-
-	    }
-
-	    Intent chooserIntent = Intent.createChooser(targetedShareIntents.remove(0), "Share Idea");
-
-	    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetedShareIntents.toArray(new Parcelable[]{}));
-	    startActivity(chooserIntent);
-
 	}
 
 	public void setRelated(String tipe) {

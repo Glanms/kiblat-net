@@ -45,10 +45,11 @@ public class SplashActivity extends Activity {
 					FileHelper fh = new FileHelper();
 					fh.deleteData();
 					new getData().execute();
+				}else{
+					Intent i = new Intent(SplashActivity.this, MainActivity.class);
+					startActivity(i);
+					finish();
 				}
-				
-				Intent i = new Intent(SplashActivity.this, MainActivity.class);
-				startActivity(i);
 			}
 		}, SPLASH_TIME_OUT);
 	}
@@ -73,7 +74,6 @@ public class SplashActivity extends Activity {
 
 					// fh.deleteData();
 					// db.deletePostbyTipe("terkini");
-					Log.i("xmlrpc", "deleted");
 					for (int i = 0; i < innerJsonArray.length(); i++) {
 						JSONObject json = innerJsonArray.getJSONObject(i);
 						Post p = new Post();
@@ -122,6 +122,7 @@ public class SplashActivity extends Activity {
 			super.onPostExecute(result);
 			Intent i = new Intent(SplashActivity.this, MainActivity.class);
 			startActivity(i);
+			finish();
 		}
 
 	}

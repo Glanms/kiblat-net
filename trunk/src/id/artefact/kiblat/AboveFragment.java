@@ -298,83 +298,63 @@ public class AboveFragment extends ListFragment {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			// last_id_list = db.getminidterkini();
-			// Log.i("xmlrpc", "min id " + last_id_list);
-
+			if (isCancelled()) {
+				return null;
+			}
 			InternetHelper inet = new InternetHelper();
 			MCrypt mc = new MCrypt();
 			byte[] en;
 			String minidbytipe = db.getminidbytipe("terkini", "");
-			if (minidbytipe.equalsIgnoreCase(null)) {
-				if (Integer.parseInt(last_list) == Integer
-						.parseInt(minidbytipe)) {
-					try {
-						String srvberitaterkini = srv.beritaterkini(last_list);
-						Log.i("xmlrpc", srvberitaterkini);
-						if (!getserverisnull(srvberitaterkini)) {
-							try {
-								Log.i("xmlrpc", "try mulai insert");
-								JSONArray jsonArray = new JSONArray("["
-										+ srvberitaterkini + "]");
-								JSONArray innerJsonArray = jsonArray
-										.getJSONArray(0);
-								// db.deletePostbyTipe("terkini");
-								// Log.i("xmlrpc", "deleted");
-								for (int i = 0; i < innerJsonArray.length(); i++) {
-									JSONObject json = innerJsonArray
-											.getJSONObject(i);
-									Post p = new Post();
-									p.setId_post(json.getString("ID"));
-									p.setDate_post(json.getString("post_date"));
-									p.setContent(json.getString("content"));
-									p.setTitle(json.getString("title"));
-									p.setGuid(json.getString("guid"));
-									p.setTax("");
-									p.setTipe("terkini");
-									p.setCount("");
-									String url_img = json.getString("img");
-									Log.i("img", url_img);
-									// donlod gambar disini
-									// kalau berhasil disimpen path nya
-									if (url_img != null) {
-										try {
-											en = mc.encrypt(json
-													.getString("ID") + ".jpg");
-											inet.downloadImage(url_img,
-													mc.bytesToHex(en));
-											Log.i("download",
-													json.getString("ID")
-															+ ".jpg");
-											p.setImg(json.getString("ID")
-													+ ".jpg");
-										} catch (Exception e) {
-											// TODO: handle exception
-											e.printStackTrace();
-										}
-									} else {
-										p.setImg(null);
-									}
-									try {
-										db.addPost(p);
-										Log.i("xmlrpc", "insert");
-									} catch (Exception e) {
-										// TODO: handle exception
-										e.printStackTrace();
-									}
+			if (Integer.parseInt(last_list) == Integer.parseInt(minidbytipe)) {
+				try {
+					String srvberitaterkini = srv.beritaterkini(last_list);
+					Log.i("xmlrpc", srvberitaterkini);
+					if (!getserverisnull(srvberitaterkini)) {
+						Log.i("xmlrpc", "try mulai insert");
+						JSONArray jsonArray = new JSONArray("["
+								+ srvberitaterkini + "]");
+						JSONArray innerJsonArray = jsonArray.getJSONArray(0);
+						for (int i = 0; i < innerJsonArray.length(); i++) {
+							JSONObject json = innerJsonArray.getJSONObject(i);
+							Post p = new Post();
+							p.setId_post(json.getString("ID"));
+							p.setDate_post(json.getString("post_date"));
+							p.setContent(json.getString("content"));
+							p.setTitle(json.getString("title"));
+							p.setGuid(json.getString("guid"));
+							p.setTax("");
+							p.setTipe("terkini");
+							p.setCount("");
+							String url_img = json.getString("img");
+							Log.i("img", url_img);
+							// donlod gambar disini
+							// kalau berhasil disimpen path nya
+							if (url_img != null) {
+								try {
+									en = mc.encrypt(json.getString("ID")
+											+ ".jpg");
+									inet.downloadImage(url_img,
+											mc.bytesToHex(en));
+									Log.i("download", json.getString("ID")
+											+ ".jpg");
+									p.setImg(json.getString("ID") + ".jpg");
+								} catch (Exception e) {
+									// TODO: handle exception
+									e.printStackTrace();
 								}
-							} catch (Exception e) {
-								Log.i("xmlrpc", "gagal jadi array");
+							} else {
+								p.setImg(null);
 							}
-
+							db.addPost(p);
 						}
 
-						return null;
-					} catch (Exception e) {
-						// TODO: handle exception
-						return null;
 					}
-				} else
+
 					return null;
+				} catch (Exception e) {
+					// TODO: handle exception
+					return null;
+				}
 			} else
 				return null;
 
@@ -486,6 +466,7 @@ public class AboveFragment extends ListFragment {
 		});
 
 	}
+
 	private class AdsTask extends AsyncTask<String, Void, Boolean> {
 
 		protected void onPreExecute() {

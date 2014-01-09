@@ -24,7 +24,7 @@ import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
 public class ImageLoader {
-    
+    final int stub_id = R.drawable.no_image;
     MemoryCache memoryCache=new MemoryCache();
     FileCache fileCache;
     private Map<ImageView, String> imageViews=Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
@@ -34,8 +34,7 @@ public class ImageLoader {
         fileCache=new FileCache(context);
         executorService=Executors.newFixedThreadPool(5);
     }
-    
-    final int stub_id = R.drawable.no_image;
+   
     public void DisplayImage(String url, ImageView imageView)
     {
         imageViews.put(imageView, url);

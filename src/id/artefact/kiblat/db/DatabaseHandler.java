@@ -239,7 +239,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		Post p = new Post();
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cur = db.rawQuery("SELECT " + KEY_TITLE + "," + KEY_POST_DATE
-				+ "," + KEY_GUID + "," + KEY_CONTENT + "," + KEY_TIPE_POST
+				+ "," + KEY_GUID + "," + KEY_CONTENT + "," + KEY_TIPE_POST + "," + KEY_IMG
 				+ " FROM " + TABLE_POST + " WHERE " + KEY_ID_POST + "=" + id,
 				null);
 		if (cur.getCount() > 0)
@@ -250,6 +250,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		p.setGuid(cur.getString(cur.getColumnIndex(KEY_GUID)));
 		p.setContent(cur.getString(cur.getColumnIndex(KEY_CONTENT)));
 		p.setTipe(cur.getString(cur.getColumnIndex(KEY_TIPE_POST)));
+		p.setImg(cur.getString(cur.getColumnIndex(KEY_IMG)));
 		cur.close();
 		db.close();
 		return p;

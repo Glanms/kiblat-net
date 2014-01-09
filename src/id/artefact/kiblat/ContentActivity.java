@@ -22,6 +22,7 @@ import id.artefact.kiblat.db.Post;
 import id.artefact.kiblat.help.BitmapDecoder;
 import id.artefact.kiblat.help.CustomAdapter;
 import id.artefact.kiblat.help.FormatDate;
+import id.artefact.kiblat.help.ImageLoader;
 import id.artefact.kiblat.help.LazyAdapterAbove;
 import id.artefact.kiblat.help.MemoryCache;
 import id.artefact.kiblat.help.ScrollViewHelper;
@@ -139,19 +140,10 @@ public class ContentActivity extends SherlockActivity {
 				.replaceAll("(?s)<!--\\[if(.*?)\\[endif\\] *-->", "")
 				.replaceAll("</p>", "\n").replaceAll("<[^>]*>", "")
 				.replaceAll("&nbsp;", ""));
-		guid = p.getGuid();
-		BitmapDecoder b = new BitmapDecoder();
-		try {
-			File f = new File("/mnt/sdcard/kiblatartefact/"
-					+ mc.bytesToHex(mc.encrypt(id_post + ".jpg")));
-			if (f.exists())
-				gambar.setImageBitmap(b.decodeFiles(f, 100));
-			Log.d("drawable", String.valueOf(Drawable.createFromPath(f
-					.getAbsolutePath())));
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-
+		guid = p.getGuid().toString();
+		ImageLoader imgLoad = new ImageLoader(getApplicationContext());
+		imgLoad.DisplayImage(p.getImg().toString(), gambar);
+		Log.d("--url gambar--", p.getImg().toString());
 		new AdsTask().execute();
 		Button clsads = (Button) this.findViewById(R.id.clsikl);
 		fadsfl = (FrameLayout) this.findViewById(R.id.adsfl);
@@ -199,7 +191,7 @@ public class ContentActivity extends SherlockActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	private void shareIt() {
 		// TODO Auto-generated method stub
 		Intent sharingIntent = new Intent(Intent.ACTION_SEND);
@@ -225,13 +217,15 @@ public class ContentActivity extends SherlockActivity {
 			}
 			if ((app.activityInfo.name).equals("com.facebook.katana")) {
 				final ActivityInfo activity = app.activityInfo;
-				final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
+				final ComponentName name = new ComponentName(
+						activity.applicationInfo.packageName, activity.name);
 				sharingIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-				sharingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+				sharingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+						| Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 				sharingIntent.setComponent(name);
 				this.startActivity(sharingIntent);
 				break;
-				}
+			}
 		}
 
 		startActivity(Intent.createChooser(sharingIntent, "Share using"));

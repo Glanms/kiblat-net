@@ -112,20 +112,10 @@ public class AboveFragment extends ListFragment {
 		srv = new ServiceHelper();
 		header = getActivity().getLayoutInflater().inflate(R.layout.headerlist,
 				null);
-
-		// SampleAdapter adapter = new SampleAdapter(getActivity());
-		// for (int i = 0; i < 20; i++) {
-		// adapter.add(new SampleItem("Sample List",
-		// android.R.drawable.ic_menu_search));
-		// }
-		// setListAdapter(adapter);
 		((PullAndLoadListView) getListView())
 				.setOnRefreshListener(new OnRefreshListener() {
 					@Override
 					public void onRefresh() {
-						// Do work to refresh the list here.
-						// new GetDataTask().execute();
-						// execute
 						new UpdateTask().execute();
 					}
 				});
@@ -223,9 +213,6 @@ public class AboveFragment extends ListFragment {
 		protected Boolean doInBackground(String... params) {
 
 			// TODO Auto-generated method stub
-			InternetHelper inet = new InternetHelper();
-			MCrypt mc = new MCrypt();
-			byte[] en;
 			try {
 				String srvberitaterkini = srv.beritaterkini("100000000000000");
 				Log.i("xmlrpc", srvberitaterkini);
@@ -252,29 +239,8 @@ public class AboveFragment extends ListFragment {
 						p.setCount("");
 						String url_img = json.getString("img");
 						Log.i("img", url_img);
-						// donlod gambar disini
-						// kalau berhasil disimpen path nya
-						if (url_img != null) {
-							try {
-								en = mc.encrypt(json.getString("ID") + ".jpg");
-								inet.downloadImage(url_img, mc.bytesToHex(en));
-								Log.i("download", json.getString("ID") + ".jpg");
-								p.setImg(json.getString("ID") + ".jpg");
-							} catch (Exception e) {
-								// TODO: handle exception
-								e.printStackTrace();
-							}
-						} else {
-							p.setImg(null);
-						}
-						try {
-							db.addPost(p);
-							Log.i("xmlrpc", "insert");
-						} catch (Exception e) {
-							// TODO: handle exception
-							e.printStackTrace();
-						}
-
+						p.setImg(url_img);
+						db.addPost(p);
 					}
 				} catch (Exception e) {
 					Log.i("xmlrpc", "gagal jadi array");
@@ -301,9 +267,6 @@ public class AboveFragment extends ListFragment {
 			if (isCancelled()) {
 				return null;
 			}
-			InternetHelper inet = new InternetHelper();
-			MCrypt mc = new MCrypt();
-			byte[] en;
 			String minidbytipe = db.getminidbytipe("terkini", "");
 			if (Integer.parseInt(last_list) == Integer.parseInt(minidbytipe)) {
 				try {
@@ -327,24 +290,7 @@ public class AboveFragment extends ListFragment {
 							p.setCount("");
 							String url_img = json.getString("img");
 							Log.i("img", url_img);
-							// donlod gambar disini
-							// kalau berhasil disimpen path nya
-							if (url_img != null) {
-								try {
-									en = mc.encrypt(json.getString("ID")
-											+ ".jpg");
-									inet.downloadImage(url_img,
-											mc.bytesToHex(en));
-									Log.i("download", json.getString("ID")
-											+ ".jpg");
-									p.setImg(json.getString("ID") + ".jpg");
-								} catch (Exception e) {
-									// TODO: handle exception
-									e.printStackTrace();
-								}
-							} else {
-								p.setImg(null);
-							}
+							p.setImg(url_img);
 							db.addPost(p);
 						}
 
@@ -372,7 +318,7 @@ public class AboveFragment extends ListFragment {
 				last_list = p.getId_post().toString();
 				map.put(KEY_TITLE, p.getTitle().toString());
 				map.put(KEY_DATE, p.getDate_post().toString());
-				map.put(KEY_THUMB_URL, p.getImg());
+				map.put(KEY_THUMB_URL, p.getImg().toString());
 				// adding HashList to ArrayList
 				postitem.add(map);
 			}
@@ -392,6 +338,7 @@ public class AboveFragment extends ListFragment {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public void setList() {
 		FormatDate fd = new FormatDate();
 		List<Post> posts = db.getPostsByTipe("terkini", "", "10000000000000");
@@ -407,24 +354,12 @@ public class AboveFragment extends ListFragment {
 				TextView tgl = (TextView) header.findViewById(R.id.headerDate);
 				RelativeLayout ndas = (RelativeLayout) header
 						.findViewById(R.id.headImg);
-				BitmapDecoder b = new BitmapDecoder();
-				MCrypt mc = new MCrypt();
-				File f;
-				try {
-					f = new File(
-							"/mnt/sdcard/kiblatartefact/"
-									+ mc.bytesToHex(mc.encrypt(p.getId_post()
-											+ ".jpg")));
-					if (f.exists()) {
-						Bitmap bm = b.decodeFiles(f, 100);
-						Drawable d = new BitmapDrawable(getResources(), bm);
-						ndas.setBackgroundDrawable(d);
-					} else {
-						ndas.setBackgroundResource(R.drawable.no_image);
-					}
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (p.getImg().toString().equalsIgnoreCase(null)) {
+					MemoryCache memoryCache = new MemoryCache();
+					Bitmap bitmap = memoryCache.get(p.getImg().toString());
+					Log.d("url ndas", p.getImg().toString());
+					Drawable d = new BitmapDrawable(getResources(), bitmap);
+					ndas.setBackgroundDrawable(d);
 				}
 				title.setText(p.getTitle().toString());
 				tgl.setText(fd.convertTime(p.getDate_post().toString()));
@@ -446,7 +381,7 @@ public class AboveFragment extends ListFragment {
 				last_list = p.getId_post().toString();
 				map.put(KEY_TITLE, p.getTitle().toString());
 				map.put(KEY_DATE, fd.convertTime(p.getDate_post().toString()));
-				map.put(KEY_THUMB_URL, p.getImg());
+				map.put(KEY_THUMB_URL, p.getImg().toString());
 				// adding HashList to ArrayList
 				postitem.add(map);
 			}

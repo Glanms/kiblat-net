@@ -86,9 +86,6 @@ public class AboveCategory extends ListFragment {
 	public AboveCategory(String id_kategori, String nama_kategori) {
 		id_category = id_kategori;
 		tipe_category = nama_kategori;
-		// setRetainInstance(true);
-		// Toast.makeText(getActivity(), "asdasdasdasd",
-		// Toast.LENGTH_LONG).show();
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -128,7 +125,7 @@ public class AboveCategory extends ListFragment {
 
 		TextView subtitle = (TextView) getView().findViewById(R.id.subtitle);
 		subtitle.setText(tipe_category);
-		if(db.is_exis_cat(tipe_category) == false){
+		if (db.is_exis_cat(tipe_category) == false) {
 			new UpdateTask().execute();
 		}
 		setList();
@@ -218,9 +215,6 @@ public class AboveCategory extends ListFragment {
 		@Override
 		protected Boolean doInBackground(String... params) {
 			// TODO Auto-generated method stub
-			InternetHelper inet = new InternetHelper();
-			MCrypt mc = new MCrypt();
-			byte[] en;
 			try {
 				String srvice = srv.category(id_category, "100000000000000");
 				Log.i("xmlrpc", srvice);
@@ -229,10 +223,6 @@ public class AboveCategory extends ListFragment {
 					Log.i("xmlrpc", "try mulai insert");
 					JSONArray jsonArray = new JSONArray("[" + srvice + "]");
 					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
-
-					FileHelper fh = new FileHelper();
-					//db.deletePostbyTipe(tipe_category);
-					//Log.i("xmlrpc", "deleted");
 					for (int i = 0; i < innerJsonArray.length(); i++) {
 						JSONObject json = innerJsonArray.getJSONObject(i);
 						Post p = new Post();
@@ -246,29 +236,9 @@ public class AboveCategory extends ListFragment {
 						p.setCount("");
 						String url_img = json.getString("img");
 						Log.i("img", url_img);
-						// donlod gambar disini
-						// kalau berhasil disimpen path nya
-						if (url_img != null) {
-							try {
-								en = mc.encrypt(json.getString("ID") + ".jpg");
-								inet.downloadImage(url_img, mc.bytesToHex(en));
-								Log.i("download", json.getString("ID") + ".jpg");
-								p.setImg(json.getString("ID") + ".jpg");
-							} catch (Exception e) {
-								// TODO: handle exception
-								e.printStackTrace();
-							}
-						} else {
-							p.setImg(null);
-						}
+						p.setImg(url_img);
+						db.addPost(p);
 
-						try {
-							db.addPost(p);
-							Log.i("xmlrpc", "insert");
-						} catch (Exception e) {
-							// TODO: handle exception
-							e.printStackTrace();
-						}
 					}
 				} catch (Exception e) {
 					Log.i("xmlrpc", "gagal jadi array");
@@ -292,82 +262,50 @@ public class AboveCategory extends ListFragment {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			// last_id_list = db.getminidterkini();
-			// Log.i("xmlrpc", "min id " + last_id_list);
-			InternetHelper inet = new InternetHelper();
-			MCrypt mc = new MCrypt();
-			byte[] en;
 			String minibytipe = "0";
 			minibytipe = db.getminidbytipe(tipe_category, tipe_category);
-				if (Integer.parseInt(last_list) == Integer.parseInt(minibytipe)) {
-					try {
-						String srvice = srv.category(id_category, last_list);
-						Log.i("xmlrpc", srvice);
-						if (!getserverisnull(srvice)) {
-							try {
-								Log.i("xmlrpc", "try mulai insert");
-								JSONArray jsonArray = new JSONArray("["
-										+ srvice + "]");
-								JSONArray innerJsonArray = jsonArray
-										.getJSONArray(0);
-								// db.deletePostbyTipe("terkini");
-								//Log.i("xmlrpc", "deleted");
-								for (int i = 0; i < innerJsonArray.length(); i++) {
-									JSONObject json = innerJsonArray
-											.getJSONObject(i);
-									Post p = new Post();
-									p.setId_post(json.getString("ID"));
-									p.setDate_post(json.getString("post_date"));
-									p.setContent(json.getString("content"));
-									p.setTitle(json.getString("title"));
-									p.setGuid(json.getString("guid"));
-									p.setTax(tipe_category);
-									p.setTipe(tipe_category);
-									p.setCount("");
-									String url_img = json.getString("img");
-									Log.i("img", url_img);
-									// donlod gambar disini
-									// kalau berhasil disimpen path nya
-									if (url_img != null) {
-										try {
-											en = mc.encrypt(json
-													.getString("ID") + ".jpg");
-											inet.downloadImage(url_img,
-													mc.bytesToHex(en));
-											Log.i("download",
-													json.getString("ID")
-															+ ".jpg");
-											p.setImg(json.getString("ID")
-													+ ".jpg");
-										} catch (Exception e) {
-											// TODO: handle exception
-											e.printStackTrace();
-										}
-									} else {
-										p.setImg(null);
-									}
-									try {
-										db.addPost(p);
-										Log.i("xmlrpc", "insert");
-									} catch (Exception e) {
-										// TODO: handle exception
-										e.printStackTrace();
-									}
-								}
-
-							} catch (Exception e) {
-								Log.i("xmlrpc", "gagal jadi array");
+			if (Integer.parseInt(last_list) == Integer.parseInt(minibytipe)) {
+				try {
+					String srvice = srv.category(id_category, last_list);
+					Log.i("xmlrpc", srvice);
+					if (!getserverisnull(srvice)) {
+						try {
+							Log.i("xmlrpc", "try mulai insert");
+							JSONArray jsonArray = new JSONArray("[" + srvice
+									+ "]");
+							JSONArray innerJsonArray = jsonArray
+									.getJSONArray(0);
+							for (int i = 0; i < innerJsonArray.length(); i++) {
+								JSONObject json = innerJsonArray
+										.getJSONObject(i);
+								Post p = new Post();
+								p.setId_post(json.getString("ID"));
+								p.setDate_post(json.getString("post_date"));
+								p.setContent(json.getString("content"));
+								p.setTitle(json.getString("title"));
+								p.setGuid(json.getString("guid"));
+								p.setTax(tipe_category);
+								p.setTipe(tipe_category);
+								p.setCount("");
+								String url_img = json.getString("img");
+								Log.i("img", url_img);
+								p.setImg(url_img);
+								db.addPost(p);
 							}
 
+						} catch (Exception e) {
+							Log.i("xmlrpc", "gagal jadi array");
 						}
 
-						return null;
-					} catch (Exception e) {
-						// TODO: handle exception
-						return null;
 					}
-				} else
+
 					return null;
+				} catch (Exception e) {
+					// TODO: handle exception
+					return null;
+				}
+			} else
+				return null;
 		}
 
 		@Override
@@ -383,7 +321,7 @@ public class AboveCategory extends ListFragment {
 				last_list = p.getId_post().toString();
 				map.put(KEY_TITLE, p.getTitle().toString());
 				map.put(KEY_DATE, p.getDate_post().toString());
-				map.put(KEY_THUMB_URL, p.getImg());
+				map.put(KEY_THUMB_URL, p.getImg().toString());
 				// adding HashList to ArrayList
 				postitem.add(map);
 			}
@@ -417,7 +355,7 @@ public class AboveCategory extends ListFragment {
 			last_list = p.getId_post().toString();
 			map.put(KEY_TITLE, p.getTitle().toString());
 			map.put(KEY_DATE, p.getDate_post().toString());
-			map.put(KEY_THUMB_URL, p.getImg());
+			map.put(KEY_THUMB_URL, p.getImg().toString());
 			// adding HashList to ArrayList
 			postitem.add(map);
 

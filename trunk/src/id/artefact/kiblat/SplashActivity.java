@@ -86,23 +86,7 @@ public class SplashActivity extends Activity {
 						p.setTipe("terkini");
 						p.setCount("");
 						String url_img = json.getString("img");
-						Log.i("img", url_img);
-						// donlod gambar disini
-						// kalau berhasil disimpen path nya
-						if (url_img != null) {
-							try {
-								en = mc.encrypt(json.getString("ID") + ".jpg");
-								inet.downloadImage(url_img, mc.bytesToHex(en));
-								Log.i("download", json.getString("ID") + ".jpg");
-								p.setImg(json.getString("ID") + ".jpg");
-							} catch (Exception e) {
-								// TODO: handle exception
-								e.printStackTrace();
-							}
-						} else {
-							p.setImg(null);
-						}
-
+						p.setImg(url_img);
 						db.addPost(p);
 						Log.i("xmlrpc", "insert");
 					}

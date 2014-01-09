@@ -208,22 +208,7 @@ public class AboveSearch extends ListFragment {
 						p.setCount(json.getString("count"));
 						String url_img = json.getString("img");
 						Log.i("img", url_img);
-						// donlod gambar disini
-						// kalau berhasil disimpen path nya
-						if (url_img != null) {
-							try {
-								en = mc.encrypt(json.getString("ID") + ".jpg");
-								inet.downloadImage(url_img, mc.bytesToHex(en));
-								Log.i("download", json.getString("ID") + ".jpg");
-								p.setImg(json.getString("ID") + ".jpg");
-							} catch (Exception e) {
-								// TODO: handle exception
-								e.printStackTrace();
-							}
-						} else {
-							p.setImg(null);
-						}
-
+						p.setImg(url_img);
 						db.addPost(p);
 						Log.i("xmlrpc", "insert");
 					}
@@ -260,7 +245,7 @@ public class AboveSearch extends ListFragment {
 			last_list = p.getId_post().toString();
 			map.put(KEY_TITLE, p.getTitle().toString());
 			map.put(KEY_DATE, p.getDate_post().toString());
-			map.put(KEY_THUMB_URL, p.getImg());
+			map.put(KEY_THUMB_URL, p.getImg().toString());
 			// adding HashList to ArrayList
 			postitem.add(map);
 
@@ -301,8 +286,6 @@ public class AboveSearch extends ListFragment {
 		@Override
 		protected Boolean doInBackground(String... params) {
 			// TODO Auto-generated method stub
-			InputStream in = null;
-			BufferedOutputStream out = null;
 			try {
 				urlads = srv.ads();
 				Log.i("ads", urlads);

@@ -119,7 +119,7 @@ public class AbovePopuler extends ListFragment {
 						new UpdateTask().execute();
 					}
 				});
-		if(db.is_exis_cat("populer") == false){
+		if (db.is_exis_cat("populer") == false) {
 			new UpdateTask().execute();
 		}
 		setList();
@@ -188,8 +188,8 @@ public class AbovePopuler extends ListFragment {
 		private ProgressDialog dialog = new ProgressDialog(getActivity());
 
 		protected void onPreExecute() {
-			 dialog.setMessage("Loading....");
-			 dialog.show();
+			dialog.setMessage("Loading....");
+			dialog.show();
 		}
 
 		@Override
@@ -217,8 +217,8 @@ public class AbovePopuler extends ListFragment {
 					JSONArray innerJsonArray = jsonArray.getJSONArray(0);
 
 					FileHelper fh = new FileHelper();
-					//db.deletePostbyTipe("populer");
-					//Log.i("xmlrpc", "deleted");
+					// db.deletePostbyTipe("populer");
+					// Log.i("xmlrpc", "deleted");
 					for (int i = 0; i < innerJsonArray.length(); i++) {
 						JSONObject json = innerJsonArray.getJSONObject(i);
 						Post p = new Post();
@@ -232,28 +232,9 @@ public class AbovePopuler extends ListFragment {
 						p.setCount(json.getString("count"));
 						String url_img = json.getString("img");
 						Log.i("img", url_img);
-						// donlod gambar disini
-						// kalau berhasil disimpen path nya
-						if (url_img != null) {
-							try {
-								en = mc.encrypt(json.getString("ID") + ".jpg");
-								inet.downloadImage(url_img, mc.bytesToHex(en));
-								Log.i("download", json.getString("ID") + ".jpg");
-								p.setImg(json.getString("ID") + ".jpg");
-							} catch (Exception e) {
-								// TODO: handle exception
-								e.printStackTrace();
-							}
-						} else {
-							p.setImg(null);
-						}
-						try {
-							db.addPost(p);
-							Log.i("xmlrpc", "insert");
-						} catch (Exception e) {
-							// TODO: handle exception
-							e.printStackTrace();
-						}
+						p.setImg(url_img);
+						db.addPost(p);
+
 					}
 				} catch (Exception e) {
 					Log.i("xmlrpc", "gagal jadi array");
@@ -288,7 +269,7 @@ public class AbovePopuler extends ListFragment {
 			last_list = p.getId_post().toString();
 			map.put(KEY_TITLE, p.getTitle().toString());
 			map.put(KEY_DATE, p.getDate_post().toString());
-			map.put(KEY_THUMB_URL, p.getImg());
+			map.put(KEY_THUMB_URL, p.getImg().toString());
 			// adding HashList to ArrayList
 			postitem.add(map);
 

@@ -69,26 +69,10 @@ public class LazyAdapterAbove extends BaseAdapter {
 		title.setText(behindmenu.get(AboveFragment.KEY_TITLE));
 		date.setText(behindmenu.get(AboveFragment.KEY_DATE));
 		id.setText(behindmenu.get(AboveFragment.KEY_ID));
-		BitmapDecoder b = new BitmapDecoder();
 		if (behindmenu.get(AboveFragment.KEY_THUMB_URL) != null) {
-			MCrypt mc = new MCrypt();
-			try {
-				File f = new File("/mnt/sdcard/kiblatartefact/"
-						+ mc.bytesToHex(mc.encrypt(behindmenu
-								.get(AboveFragment.KEY_THUMB_URL))));
-				if (f.exists()) {
-					thumb_image.setImageBitmap(b.decodeFiles(f, 70));
-					// thumb_image.setScaleType(ScaleType.FIT_XY);
-				} else {
-					imageLoader.DisplayImage(
-							behindmenu.get(AboveFragment.KEY_THUMB_URL),
-							thumb_image);
-				}
-
-				System.gc();
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
+			imageLoader.DisplayImage(behindmenu.get(AboveFragment.KEY_THUMB_URL), thumb_image);
+		}else{
+			thumb_image.setBackgroundResource(R.drawable.no_image);
 		}
 		return vi;
 	}

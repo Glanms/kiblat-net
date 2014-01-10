@@ -358,18 +358,12 @@ public class AboveFragment extends ListFragment {
 						.findViewById(R.id.headImg);
 				String url = p.getImg().toString();
 				Log.d("--URL IMAGE--", url);
-				URL onlineUrl;
-				try {
-					onlineUrl = new URL(url);
-					new imageTask(ndas).execute(onlineUrl);
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (url.equalsIgnoreCase(null)) {
+					MemoryCache memCache = new MemoryCache();
+					Bitmap bitmap = memoryCache.get(url);
+					BitmapDrawable bd = new BitmapDrawable(bitmap);
+					ndas.setBackground(bd);
 				}
-
 				title.setText(p.getTitle().toString());
 				tgl.setText(fd.convertTime(p.getDate_post().toString()));
 				getListView().addHeaderView(header);
@@ -408,40 +402,6 @@ public class AboveFragment extends ListFragment {
 				// Toast.LENGTH_LONG).show();
 			}
 		});
-
-	}
-
-	private class imageTask extends AsyncTask<URL, Void, Bitmap> {
-		RelativeLayout rel;
-
-		public imageTask(RelativeLayout rl) {
-			// TODO Auto-generated constructor stub
-			rel = rl;
-		}
-
-		@Override
-		protected Bitmap doInBackground(URL... params) {
-			// TODO Auto-generated method stub
-			Bitmap networkBitmap = null;
-
-			URL networkUrl = params[0]; // Load the first element
-			try {
-				networkBitmap = BitmapFactory.decodeStream(networkUrl
-						.openConnection().getInputStream());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			return networkBitmap;
-		}
-
-		@Override
-		protected void onPostExecute(Bitmap result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			BitmapDrawable bd = new BitmapDrawable(result);
-			rel.setBackground(bd);
-		}
 
 	}
 

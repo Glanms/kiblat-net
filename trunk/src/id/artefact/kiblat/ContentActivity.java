@@ -2,12 +2,11 @@ package id.artefact.kiblat;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,13 +16,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.xmlrpc.android.MCrypt;
 
+
 import id.artefact.kiblat.db.DatabaseHandler;
 import id.artefact.kiblat.db.Post;
-import id.artefact.kiblat.help.BitmapDecoder;
 import id.artefact.kiblat.help.CustomAdapter;
 import id.artefact.kiblat.help.FormatDate;
 import id.artefact.kiblat.help.ImageLoader;
-import id.artefact.kiblat.help.LazyAdapterAbove;
 import id.artefact.kiblat.help.MemoryCache;
 import id.artefact.kiblat.help.ScrollViewHelper;
 import id.artefact.kiblat.help.ServiceHelper;
@@ -34,11 +32,13 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import android.widget.AdapterView.OnItemClickListener;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -141,9 +141,24 @@ public class ContentActivity extends SherlockActivity {
 				.replaceAll("</p>", "\n").replaceAll("<[^>]*>", "")
 				.replaceAll("&nbsp;", ""));
 		guid = p.getGuid().toString();
-		ImageLoader imgLoad = new ImageLoader(getApplicationContext());
-		imgLoad.DisplayImage(p.getImg().toString(), gambar);
-		Log.d("--url gambar--", p.getImg().toString());
+		String url = p.getImg().toString();
+		URL onlineUrl;
+		if (isNetworkAvailable(getApplicationContext()) == true) {
+			try {
+				onlineUrl = new URL(url);
+				new imageTask(gambar).execute(onlineUrl);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			ImageLoader imgLoad = new ImageLoader(getApplicationContext());
+			imgLoad.DisplayImage(url, gambar);
+		}
+		Log.d("--url gambar--", url);
 		new AdsTask().execute();
 		Button clsads = (Button) this.findViewById(R.id.clsikl);
 		fadsfl = (FrameLayout) this.findViewById(R.id.adsfl);
@@ -159,6 +174,45 @@ public class ContentActivity extends SherlockActivity {
 		});
 		setRelated(p.getTipe());
 
+	}
+
+	private class imageTask extends AsyncTask<URL, Void, Bitmap> {
+		ImageView tIV;
+
+		public imageTask(ImageView iv) {
+			tIV = iv;
+		}
+
+		@Override
+		protected Bitmap doInBackground(URL... params) {
+			// TODO Auto-generated method stub
+			Bitmap networkBitmap = null;
+
+			URL networkUrl = params[0]; // Load the first element
+			try {
+				networkBitmap = BitmapFactory.decodeStream(networkUrl
+						.openConnection().getInputStream());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			return networkBitmap;
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap result) {
+			// TODO Auto-generated method stub
+			tIV.setImageBitmap(result);
+		}
+
+	}
+
+	public static boolean isNetworkAvailable(Context context) {
+		ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		return (mConnectivityManager != null && mConnectivityManager
+				.getActiveNetworkInfo().isConnectedOrConnecting()) ? true
+				: false;
 	}
 
 	@Override

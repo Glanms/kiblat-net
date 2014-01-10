@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import id.artefact.kiblat.db.DatabaseHandler;
 import id.artefact.kiblat.db.Post;
 import id.artefact.kiblat.help.BitmapDecoder;
 import id.artefact.kiblat.help.FormatDate;
+import id.artefact.kiblat.help.ImageLoader;
 import id.artefact.kiblat.help.LazyAdapterAbove;
 import id.artefact.kiblat.help.LazyAdapterBehindMenu;
 import id.artefact.kiblat.help.MemoryCache;
@@ -354,13 +356,20 @@ public class AboveFragment extends ListFragment {
 				TextView tgl = (TextView) header.findViewById(R.id.headerDate);
 				RelativeLayout ndas = (RelativeLayout) header
 						.findViewById(R.id.headImg);
-				if (p.getImg().toString().equalsIgnoreCase(null)) {
-					MemoryCache memoryCache = new MemoryCache();
-					Bitmap bitmap = memoryCache.get(p.getImg().toString());
-					Log.d("url ndas", p.getImg().toString());
-					Drawable d = new BitmapDrawable(getResources(), bitmap);
-					ndas.setBackgroundDrawable(d);
+				String url = p.getImg().toString();
+				Log.d("--URL IMAGE--", url);
+				URL onlineUrl;
+				try {
+					onlineUrl = new URL(url);
+					new imageTask(ndas).execute(onlineUrl);
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
+
 				title.setText(p.getTitle().toString());
 				tgl.setText(fd.convertTime(p.getDate_post().toString()));
 				getListView().addHeaderView(header);
@@ -399,6 +408,40 @@ public class AboveFragment extends ListFragment {
 				// Toast.LENGTH_LONG).show();
 			}
 		});
+
+	}
+
+	private class imageTask extends AsyncTask<URL, Void, Bitmap> {
+		RelativeLayout rel;
+
+		public imageTask(RelativeLayout rl) {
+			// TODO Auto-generated constructor stub
+			rel = rl;
+		}
+
+		@Override
+		protected Bitmap doInBackground(URL... params) {
+			// TODO Auto-generated method stub
+			Bitmap networkBitmap = null;
+
+			URL networkUrl = params[0]; // Load the first element
+			try {
+				networkBitmap = BitmapFactory.decodeStream(networkUrl
+						.openConnection().getInputStream());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			return networkBitmap;
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			BitmapDrawable bd = new BitmapDrawable(result);
+			rel.setBackground(bd);
+		}
 
 	}
 

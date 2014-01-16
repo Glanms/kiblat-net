@@ -8,19 +8,23 @@
         android:id="@+id/headImg"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:orientation="vertical" 
         android:background="@drawable/no_image"
-        >
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/imagehead"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <TextView
-            android:layout_margin="10dp"
             android:id="@+id/headJudul"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
             android:layout_marginBottom="15dp"
-            android:padding="3dip"
             android:background="#CCFFFFFF"
+            android:padding="3dip"
             android:text="INI JUDUL PANJANG BANGET YEYEYEYEYYEYEYE"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold" />
@@ -32,11 +36,10 @@
             android:layout_alignParentTop="true"
             android:layout_alignRight="@+id/headJudul"
             android:layout_marginTop="14dp"
-            android:padding="3dip"
             android:background="#CCFFFFFF"
+            android:padding="3dip"
             android:text="20 Oktober 2013"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
     </RelativeLayout>
 
 </LinearLayout>

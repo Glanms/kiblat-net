@@ -73,6 +73,7 @@ public class ContentActivity extends SherlockActivity {
 	FrameLayout fadsfl;
 	ImageView imgads;
 	ServiceHelper srv;
+	DatabaseHandler db = new DatabaseHandler(this);
 
 	@SuppressWarnings("null")
 	@Override
@@ -112,7 +113,6 @@ public class ContentActivity extends SherlockActivity {
 		MCrypt mc = new MCrypt();
 		Bundle extras = getIntent().getExtras();
 		id_post = extras.getString("id");
-		DatabaseHandler db = new DatabaseHandler(this);
 		Post p = db.getPostById(id_post);
 		title.setText(p.getTitle());
 		tanggal.setText(fd.convert(p.getDate_post()));
@@ -247,43 +247,37 @@ public class ContentActivity extends SherlockActivity {
 	}
 
 	private void shareIt() {
-		// TODO Auto-generated method stub
-		Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-		sharingIntent.setType("text/html");
-		sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,
-				Html.fromHtml(guid));
+		Post p = db.getPostById(id_post);
+		List<Intent> targetedShareIntents = new ArrayList<Intent>();
+	    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+	    sharingIntent.setType("text/plain");
+	    String shareBody = p.getTitle().toString()+" via "+p.getGuid().toString();
 
-		PackageManager pm = getBaseContext().getPackageManager();
-		List<ResolveInfo> activityList = pm.queryIntentActivities(
-				sharingIntent, 0);
-		for (ResolveInfo app : activityList) {
-			if ("com.twitter.android.PostActivity"
-					.equals(app.activityInfo.name)) {
-				final ActivityInfo activity = app.activityInfo;
-				final ComponentName name = new ComponentName(
-						activity.applicationInfo.packageName, activity.name);
-				sharingIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-				sharingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-						| Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-				sharingIntent.setComponent(name);
-				this.startActivity(sharingIntent);
-				break;
-			}
-			if ((app.activityInfo.name).equals("com.facebook.katana")) {
-				final ActivityInfo activity = app.activityInfo;
-				final ComponentName name = new ComponentName(
-						activity.applicationInfo.packageName, activity.name);
-				sharingIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-				sharingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-						| Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-				sharingIntent.setComponent(name);
-				this.startActivity(sharingIntent);
-				break;
-			}
-		}
+	    PackageManager pm = this.getPackageManager();
+	    List<ResolveInfo> activityList = pm.queryIntentActivities(sharingIntent, 0);
+	    for(final ResolveInfo app : activityList) {
 
-		startActivity(Intent.createChooser(sharingIntent, "Share using"));
+	         String packageName = app.activityInfo.packageName;
+	         Intent targetedShareIntent = new Intent(android.content.Intent.ACTION_SEND);
+	         targetedShareIntent.setType("text/plain");
+	         targetedShareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, p.getTitle().toString());
+	         if(TextUtils.equals(packageName, "com.facebook.katana")){
+	             targetedShareIntent.putExtra(android.content.Intent.EXTRA_TEXT, p.getGuid().toString());
+	         } else {
+	             targetedShareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+	         }
+
+	         targetedShareIntent.setPackage(packageName);
+	         targetedShareIntents.add(targetedShareIntent);
+
+	    }
+
+	    Intent chooserIntent = Intent.createChooser(targetedShareIntents.remove(0), "Share Idea");
+
+	    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetedShareIntents.toArray(new Parcelable[]{}));
+	    startActivity(chooserIntent);
 	}
+	
 
 	public void setRelated(String tipe) {
 		ListView list = (ListView) findViewById(R.id.related);

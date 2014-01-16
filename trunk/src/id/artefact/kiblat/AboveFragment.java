@@ -356,13 +356,14 @@ public class AboveFragment extends ListFragment {
 				TextView tgl = (TextView) header.findViewById(R.id.headerDate);
 				RelativeLayout ndas = (RelativeLayout) header
 						.findViewById(R.id.headImg);
-				String url = p.getImg().toString();
-				Log.d("--URL IMAGE--", url);
-				if (url.equalsIgnoreCase(null)) {
-					MemoryCache memCache = new MemoryCache();
-					Bitmap bitmap = memoryCache.get(url);
-					BitmapDrawable bd = new BitmapDrawable(bitmap);
-					ndas.setBackground(bd);
+				ImageView imghead = (ImageView) header
+						.findViewById(R.id.imagehead);
+				String urls = p.getImg().toString();
+				Log.d("--URL IMAGE--", urls);
+				if (urls != null) {
+					ImageLoader imgl = new ImageLoader(getActivity());
+					imgl.DisplayImage(urls, imghead);
+
 				}
 				title.setText(p.getTitle().toString());
 				tgl.setText(fd.convertTime(p.getDate_post().toString()));
@@ -385,7 +386,7 @@ public class AboveFragment extends ListFragment {
 				map.put(KEY_TITLE, p.getTitle().toString());
 				map.put(KEY_DATE, fd.convertTime(p.getDate_post().toString()));
 				map.put(KEY_THUMB_URL, p.getImg().toString());
-				// adding HashList to ArrayList
+				// adding HashList to AzrrayList
 				postitem.add(map);
 			}
 

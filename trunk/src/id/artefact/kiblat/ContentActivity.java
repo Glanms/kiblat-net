@@ -248,36 +248,15 @@ public class ContentActivity extends SherlockActivity {
 
 	private void shareIt() {
 		Post p = db.getPostById(id_post);
-		List<Intent> targetedShareIntents = new ArrayList<Intent>();
-	    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-	    sharingIntent.setType("text/plain");
-	    String shareBody = p.getTitle().toString()+" via "+p.getGuid().toString();
-
-	    PackageManager pm = this.getPackageManager();
-	    List<ResolveInfo> activityList = pm.queryIntentActivities(sharingIntent, 0);
-	    for(final ResolveInfo app : activityList) {
-
-	         String packageName = app.activityInfo.packageName;
-	         Intent targetedShareIntent = new Intent(android.content.Intent.ACTION_SEND);
-	         targetedShareIntent.setType("text/plain");
-	         targetedShareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, p.getTitle().toString());
-	         if(TextUtils.equals(packageName, "com.facebook.katana")){
-	             targetedShareIntent.putExtra(android.content.Intent.EXTRA_TEXT, p.getGuid().toString());
-	         } else {
-	             targetedShareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-	         }
-
-	         targetedShareIntent.setPackage(packageName);
-	         targetedShareIntents.add(targetedShareIntent);
-
-	    }
-
-	    Intent chooserIntent = Intent.createChooser(targetedShareIntents.remove(0), "Share Idea");
-
-	    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetedShareIntents.toArray(new Parcelable[]{}));
-	    startActivity(chooserIntent);
+		Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+		sharingIntent.setType("text/plain");
+		sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, p.getTitle().toString());
+		sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, p.getGuid().toString());
+		startActivity(Intent.createChooser(sharingIntent, "Share via Kiblat.Net for Android"));
 	}
 	
+	
+
 
 	public void setRelated(String tipe) {
 		ListView list = (ListView) findViewById(R.id.related);
